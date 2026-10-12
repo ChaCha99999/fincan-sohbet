@@ -116,6 +116,9 @@ export const AdminQuestionsPage: React.FC = () => {
         'ikilemde-kal': 'cat-ikilem',
         'kim-daha-muhtemel': 'cat-muhtemel',
         'ne-kadar-taniyoruz': 'cat-taniyoruz',
+        'kafe-trivia': 'cat-trivia',
+        'masa-duellosu': 'cat-duello',
+        'kafe-nabzi': 'cat-nabiz',
       };
 
       if (modalMode === 'create') {
@@ -205,6 +208,7 @@ export const AdminQuestionsPage: React.FC = () => {
               <option value="ikilemde-kal">İkilemde Kal</option>
               <option value="kim-daha-muhtemel">Kim Daha Muhtemel?</option>
               <option value="ne-kadar-taniyoruz">Birbirimizi Ne Kadar Tanıyoruz?</option>
+              <option value="kafe-trivia">Kafe Trivia (Pub Quiz)</option>
             </select>
 
             {/* Status Filter */}
@@ -369,6 +373,7 @@ export const AdminQuestionsPage: React.FC = () => {
                     <option value="ikilemde-kal">İkilemde Kal</option>
                     <option value="kim-daha-muhtemel">Kim Daha Muhtemel?</option>
                     <option value="ne-kadar-taniyoruz">Birbirimizi Ne Kadar Tanıyoruz?</option>
+                    <option value="kafe-trivia">Kafe Trivia (Pub Quiz)</option>
                   </select>
                 </div>
 

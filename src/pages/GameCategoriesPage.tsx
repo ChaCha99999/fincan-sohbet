@@ -10,7 +10,10 @@ import {
   Play, 
   Sparkles,
   Coffee,
-  ChevronRight
+  ChevronRight,
+  Trophy,
+  Swords,
+  BarChart3
 } from 'lucide-react';
 import { getCategories } from '../lib/api';
 import type { Category, GameType } from '../types';
@@ -157,6 +160,117 @@ export const GameCategoriesPage: React.FC = () => {
           </div>
         ) : (
           <div className="space-y-4">
+            {/* ÖNE ÇIKAN: MASALAR ARASI KAFE TRIVIA */}
+            <div className="p-5 rounded-3xl bg-gradient-to-br from-amber-600 via-amber-700 to-terracotta-700 text-white shadow-warm hover:shadow-warm-md transition-all flex flex-col justify-between gap-4 relative overflow-hidden">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3.5">
+                  <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
+                    <Trophy className="w-7 h-7 text-amber-200" />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-amber-400 text-amber-950 uppercase tracking-wider">
+                        Yeni • Çok Oyunculu
+                      </span>
+                      <span className="text-[11px] text-amber-100 font-medium flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        ~3-5 dk
+                      </span>
+                    </div>
+                    <h2 className="font-serif font-black text-xl text-white leading-snug">
+                      Kafe Trivia (Masalar Arası Yarışma)
+                    </h2>
+                    <p className="text-xs text-amber-100/90 leading-relaxed">
+                      10 farklı tematik kategori! Masanızla yarışın, en hızlı doğru cevapları vererek kafe lider tablosunda şampiyon olun.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => navigate('/play/kafe-trivia')}
+                className="w-full py-3.5 px-4 rounded-xl bg-white hover:bg-cream-100 text-amber-950 font-black text-sm shadow-warm flex items-center justify-center gap-2 transition-transform active:scale-98"
+              >
+                <Play className="w-4 h-4 fill-amber-950" />
+                <span>Trivia'ya Katıl (Kategori Seç)</span>
+                <ChevronRight className="w-4 h-4 ml-auto text-amber-900" />
+              </button>
+            </div>
+
+            {/* ÖNE ÇIKAN 2: MASALAR ARASI DÜELLO */}
+            <div className="p-5 rounded-3xl bg-gradient-to-br from-red-600 via-rose-700 to-coffee-950 text-white shadow-warm hover:shadow-warm-md transition-all flex flex-col justify-between gap-4 relative overflow-hidden">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3.5">
+                  <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
+                    <Swords className="w-7 h-7 text-rose-200" />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-red-400 text-red-950 uppercase tracking-wider">
+                        1'e 1 Kapışma
+                      </span>
+                      <span className="text-[11px] text-rose-100 font-medium flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        ~2 dk
+                      </span>
+                    </div>
+                    <h2 className="font-serif font-black text-xl text-white leading-snug">
+                      Masalar Arası Hızlı Düello
+                    </h2>
+                    <p className="text-xs text-rose-100/90 leading-relaxed">
+                      Kafedeki başka bir masaya anında meydan okuyun! 5 soruluk nefes kesen canlı düelloda masanızı temsil edin.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => navigate('/play/masa-duellosu')}
+                className="w-full py-3.5 px-4 rounded-xl bg-white hover:bg-cream-100 text-rose-950 font-black text-sm shadow-warm flex items-center justify-center gap-2 transition-transform active:scale-98"
+              >
+                <Play className="w-4 h-4 fill-rose-950" />
+                <span>Düello Başlat (Rakip Seç)</span>
+                <ChevronRight className="w-4 h-4 ml-auto text-rose-900" />
+              </button>
+            </div>
+
+            {/* ÖNE ÇIKAN 3: ORTAK KAFE NABZI */}
+            <div className="p-5 rounded-3xl bg-gradient-to-br from-teal-700 via-emerald-800 to-coffee-950 text-white shadow-warm hover:shadow-warm-md transition-all flex flex-col justify-between gap-4 relative overflow-hidden">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3.5">
+                  <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
+                    <BarChart3 className="w-7 h-7 text-emerald-200" />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-emerald-400 text-emerald-950 uppercase tracking-wider">
+                        Canlı Oylama
+                      </span>
+                      <span className="text-[11px] text-emerald-100 font-medium flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        Sürekli Açık
+                      </span>
+                    </div>
+                    <h2 className="font-serif font-black text-xl text-white leading-snug">
+                      Ortak Kafe Nabzı & Anketler
+                    </h2>
+                    <p className="text-xs text-emerald-100/90 leading-relaxed">
+                      Kafede bugün ne çalmalı? Menemen soğanlı mı olur? Masanızla oyunuzu verin, kafe genelindeki canlı çoğunluğu görün.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => navigate('/play/kafe-nabzi')}
+                className="w-full py-3.5 px-4 rounded-xl bg-white hover:bg-cream-100 text-emerald-950 font-black text-sm shadow-warm flex items-center justify-center gap-2 transition-transform active:scale-98"
+              >
+                <Play className="w-4 h-4 fill-emerald-950" />
+                <span>Anketlere Katıl (Oyla)</span>
+                <ChevronRight className="w-4 h-4 ml-auto text-emerald-900" />
+              </button>
+            </div>
+
             {categories.map((cat) => {
               const visual = getGameVisual(cat.slug);
               return (

@@ -38,6 +38,12 @@ const withTimeout = <T = any>(promise: Promise<T> | PromiseLike<T>, ms = 3500): 
   ]);
 };
 
+// =========================================================================
+// ÜCRETSİZ PLAN OPTİMİZASYONLARI (SUPABASE & EGRESS KORUMASI)
+// =========================================================================
+const tokenValidationCache = new Map<string, { result: TableValidationResult; expiresAt: number }>();
+let cachedCategories: Category[] | null = null;
+const recentEventLogMap = new Map<string, number>();
 
 // ==========================================
 // MASA DOĞRULAMA (TABLE VALIDATION)
@@ -54,7 +60,13 @@ export const validateTableToken = async (token: string): Promise<TableValidation
 
   const cleanToken = token.trim().toLowerCase();
 
-  // 1. Supabase üzerinden RPC çağrısı
+  // 1. Önbellek Kontrolü (3 dakika geçerli - Supabase RPC çağrısını ve kotasını korur)
+  const cached = tokenValidationCache.get(cleanToken);
+  if (cached && Date.now() < cached.expiresAt && cached.result.isValid) {
+    return cached.result;
+  }
+
+  // 2. Supabase üzerinden RPC çağrısı
   if (isSupabaseConfigured && supabase) {
     try {
       const { data, error } = await withTimeout(
@@ -111,12 +123,14 @@ export const validateTableToken = async (token: string): Promise<TableValidation
           };
         }
 
-        return {
+        const validRes: TableValidationResult = {
           isValid: true,
           isCafeActive: true,
           isTableActive: true,
           table: tableObj,
         };
+        tokenValidationCache.set(cleanToken, { result: validRes, expiresAt: Date.now() + 180000 });
+        return validRes;
       }
     } catch (err) {
       console.warn('Supabase token query failed, falling back to local:', err);
@@ -173,12 +187,14 @@ export const validateTableToken = async (token: string): Promise<TableValidation
     };
   }
 
-  return {
+  const localValidRes: TableValidationResult = {
     isValid: true,
     isCafeActive: true,
     isTableActive: true,
     table: resolvedTable,
   };
+  tokenValidationCache.set(cleanToken, { result: localValidRes, expiresAt: Date.now() + 180000 });
+  return localValidRes;
 };
 
 // ==========================================
@@ -190,6 +206,18 @@ export const logUsageEvent = async (
   eventType: EventType,
   gameType?: GameType | null
 ): Promise<void> => {
+  const eventKey = `${tableId}_${eventType}_${gameType || 'none'}`;
+  const now = Date.now();
+  const lastLogged = recentEventLogMap.get(eventKey) || 0;
+
+  // Ücretsiz Plan Optimizasyonu: Aynı masadan 15 saniye içinde gelen mükerrer logları engelle
+  if (now - lastLogged < 15000) {
+    return;
+  }
+  recentEventLogMap.set(eventKey, now);
+  if (recentEventLogMap.size > 150) {
+    recentEventLogMap.clear();
+  }
   if (isSupabaseConfigured && supabase) {
     try {
       const { error } = await supabase.from('events').insert([
@@ -226,6 +254,10 @@ export const logUsageEvent = async (
 // SORULAR & KATEGORİLER
 // ==========================================
 export const getCategories = async (): Promise<Category[]> => {
+  if (cachedCategories && cachedCategories.length > 0) {
+    return cachedCategories;
+  }
+
   if (isSupabaseConfigured && supabase) {
     try {
       const { data, error } = await withTimeout(
@@ -238,12 +270,14 @@ export const getCategories = async (): Promise<Category[]> => {
       );
 
       if (!error && data && data.length > 0) {
-        return data as Category[];
+        cachedCategories = data as Category[];
+        return cachedCategories;
       }
     } catch (e) {
       console.warn('Supabase categories error, using fallback:', e);
     }
   }
+  cachedCategories = INITIAL_CATEGORIES;
   return INITIAL_CATEGORIES;
 };
 

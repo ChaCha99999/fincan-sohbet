@@ -1,15 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Coffee, Sparkles } from 'lucide-react';
+import { ArrowLeft, Coffee, Sparkles, Loader2 } from 'lucide-react';
 import { getQuestions, logUsageEvent } from '../lib/api';
 import type { Question, GameType } from '../types';
 import { useTableSession } from '../hooks/useTableSession';
 import { useTranslation } from '../lib/i18n';
 import { LanguageSwitch } from '../components/LanguageSwitch';
-import { SohbetiBaslatGame } from '../features/games/SohbetiBaslatGame';
-import { IkilemdeKalGame } from '../features/games/IkilemdeKalGame';
-import { KimDahaMuhtemelGame } from '../features/games/KimDahaMuhtemelGame';
-import { NeKadarTaniyoruzGame } from '../features/games/NeKadarTaniyoruzGame';
+
+// Ücretsiz Plan Optimizasyonu: Oyunlar yalnızca oynandığında dinamik olarak yüklenir
+// Bu sayede QR okutan müşteri gereksiz kod ve soru paketlerini indirmez (Bant genişliği & Kota tasarrufu)
+const SohbetiBaslatGame = lazy(() => import('../features/games/SohbetiBaslatGame').then(m => ({ default: m.SohbetiBaslatGame })));
+const IkilemdeKalGame = lazy(() => import('../features/games/IkilemdeKalGame').then(m => ({ default: m.IkilemdeKalGame })));
+const KimDahaMuhtemelGame = lazy(() => import('../features/games/KimDahaMuhtemelGame').then(m => ({ default: m.KimDahaMuhtemelGame })));
+const NeKadarTaniyoruzGame = lazy(() => import('../features/games/NeKadarTaniyoruzGame').then(m => ({ default: m.NeKadarTaniyoruzGame })));
+const KafeTriviaGame = lazy(() => import('../features/games/KafeTriviaGame').then(m => ({ default: m.KafeTriviaGame })));
+const MasaDuellosuGame = lazy(() => import('../features/games/MasaDuellosuGame').then(m => ({ default: m.MasaDuellosuGame })));
+const KafeNabziGame = lazy(() => import('../features/games/KafeNabziGame').then(m => ({ default: m.KafeNabziGame })));
 
 export const GamePlayPage: React.FC = () => {
   const { gameSlug } = useParams<{ gameSlug: string }>();
@@ -25,11 +31,22 @@ export const GamePlayPage: React.FC = () => {
     'ikilemde-kal',
     'kim-daha-muhtemel',
     'ne-kadar-taniyoruz',
+    'kafe-trivia',
+    'masa-duellosu',
+    'kafe-nabzi',
   ].includes(gameSlug || '');
 
   useEffect(() => {
     if (!isValidGame || !gameSlug) {
       navigate('/games', { replace: true });
+      return;
+    }
+
+    if (gameSlug === 'kafe-trivia' || gameSlug === 'masa-duellosu' || gameSlug === 'kafe-nabzi') {
+      setLoading(false);
+      if (activeTable) {
+        logUsageEvent(activeTable.cafe_id, activeTable.id, 'game_start', gameSlug as GameType);
+      }
       return;
     }
 
@@ -63,6 +80,9 @@ export const GamePlayPage: React.FC = () => {
         case 'ikilemde-kal': return 'Stay in Dilemma';
         case 'kim-daha-muhtemel': return "Who's More Likely?";
         case 'ne-kadar-taniyoruz': return 'How Well Do We Know Each Other?';
+        case 'kafe-trivia': return 'Cafe Trivia & Pub Quiz';
+        case 'masa-duellosu': return 'Table Duel (1v1)';
+        case 'kafe-nabzi': return 'Cafe Pulse & Live Polls';
         default: return 'Mini Game';
       }
     }
@@ -75,6 +95,12 @@ export const GamePlayPage: React.FC = () => {
         return 'Kim Daha Muhtemel?';
       case 'ne-kadar-taniyoruz':
         return 'Birbirimizi Ne Kadar Tanıyoruz?';
+      case 'kafe-trivia':
+        return 'Kafe Trivia (Masalar Arası)';
+      case 'masa-duellosu':
+        return 'Masalar Arası Düello (1v1)';
+      case 'kafe-nabzi':
+        return 'Ortak Kafe Nabzı (Canlı Oylamalar)';
       default:
         return 'Mini Oyun';
     }
@@ -125,23 +151,45 @@ export const GamePlayPage: React.FC = () => {
             {getGameTitle()}
           </h1>
           <span className="text-xs text-coffee-500 font-medium">
-            {questions.length} {lang === 'en' ? 'Questions' : 'Soru'}
+            {gameSlug === 'kafe-trivia' 
+              ? (lang === 'en' ? '50+ Questions • 10 Categories' : '50+ Soru • 10 Kategori')
+              : gameSlug === 'masa-duellosu'
+              ? (lang === 'en' ? '5 Quick Questions • 1v1 Arena' : '5 Hızlı Soru • 1v1 Arena')
+              : gameSlug === 'kafe-nabzi'
+              ? (lang === 'en' ? 'Live Polls • All Tables' : 'Canlı Oylamalar • Tüm Masalar')
+              : `${questions.length} ${lang === 'en' ? 'Questions' : 'Soru'}`}
           </span>
         </header>
 
-        {/* Dynamic Game Component */}
-        {gameSlug === 'sohbeti-baslat' && (
-          <SohbetiBaslatGame questions={questions} onFinishGame={handleFinishGame} />
-        )}
-        {gameSlug === 'ikilemde-kal' && (
-          <IkilemdeKalGame questions={questions} onFinishGame={handleFinishGame} />
-        )}
-        {gameSlug === 'kim-daha-muhtemel' && (
-          <KimDahaMuhtemelGame questions={questions} onFinishGame={handleFinishGame} />
-        )}
-        {gameSlug === 'ne-kadar-taniyoruz' && (
-          <NeKadarTaniyoruzGame questions={questions} onFinishGame={handleFinishGame} />
-        )}
+        {/* Dynamic Game Component (Lazy Loaded Chunk) */}
+        <Suspense fallback={
+          <div className="py-16 flex flex-col items-center justify-center gap-2.5 text-coffee-700">
+            <Loader2 className="w-7 h-7 animate-spin text-terracotta-600" />
+            <span className="text-xs font-semibold uppercase tracking-wider text-coffee-500">Oyun Hazırlanıyor...</span>
+          </div>
+        }>
+          {gameSlug === 'sohbeti-baslat' && (
+            <SohbetiBaslatGame questions={questions} onFinishGame={handleFinishGame} />
+          )}
+          {gameSlug === 'ikilemde-kal' && (
+            <IkilemdeKalGame questions={questions} onFinishGame={handleFinishGame} />
+          )}
+          {gameSlug === 'kim-daha-muhtemel' && (
+            <KimDahaMuhtemelGame questions={questions} onFinishGame={handleFinishGame} />
+          )}
+          {gameSlug === 'ne-kadar-taniyoruz' && (
+            <NeKadarTaniyoruzGame questions={questions} onFinishGame={handleFinishGame} />
+          )}
+          {gameSlug === 'kafe-trivia' && (
+            <KafeTriviaGame onFinishGame={handleFinishGame} />
+          )}
+          {gameSlug === 'masa-duellosu' && (
+            <MasaDuellosuGame onFinishGame={handleFinishGame} />
+          )}
+          {gameSlug === 'kafe-nabzi' && (
+            <KafeNabziGame onFinishGame={handleFinishGame} />
+          )}
+        </Suspense>
       </div>
 
       <footer className="text-center pt-8 pb-3 text-[11px] text-coffee-400">

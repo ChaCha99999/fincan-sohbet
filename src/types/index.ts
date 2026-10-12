@@ -2,7 +2,10 @@ export type GameType =
   | 'sohbeti-baslat'
   | 'ikilemde-kal'
   | 'kim-daha-muhtemel'
-  | 'ne-kadar-taniyoruz';
+  | 'ne-kadar-taniyoruz'
+  | 'kafe-trivia'
+  | 'masa-duellosu'
+  | 'kafe-nabzi';
 
 export type CafeStatus = 'active' | 'inactive';
 
@@ -125,3 +128,76 @@ export interface TableValidationResult {
   table?: Table;
   errorMessage?: string;
 }
+
+export interface TriviaQuestion {
+  id: string;
+  categoryId: string;
+  categoryName: string;
+  question: string;
+  options: [string, string, string, string];
+  correctIndex: number;
+  explanation?: string;
+  difficulty?: 'easy' | 'medium' | 'hard';
+}
+
+export interface TriviaCategoryInfo {
+  id: string;
+  name: string;
+  iconName: string;
+  badgeColor: string;
+  bgGradient: string;
+  description: string;
+  questionCount?: number;
+}
+
+export interface TriviaLeaderboardEntry {
+  tableLabel: string;
+  score: number;
+  correctCount: number;
+  totalQuestions: number;
+  isCurrentTable?: boolean;
+  rank?: number;
+}
+
+export interface DuelOpponent {
+  id: string;
+  tableLabel: string;
+  isOnline: boolean;
+  avatarColor: string;
+  winCount?: number;
+}
+
+export interface DuelMatchSummary {
+  myTableLabel: string;
+  opponentTableLabel: string;
+  myScore: number;
+  opponentScore: number;
+  myCorrect: number;
+  opponentCorrect: number;
+  winner: 'me' | 'opponent' | 'draw';
+  categoryName: string;
+}
+
+export type PollCategory = 'kahve-muzik' | 'gunun-ikilemi' | 'kafe-modu';
+
+export interface CafePollOption {
+  id: string;
+  text: string;
+  votes: number;
+  percentage?: number;
+}
+
+export interface CafePoll {
+  id: string;
+  category: PollCategory;
+  categoryTitle: string;
+  question: string;
+  description?: string;
+  totalVotes: number;
+  options: CafePollOption[];
+  myVoteOptionId?: string | null;
+  trendingBadge?: string;
+}
+
+
+

@@ -17,7 +17,10 @@ import {
   BookOpen,
   Wifi,
   Copy,
-  ChevronRight
+  ChevronRight,
+  Trophy,
+  Swords,
+  BarChart3
 } from 'lucide-react';
 import { validateTableToken, logUsageEvent, getCategories } from '../lib/api';
 import type { Table, Category, GameType } from '../types';
@@ -330,6 +333,81 @@ export const TableLandingPage: React.FC = () => {
                   </p>
                 </div>
               </button>
+
+              {/* KART 3: MASALAR ARASI KAFE TRIVIA (PUB QUIZ) */}
+              <button
+                onClick={() => navigate('/play/kafe-trivia')}
+                className="w-full text-left p-5 rounded-3xl bg-gradient-to-br from-amber-600 via-amber-700 to-terracotta-700 text-white shadow-warm hover:shadow-warm-md transition-all group active:scale-[0.99] relative overflow-hidden"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="w-13 h-13 rounded-2xl bg-white/20 text-white flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <Trophy className="w-7 h-7 text-amber-200" />
+                  </div>
+                  <span className="px-2.5 py-1 rounded-full bg-amber-400 text-amber-950 text-[10px] font-black uppercase tracking-wider">
+                    Yeni • Masalar Arası
+                  </span>
+                </div>
+
+                <div className="mt-3.5 space-y-1 text-white">
+                  <h3 className="font-serif font-extrabold text-lg sm:text-xl text-white flex items-center justify-between">
+                    <span>Kafe Trivia & Bilgi Yarışması</span>
+                    <ChevronRight className="w-5 h-5 text-white/90 group-hover:translate-x-1 transition-transform" />
+                  </h3>
+                  <p className="text-xs text-amber-100 leading-relaxed">
+                    10 kategori (Futbol, Arabalar, Müzik, Genel Kültür...) arasından seçin, diğer masalarla canlı yarışın!
+                  </p>
+                </div>
+              </button>
+
+              {/* KART 4: MASALAR ARASI HIZLI DÜELLO (1V1) */}
+              <button
+                onClick={() => navigate('/play/masa-duellosu')}
+                className="w-full text-left p-5 rounded-3xl bg-gradient-to-br from-red-600 via-rose-700 to-coffee-950 text-white shadow-warm hover:shadow-warm-md transition-all group active:scale-[0.99] relative overflow-hidden"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="w-13 h-13 rounded-2xl bg-white/20 text-white flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <Swords className="w-7 h-7 text-rose-200" />
+                  </div>
+                  <span className="px-2.5 py-1 rounded-full bg-red-400 text-red-950 text-[10px] font-black uppercase tracking-wider">
+                    1'e 1 Düello
+                  </span>
+                </div>
+
+                <div className="mt-3.5 space-y-1 text-white">
+                  <h3 className="font-serif font-extrabold text-lg sm:text-xl text-white flex items-center justify-between">
+                    <span>Masalar Arası Düello</span>
+                    <ChevronRight className="w-5 h-5 text-white/90 group-hover:translate-x-1 transition-transform" />
+                  </h3>
+                  <p className="text-xs text-rose-100 leading-relaxed">
+                    Kafedeki bir masaya meydan okuyun, 5 hızlı soruda kozlarınızı paylaşın!
+                  </p>
+                </div>
+              </button>
+
+              {/* KART 5: ORTAK KAFE NABZI (CANLI OYLAMALAR) */}
+              <button
+                onClick={() => navigate('/play/kafe-nabzi')}
+                className="w-full text-left p-5 rounded-3xl bg-gradient-to-br from-teal-700 via-emerald-800 to-coffee-950 text-white shadow-warm hover:shadow-warm-md transition-all group active:scale-[0.99] relative overflow-hidden"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="w-13 h-13 rounded-2xl bg-white/20 text-white flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <BarChart3 className="w-7 h-7 text-emerald-200" />
+                  </div>
+                  <span className="px-2.5 py-1 rounded-full bg-emerald-400 text-emerald-950 text-[10px] font-black uppercase tracking-wider">
+                    Canlı Oylama
+                  </span>
+                </div>
+
+                <div className="mt-3.5 space-y-1 text-white">
+                  <h3 className="font-serif font-extrabold text-lg sm:text-xl text-white flex items-center justify-between">
+                    <span>Ortak Kafe Nabzı & Anketler</span>
+                    <ChevronRight className="w-5 h-5 text-white/90 group-hover:translate-x-1 transition-transform" />
+                  </h3>
+                  <p className="text-xs text-emerald-100 leading-relaxed">
+                    Müzik tercihi, menemen ikilemi ve kafe modunu oylayın, canlı sonuçları görün!
+                  </p>
+                </div>
+              </button>
             </div>
 
             {/* Hızlı Wi-Fi Bilgisi Kartı */}
@@ -413,6 +491,51 @@ export const TableLandingPage: React.FC = () => {
               <MessageCircle className="w-5 h-5" />
               <span>Hemen Sohbeti Başlat</span>
               <ArrowRight className="w-4 h-4 ml-1" />
+            </button>
+
+            {/* Masalar Arası Kafe Trivia Butonu */}
+            <button
+              onClick={() => navigate('/play/kafe-trivia')}
+              className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-bold text-sm shadow-warm flex items-center justify-between gap-2 transition-transform active:scale-98"
+            >
+              <div className="flex items-center gap-2.5">
+                <Trophy className="w-5 h-5 text-amber-200" />
+                <span className="text-left leading-tight">
+                  <span className="block font-black text-sm">Masalar Arası Kafe Trivia</span>
+                  <span className="block text-[11px] text-amber-100 font-normal">10 tematik kategori ile canlı yarışın</span>
+                </span>
+              </div>
+              <ArrowRight className="w-4 h-4 ml-1 shrink-0" />
+            </button>
+
+            {/* Masalar Arası Hızlı Düello Butonu */}
+            <button
+              onClick={() => navigate('/play/masa-duellosu')}
+              className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-700 hover:to-rose-800 text-white font-bold text-sm shadow-warm flex items-center justify-between gap-2 transition-transform active:scale-98"
+            >
+              <div className="flex items-center gap-2.5">
+                <Swords className="w-5 h-5 text-rose-200" />
+                <span className="text-left leading-tight">
+                  <span className="block font-black text-sm">Masalar Arası Hızlı Düello</span>
+                  <span className="block text-[11px] text-rose-100 font-normal">Başka bir masaya meydan okuyun (1v1)</span>
+                </span>
+              </div>
+              <ArrowRight className="w-4 h-4 ml-1 shrink-0" />
+            </button>
+
+            {/* Ortak Kafe Nabzı Butonu */}
+            <button
+              onClick={() => navigate('/play/kafe-nabzi')}
+              className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-teal-700 to-emerald-800 hover:from-teal-800 hover:to-emerald-900 text-white font-bold text-sm shadow-warm flex items-center justify-between gap-2 transition-transform active:scale-98"
+            >
+              <div className="flex items-center gap-2.5">
+                <BarChart3 className="w-5 h-5 text-emerald-200" />
+                <span className="text-left leading-tight">
+                  <span className="block font-black text-sm">Ortak Kafe Nabzı & Anketler</span>
+                  <span className="block text-[11px] text-emerald-100 font-normal">Günün canlı oylamalarına katılın</span>
+                </span>
+              </div>
+              <ArrowRight className="w-4 h-4 ml-1 shrink-0" />
             </button>
 
             {/* Kategoriler Listesi */}
