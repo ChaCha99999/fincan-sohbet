@@ -20,8 +20,8 @@ import { TRIVIA_CATEGORIES, TRIVIA_QUESTIONS } from '../data/triviaQuestions';
 import { INITIAL_CAFE_POLLS } from '../data/cafePollsSeed';
 
 describe('Soru Havuzu ve Kategoriler (Question Pool & Categories)', () => {
-  it('Toplam en az 150 (hedef 200) özgün soru bulunmalıdır', () => {
-    expect(INITIAL_QUESTIONS.length).toBe(200);
+  it('Toplam 900 adet özgün oyun sorusu bulunmalıdır', () => {
+    expect(INITIAL_QUESTIONS.length).toBe(900);
   });
 
   it('4 ana kategori eksiksiz tanımlanmış olmalıdır', () => {
@@ -33,16 +33,16 @@ describe('Soru Havuzu ve Kategoriler (Question Pool & Categories)', () => {
     expect(slugs).toContain('ne-kadar-taniyoruz');
   });
 
-  it('Her oyun türünde tam 50 adet soru bulunmalıdır', () => {
+  it('Her oyun türünde hedeflenen sayıda soru bulunmalıdır (250 sohbet, 250 ikilem, 250 muhtemel, 150 taniyoruz)', () => {
     const sohbetCount = INITIAL_QUESTIONS.filter(q => q.game_type === 'sohbeti-baslat').length;
     const ikilemCount = INITIAL_QUESTIONS.filter(q => q.game_type === 'ikilemde-kal').length;
     const muhtemelCount = INITIAL_QUESTIONS.filter(q => q.game_type === 'kim-daha-muhtemel').length;
     const taniyoruzCount = INITIAL_QUESTIONS.filter(q => q.game_type === 'ne-kadar-taniyoruz').length;
 
-    expect(sohbetCount).toBe(50);
-    expect(ikilemCount).toBe(50);
-    expect(muhtemelCount).toBe(50);
-    expect(taniyoruzCount).toBe(50);
+    expect(sohbetCount).toBe(250);
+    expect(ikilemCount).toBe(250);
+    expect(muhtemelCount).toBe(250);
+    expect(taniyoruzCount).toBe(150);
   });
 
   it('İkilem sorularının Seçenek A ve Seçenek B alanları dolu olmalıdır', () => {
@@ -194,7 +194,7 @@ describe('Masalar Arası Kafe Trivia Modülü (Trivia & Categories)', () => {
 
   it('Kategoriye göre filtreleme doğru çalışmalıdır', () => {
     const arabalarQuestions = TRIVIA_QUESTIONS.filter(q => q.categoryId === 'arabalar');
-    expect(arabalarQuestions.length).toBe(5);
+    expect(arabalarQuestions.length).toBe(10);
     arabalarQuestions.forEach(q => {
       expect(q.categoryId).toBe('arabalar');
       expect(q.categoryName).toContain('Arabalar');

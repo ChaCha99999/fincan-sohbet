@@ -1,33 +1,51 @@
 const fs = require('fs');
 const path = require('path');
 
-// Read questionsSeed.ts
-const questionsSeedContent = fs.readFileSync(path.join(__dirname, '../src/data/questionsSeed.ts'), 'utf8');
-
-// Simple parser for INITIAL_QUESTIONS
-const questions = [];
-const regex = /{\s*id:\s*'([^']+)',\s*category_id:\s*'([^']+)',\s*game_type:\s*'([^']+)',\s*question_text:\s*'([^']+)'(?:,\s*option_a:\s*'([^']+)')?(?:,\s*option_b:\s*'([^']+)')?(?:,\s*tags:\s*\[([^\]]*)\])?(?:,\s*difficulty:\s*'([^']+)')?,\s*is_active:\s*(true|false),\s*sort_order:\s*(\d+)\s*}/g;
-
-let match;
-while ((match = regex.exec(questionsSeedContent)) !== null) {
-  questions.push({
-    id: match[1],
-    category_id: match[2],
-    game_type: match[3],
-    question_text: match[4].replace(/'/g, "''"),
-    option_a: match[5] ? match[5].replace(/'/g, "''") : null,
-    option_b: match[6] ? match[6].replace(/'/g, "''") : null,
-    tags: match[7] ? match[7].split(',').map(t => t.trim().replace(/'/g, '')).filter(Boolean) : [],
-    difficulty: match[8] || 'easy',
-    is_active: match[9] === 'true',
-    sort_order: parseInt(match[10], 10),
-  });
+function loadQuestionsFromFile(filePath) {
+  const content = fs.readFileSync(filePath, 'utf8');
+  const eqIdx = content.indexOf('= [');
+  if (eqIdx === -1) {
+    throw new Error(`Could not find "= [" in ${filePath}`);
+  }
+  const startIdx = content.indexOf('[', eqIdx);
+  const endIdx = content.lastIndexOf(']');
+  if (startIdx === -1 || endIdx === -1) {
+    throw new Error(`Could not find JSON array in ${filePath}`);
+  }
+  const jsonStr = content.slice(startIdx, endIdx + 1);
+  return JSON.parse(jsonStr);
 }
 
-console.log(`Parsed ${questions.length} questions.`);
+const sohbetPath = path.join(__dirname, '../src/data/questions/sohbet.ts');
+const ikilemPath = path.join(__dirname, '../src/data/questions/ikilem.ts');
+const muhtemelPath = path.join(__dirname, '../src/data/questions/muhtemel.ts');
+const taniyoruzPath = path.join(__dirname, '../src/data/questions/taniyoruz.ts');
+
+const sohbetQuestions = loadQuestionsFromFile(sohbetPath);
+const ikilemQuestions = loadQuestionsFromFile(ikilemPath);
+const muhtemelQuestions = loadQuestionsFromFile(muhtemelPath);
+const taniyoruzQuestions = loadQuestionsFromFile(taniyoruzPath);
+
+const allQuestions = [
+  ...sohbetQuestions,
+  ...ikilemQuestions,
+  ...muhtemelQuestions,
+  ...taniyoruzQuestions,
+];
+
+console.log(`Loaded ${allQuestions.length} total questions:`);
+console.log(`- Sohbet: ${sohbetQuestions.length}`);
+console.log(`- İkilem: ${ikilemQuestions.length}`);
+console.log(`- Muhtemel: ${muhtemelQuestions.length}`);
+console.log(`- Tanıyoruz: ${taniyoruzQuestions.length}`);
+
+function escapeSql(str) {
+  if (!str) return '';
+  return str.replace(/'/g, "''");
+}
 
 let sql = `-- ==============================================================================
--- FİNCAN SOHBET — SEED DATA (KATEGORİLER, 200 SORU, ÖRNEK KAFE & MASALAR)
+-- FİNCAN SOHBET — SEED DATA (KATEGORİLER, 900 ÖZGÜN SORU, ÖRNEK KAFE & MASALAR)
 -- ==============================================================================
 
 -- KATEGORİLER
@@ -51,19 +69,32 @@ INSERT INTO public.tables (id, cafe_id, label, public_token, is_active) VALUES
 ('b0000000-0000-0000-0000-000000000003', 'a0000000-0000-0000-0000-000000000001', 'Masa 03 (Pasif)', 'demo-masa-pasif', false)
 ON CONFLICT (public_token) DO NOTHING;
 
--- 200 ÖZGÜN TÜRKÇE SORU
+-- 900 ÖZGÜN TÜRKÇE SORU
 INSERT INTO public.questions (id, category_id, game_type, question_text, option_a, option_b, tags, difficulty, is_active, sort_order) VALUES
 `;
 
-const valueRows = questions.map(q => {
-  const optA = q.option_a ? `'${q.option_a}'` : 'NULL';
-  const optB = q.option_b ? `'${q.option_b}'` : 'NULL';
-  const tagArray = q.tags.length > 0 ? `ARRAY[${q.tags.map(t => `'${t}'`).join(', ')}]::TEXT[]` : 'ARRAY[]::TEXT[]';
-  return `('${q.id}', '${q.category_id}', '${q.game_type}', '${q.question_text}', ${optA}, ${optB}, ${tagArray}, '${q.difficulty}', ${q.is_active}, ${q.sort_order})`;
+const valueRows = allQuestions.map(q => {
+  const optA = q.option_a ? `'${escapeSql(q.option_a)}'` : 'NULL';
+  const optB = q.option_b ? `'${escapeSql(q.option_b)}'` : 'NULL';
+  const tagsStr = q.tags && q.tags.length > 0 
+    ? `ARRAY[${q.tags.map(t => `'${escapeSql(t)}'`).join(', ')}]::TEXT[]` 
+    : `'{}'::TEXT[]`;
+  const diff = q.difficulty || 'easy';
+  const active = q.is_active ? 'true' : 'false';
+  
+  return `('${q.id}', '${q.category_id}', '${q.game_type}', '${escapeSql(q.question_text)}', ${optA}, ${optB}, ${tagsStr}, '${diff}', ${active}, ${q.sort_order})`;
 });
 
 sql += valueRows.join(',\n');
-sql += `\nON CONFLICT (id) DO UPDATE SET\n  question_text = EXCLUDED.question_text,\n  option_a = EXCLUDED.option_a,\n  option_b = EXCLUDED.option_b;\n`;
+sql += `\nON CONFLICT (id) DO UPDATE SET
+  question_text = EXCLUDED.question_text,
+  option_a = EXCLUDED.option_a,
+  option_b = EXCLUDED.option_b,
+  tags = EXCLUDED.tags,
+  difficulty = EXCLUDED.difficulty,
+  is_active = EXCLUDED.is_active,
+  sort_order = EXCLUDED.sort_order;\n`;
 
-fs.writeFileSync(path.join(__dirname, '../supabase/seed.sql'), sql, 'utf8');
-console.log('supabase/seed.sql generated successfully with ' + questions.length + ' questions.');
+const targetSqlPath = path.join(__dirname, '../supabase/seed.sql');
+fs.writeFileSync(targetSqlPath, sql, 'utf8');
+console.log(`Successfully generated ${targetSqlPath} with ${allQuestions.length} questions.`);
