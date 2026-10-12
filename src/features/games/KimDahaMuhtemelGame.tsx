@@ -19,7 +19,18 @@ export const KimDahaMuhtemelGame: React.FC<KimDahaMuhtemelGameProps> = ({
   questions,
   onFinishGame,
 }) => {
-  const [players, setPlayers] = useState<string[]>(['Ahmet', 'Zeynep', 'Can']);
+  const [players, setPlayers] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('fincan_table_players');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length >= 2) return parsed;
+      }
+    } catch {
+      // fallback
+    }
+    return ['Ahmet', 'Zeynep', 'Can'];
+  });
   const [newPlayerInput, setNewPlayerInput] = useState<string>('');
   const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -32,14 +43,26 @@ export const KimDahaMuhtemelGame: React.FC<KimDahaMuhtemelGameProps> = ({
     e.preventDefault();
     const clean = newPlayerInput.trim();
     if (clean && !players.includes(clean)) {
-      setPlayers([...players, clean]);
+      const updated = [...players, clean];
+      setPlayers(updated);
+      try {
+        localStorage.setItem('fincan_table_players', JSON.stringify(updated));
+      } catch {
+        // ignore storage errors
+      }
       setNewPlayerInput('');
     }
   };
 
   const handleRemovePlayer = (name: string) => {
     if (players.length <= 2) return;
-    setPlayers(players.filter(p => p !== name));
+    const updated = players.filter(p => p !== name);
+    setPlayers(updated);
+    try {
+      localStorage.setItem('fincan_table_players', JSON.stringify(updated));
+    } catch {
+      // ignore storage errors
+    }
     const nextScores = { ...scores };
     delete nextScores[name];
     setScores(nextScores);

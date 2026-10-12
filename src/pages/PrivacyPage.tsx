@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { ShieldCheck, ArrowLeft, Lock, EyeOff, Server, HelpCircle } from 'lucide-react';
 import { APP_CONFIG } from '../lib/config';
 
+const LAST_UPDATE_DATE = new Date().toLocaleDateString('tr-TR');
+
 export const PrivacyPage: React.FC = () => {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12 space-y-10">
@@ -27,7 +29,7 @@ export const PrivacyPage: React.FC = () => {
           Gizlilik ve Veri Güvenliği
         </h1>
         <p className="text-xs sm:text-sm text-coffee-600">
-          Son güncelleme: {new Date().toLocaleDateString('tr-TR')} • {APP_CONFIG.brandName}
+          Son güncelleme: {LAST_UPDATE_DATE} • {APP_CONFIG.brandName}
         </p>
       </div>
 

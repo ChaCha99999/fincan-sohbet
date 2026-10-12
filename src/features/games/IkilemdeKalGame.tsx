@@ -17,20 +17,45 @@ export const IkilemdeKalGame: React.FC<IkilemdeKalGameProps> = ({
   questions,
   onFinishGame,
 }) => {
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [currentIndex, setCurrentIndex] = useState<number>(() => {
+    return questions.length > 0 ? Math.floor(Math.random() * questions.length) : 0;
+  });
   const [selectedOption, setSelectedOption] = useState<'A' | 'B' | null>(null);
   const [dilemmasCompleted, setDilemmasCompleted] = useState<number>(0);
+  const [seenIds, setSeenIds] = useState<Set<string>>(new Set());
+  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
 
   const current = questions[currentIndex] || questions[0];
 
   const handleNextDilemma = () => {
-    setSelectedOption(null);
-    setDilemmasCompleted(prev => prev + 1);
-    setCurrentIndex(prev => (prev + 1) % questions.length);
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setSelectedOption(null);
+      setDilemmasCompleted(prev => prev + 1);
+
+      if (current) {
+        const nextSeen = new Set(seenIds);
+        nextSeen.add(current.id);
+
+        const unseenIndices = questions
+          .map((q, idx) => ({ q, idx }))
+          .filter(item => !nextSeen.has(item.q.id));
+
+        if (unseenIndices.length > 0) {
+          const picked = unseenIndices[Math.floor(Math.random() * unseenIndices.length)];
+          setCurrentIndex(picked.idx);
+          setSeenIds(nextSeen);
+        } else {
+          setSeenIds(new Set([current.id]));
+          setCurrentIndex(Math.floor(Math.random() * questions.length));
+        }
+      }
+      setIsTransitioning(false);
+    }, 150);
   };
 
   return (
-    <div className="space-y-6">
+    <div className={`space-y-6 transition-all duration-200 ${isTransitioning ? 'opacity-30 scale-[0.99]' : 'opacity-100 scale-100'}`}>
       {/* Question Header Card */}
       <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-warm border border-caramel-200 text-center space-y-3">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-caramel-100 text-caramel-800 text-xs font-bold">

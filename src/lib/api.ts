@@ -491,6 +491,47 @@ export const toggleTableStatus = async (id: string, isActive: boolean): Promise<
   }
 };
 
+export const updateTable = async (id: string, updates: Partial<Table>): Promise<Table> => {
+  if (isSupabaseConfigured && supabase) {
+    const { data, error } = await supabase
+      .from('tables')
+      .update(updates)
+      .eq('id', id)
+      .select('*, cafes(id, name, slug, status)')
+      .single();
+
+    if (error) throw new Error(error.message);
+    return {
+      id: data.id,
+      cafe_id: data.cafe_id,
+      label: data.label,
+      public_token: data.public_token,
+      is_active: data.is_active,
+      created_at: data.created_at,
+      cafe: data.cafes,
+    };
+  }
+
+  const index = localTables.findIndex(t => t.id === id);
+  if (index === -1) throw new Error('Masa bulunamadı');
+  localTables[index] = { ...localTables[index], ...updates };
+  return localTables[index];
+};
+
+export const deleteTable = async (id: string): Promise<void> => {
+  if (isSupabaseConfigured && supabase) {
+    const { error } = await supabase
+      .from('tables')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw new Error(error.message);
+    return;
+  }
+
+  localTables = localTables.filter(t => t.id !== id);
+};
+
 // ==========================================
 // DASHBOARD İSTATİSTİKLERİ
 // ==========================================

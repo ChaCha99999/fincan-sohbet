@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { Coffee, Shield, Mail, Phone, Heart } from 'lucide-react';
 import { APP_CONFIG } from '../lib/config';
 
+const CURRENT_YEAR = new Date().getFullYear();
+
 export const Footer: React.FC = () => {
   return (
     <footer className="bg-coffee-950 text-coffee-200 pt-16 pb-12 border-t border-coffee-900 mt-auto no-print">
@@ -88,7 +90,7 @@ export const Footer: React.FC = () => {
 
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-coffee-400">
-          <p>© {new Date().getFullYear()} {APP_CONFIG.brandName}. Tüm hakları saklıdır.</p>
+          <p>© {CURRENT_YEAR} {APP_CONFIG.brandName}. Tüm hakları saklıdır.</p>
           <div className="flex items-center gap-1 text-coffee-400">
             <span>Kahve ve sohbet aşkıyla tasarlandı</span>
             <Heart className="w-3.5 h-3.5 text-terracotta-400 fill-terracotta-400 inline" />

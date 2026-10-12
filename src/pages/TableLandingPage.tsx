@@ -11,7 +11,9 @@ import {
   RefreshCw, 
   ArrowRight,
   Clock,
-  ShieldCheck
+  ShieldCheck,
+  Share2,
+  Check
 } from 'lucide-react';
 import { validateTableToken, logUsageEvent, getCategories } from '../lib/api';
 import type { Table, Category, GameType } from '../types';
@@ -27,6 +29,22 @@ export const TableLandingPage: React.FC = () => {
   const [table, setTable] = useState<Table | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [copied, setCopied] = useState<boolean>(false);
+
+  const handleShare = () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      navigator.share({
+        title: `${table?.cafe?.name || 'Fincan Sohbet'} - ${table?.label || 'Masa'}`,
+        text: 'Masadayız! Gel sen de fincanını al, sohbete ve mini oyunlara katıl:',
+        url,
+      }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -74,7 +92,7 @@ export const TableLandingPage: React.FC = () => {
     return () => {
       isMounted = false;
     };
-  }, [token]);
+  }, [token, setActiveTable]);
 
   // Loading State
   if (loading) {
@@ -207,6 +225,17 @@ export const TableLandingPage: React.FC = () => {
           >
             <Sparkles className="w-5 h-5 text-caramel-600" />
             Tüm Oyunları Gör
+          </button>
+        </div>
+
+        {/* Share with table button */}
+        <div className="pt-2">
+          <button
+            onClick={handleShare}
+            className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-cream-100 border border-coffee-200/80 text-coffee-800 text-xs font-semibold flex items-center justify-center gap-2 transition-colors shadow-warm-sm"
+          >
+            {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Share2 className="w-4 h-4 text-terracotta-600" />}
+            <span>{copied ? 'Masa Bağlantısı Kopyalandı!' : 'Masayı Arkadaşlarınla Paylaş'}</span>
           </button>
         </div>
       </header>

@@ -20,7 +20,18 @@ export const NeKadarTaniyoruzGame: React.FC<NeKadarTaniyoruzGameProps> = ({
   questions,
   onFinishGame,
 }) => {
-  const [players, setPlayers] = useState<string[]>(['Elif', 'Burak']);
+  const [players, setPlayers] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('fincan_table_players');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length >= 2) return parsed;
+      }
+    } catch {
+      // fallback
+    }
+    return ['Elif', 'Burak'];
+  });
   const [newPlayerInput, setNewPlayerInput] = useState<string>('');
   const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
@@ -36,14 +47,26 @@ export const NeKadarTaniyoruzGame: React.FC<NeKadarTaniyoruzGameProps> = ({
     e.preventDefault();
     const clean = newPlayerInput.trim();
     if (clean && !players.includes(clean)) {
-      setPlayers([...players, clean]);
+      const updated = [...players, clean];
+      setPlayers(updated);
+      try {
+        localStorage.setItem('fincan_table_players', JSON.stringify(updated));
+      } catch {
+        // ignore
+      }
       setNewPlayerInput('');
     }
   };
 
   const handleRemovePlayer = (name: string) => {
     if (players.length <= 2) return;
-    setPlayers(players.filter(p => p !== name));
+    const updated = players.filter(p => p !== name);
+    setPlayers(updated);
+    try {
+      localStorage.setItem('fincan_table_players', JSON.stringify(updated));
+    } catch {
+      // ignore
+    }
   };
 
   const handleStartGame = () => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { 
   ArrowLeft, 
@@ -39,7 +39,7 @@ export const AdminTablesPage: React.FC = () => {
   const [copiedToken, setCopiedToken] = useState<string | null>(null);
 
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     if (!cafeId) return;
     setLoading(true);
     const [allCafes, cafeTables] = await Promise.all([
@@ -50,11 +50,11 @@ export const AdminTablesPage: React.FC = () => {
     setCafe(current);
     setTables(cafeTables);
     setLoading(false);
-  };
+  }, [cafeId]);
 
   useEffect(() => {
     loadData();
-  }, [cafeId]);
+  }, [loadData]);
 
   const handleCreateTable = async (e: React.FormEvent) => {
     e.preventDefault();

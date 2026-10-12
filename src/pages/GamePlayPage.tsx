@@ -40,7 +40,7 @@ export const GamePlayPage: React.FC = () => {
         logUsageEvent(activeTable.cafe_id, activeTable.id, 'game_start', gameSlug as GameType);
       }
     });
-  }, [gameSlug, isValidGame]);
+  }, [gameSlug, isValidGame, navigate, activeTable]);
 
   const handleFinishGame = () => {
     if (activeTable && gameSlug) {
