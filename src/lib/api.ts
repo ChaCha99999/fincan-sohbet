@@ -715,6 +715,7 @@ export const createMenuItem = async (item: Omit<MenuItem, 'id' | 'created_at'>):
           description: item.description || null,
           price: item.price,
           currency: item.currency || '₺',
+          image_url: item.image_url || null,
           is_popular: item.is_popular || false,
           is_available: item.is_available !== false,
           sort_order: item.sort_order || 1,

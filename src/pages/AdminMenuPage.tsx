@@ -12,7 +12,8 @@ import {
   X, 
   AlertCircle,
   Eye,
-  EyeOff
+  EyeOff,
+  Camera
 } from 'lucide-react';
 import { AdminLayout } from '../components/AdminLayout';
 import { getCafes, getMenuItems, createMenuItem, updateMenuItem, deleteMenuItem } from '../lib/api';
@@ -37,6 +38,8 @@ export const AdminMenuPage: React.FC = () => {
   const [formName, setFormName] = useState('');
   const [formDescription, setFormDescription] = useState('');
   const [formPrice, setFormPrice] = useState<number>(100);
+  const [formImageUrl, setFormImageUrl] = useState<string>('');
+  const [imageInputMode, setImageInputMode] = useState<'upload' | 'url'>('upload');
   const [formIsPopular, setFormIsPopular] = useState(false);
   const [formIsAvailable, setFormIsAvailable] = useState(true);
   const [formError, setFormError] = useState<string | null>(null);
@@ -87,6 +90,8 @@ export const AdminMenuPage: React.FC = () => {
     setFormName('');
     setFormDescription('');
     setFormPrice(100);
+    setFormImageUrl('');
+    setImageInputMode('upload');
     setFormIsPopular(false);
     setFormIsAvailable(true);
     setFormError(null);
@@ -100,11 +105,53 @@ export const AdminMenuPage: React.FC = () => {
     setFormName(item.name);
     setFormDescription(item.description || '');
     setFormPrice(item.price);
+    setFormImageUrl(item.image_url || '');
+    setImageInputMode(item.image_url?.startsWith('data:') ? 'upload' : 'url');
     setFormIsPopular(item.is_popular || false);
     setFormIsAvailable(item.is_available !== false);
     setFormError(null);
     setActiveItem(item);
     setModalMode('edit');
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 6 * 1024 * 1024) {
+      setFormError('Lütfen 6 MB altında bir fotoğraf seçin.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const maxDim = 500;
+        let width = img.width;
+        let height = img.height;
+        if (width > height) {
+          if (width > maxDim) {
+            height *= maxDim / width;
+            width = maxDim;
+          }
+        } else {
+          if (height > maxDim) {
+            width *= maxDim / height;
+            height = maxDim;
+          }
+        }
+        canvas.width = Math.round(width);
+        canvas.height = Math.round(height);
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const compressed = canvas.toDataURL('image/jpeg', 0.8);
+        setFormImageUrl(compressed);
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -132,6 +179,8 @@ export const AdminMenuPage: React.FC = () => {
 
     setSubmitting(true);
     try {
+      const cleanImageUrl = formImageUrl.trim() || undefined;
+
       if (modalMode === 'create' && id) {
         await createMenuItem({
           cafe_id: id,
@@ -140,6 +189,7 @@ export const AdminMenuPage: React.FC = () => {
           description: formDescription.trim() || undefined,
           price: Number(formPrice),
           currency: '₺',
+          image_url: cleanImageUrl,
           is_popular: formIsPopular,
           is_available: formIsAvailable,
         });
@@ -149,6 +199,7 @@ export const AdminMenuPage: React.FC = () => {
           name: formName.trim(),
           description: formDescription.trim() || undefined,
           price: Number(formPrice),
+          image_url: cleanImageUrl || null,
           is_popular: formIsPopular,
           is_available: formIsAvailable,
         });
@@ -331,75 +382,94 @@ export const AdminMenuPage: React.FC = () => {
                       : 'border-red-200 bg-red-50/20 opacity-75'
                   }`}
                 >
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-coffee-500 bg-cream-100 px-2 py-0.5 rounded-md">
-                          {item.category}
-                        </span>
-                        {isPopular && (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-caramel-800 bg-caramel-100 px-2 py-0.5 rounded-md">
-                            <Sparkles className="w-3 h-3" />
-                            Popüler
-                          </span>
-                        )}
-                        {!isAvailable && (
-                          <span className="text-[10px] font-bold text-red-700 bg-red-100 px-2 py-0.5 rounded-md">
-                            Tükendi
-                          </span>
-                        )}
+                  <div className="flex items-start gap-3">
+                    {/* Ürün Görseli */}
+                    {item.image_url ? (
+                      <div className="w-16 h-16 rounded-xl overflow-hidden bg-cream-100 shrink-0 border border-coffee-200/60 shadow-xs">
+                        <img
+                          src={item.image_url}
+                          alt={item.name}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                          onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
+                        />
                       </div>
-
-                      {/* Fiyat Görünümü & Hızlı Düzenleme */}
-                      <div className="shrink-0 text-right">
-                        {quickPriceId === item.id ? (
-                          <div className="flex items-center gap-1">
-                            <input
-                              type="number"
-                              value={quickPriceValue}
-                              onChange={e => setQuickPriceValue(Number(e.target.value))}
-                              className="w-18 px-2 py-1 text-xs font-bold rounded-lg border border-terracotta-400 bg-white"
-                              autoFocus
-                            />
-                            <button
-                              onClick={() => handleSaveQuickPrice(item)}
-                              className="p-1 rounded-md bg-emerald-600 text-white"
-                              title="Kaydet"
-                            >
-                              <Check className="w-3 h-3" />
-                            </button>
-                            <button
-                              onClick={() => setQuickPriceId(null)}
-                              className="p-1 rounded-md bg-coffee-200 text-coffee-700"
-                              title="İptal"
-                            >
-                              <X className="w-3 h-3" />
-                            </button>
-                          </div>
-                        ) : (
-                          <button
-                            onClick={() => {
-                              setQuickPriceId(item.id);
-                              setQuickPriceValue(item.price);
-                            }}
-                            className="font-serif font-black text-lg text-terracotta-700 hover:text-terracotta-800 hover:underline flex items-center gap-1"
-                            title="Fiyatı Değiştir"
-                          >
-                            <span>{item.price} {item.currency || '₺'}</span>
-                            <Edit3 className="w-3 h-3 opacity-40 hover:opacity-100" />
-                          </button>
-                        )}
+                    ) : (
+                      <div className="w-16 h-16 rounded-xl bg-cream-100 text-coffee-400 flex items-center justify-center shrink-0 border border-coffee-200/40">
+                        <UtensilsCrossed className="w-5 h-5 opacity-40" />
                       </div>
-                    </div>
-
-                    <h4 className="font-bold text-sm text-coffee-950 pt-1">
-                      {item.name}
-                    </h4>
-                    {item.description && (
-                      <p className="text-xs text-coffee-600 leading-relaxed line-clamp-2">
-                        {item.description}
-                      </p>
                     )}
+
+                    <div className="space-y-1 flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-coffee-500 bg-cream-100 px-2 py-0.5 rounded-md">
+                            {item.category}
+                          </span>
+                          {isPopular && (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-caramel-800 bg-caramel-100 px-2 py-0.5 rounded-md">
+                              <Sparkles className="w-3 h-3" />
+                              Popüler
+                            </span>
+                          )}
+                          {!isAvailable && (
+                            <span className="text-[10px] font-bold text-red-700 bg-red-100 px-2 py-0.5 rounded-md">
+                              Tükendi
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Fiyat Görünümü & Hızlı Düzenleme */}
+                        <div className="shrink-0 text-right">
+                          {quickPriceId === item.id ? (
+                            <div className="flex items-center gap-1">
+                              <input
+                                type="number"
+                                value={quickPriceValue}
+                                onChange={e => setQuickPriceValue(Number(e.target.value))}
+                                className="w-18 px-2 py-1 text-xs font-bold rounded-lg border border-terracotta-400 bg-white"
+                                autoFocus
+                              />
+                              <button
+                                onClick={() => handleSaveQuickPrice(item)}
+                                className="p-1 rounded-md bg-emerald-600 text-white"
+                                title="Kaydet"
+                              >
+                                <Check className="w-3 h-3" />
+                              </button>
+                              <button
+                                onClick={() => setQuickPriceId(null)}
+                                className="p-1 rounded-md bg-coffee-200 text-coffee-700"
+                                title="İptal"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => {
+                                setQuickPriceId(item.id);
+                                setQuickPriceValue(item.price);
+                              }}
+                              className="font-serif font-black text-lg text-terracotta-700 hover:text-terracotta-800 hover:underline flex items-center gap-1"
+                              title="Fiyatı Değiştir"
+                            >
+                              <span>{item.price} {item.currency || '₺'}</span>
+                              <Edit3 className="w-3 h-3 opacity-40 hover:opacity-100" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      <h4 className="font-bold text-sm text-coffee-950 pt-1">
+                        {item.name}
+                      </h4>
+                      {item.description && (
+                        <p className="text-xs text-coffee-600 leading-relaxed line-clamp-2">
+                          {item.description}
+                        </p>
+                      )}
+                    </div>
                   </div>
 
                   {/* Alt Kontroller */}
@@ -550,6 +620,82 @@ export const AdminMenuPage: React.FC = () => {
                   rows={2}
                   className="w-full px-3 py-2 rounded-xl border border-coffee-200 bg-cream-50 text-xs text-coffee-950 focus:outline-none focus:ring-2 focus:ring-terracotta-500"
                 />
+              </div>
+
+              {/* Ürün Fotoğrafı (Dosyadan / Kameradan veya URL) */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-semibold text-coffee-800">
+                    Ürün Fotoğrafı (İsteğe Bağlı)
+                  </label>
+                  <div className="flex items-center gap-1 text-[10px]">
+                    <button
+                      type="button"
+                      onClick={() => setImageInputMode('upload')}
+                      className={`px-2 py-0.5 rounded-lg font-bold transition-colors ${
+                        imageInputMode === 'upload' ? 'bg-coffee-900 text-white' : 'text-coffee-600 hover:bg-cream-100'
+                      }`}
+                    >
+                      Kamera / Dosya
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setImageInputMode('url')}
+                      className={`px-2 py-0.5 rounded-lg font-bold transition-colors ${
+                        imageInputMode === 'url' ? 'bg-coffee-900 text-white' : 'text-coffee-600 hover:bg-cream-100'
+                      }`}
+                    >
+                      Görsel Linki
+                    </button>
+                  </div>
+                </div>
+
+                {/* Ön İzleme (Varsa) */}
+                {formImageUrl ? (
+                  <div className="relative w-full h-28 rounded-2xl overflow-hidden border border-coffee-200 bg-cream-100 group">
+                    <img
+                      src={formImageUrl}
+                      alt="Ön İzleme"
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setFormImageUrl('')}
+                      className="absolute top-2 right-2 p-1.5 rounded-xl bg-coffee-950/70 hover:bg-rose-700 text-white text-xs transition-colors shadow-md"
+                      title="Fotoğrafı Kaldır"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ) : imageInputMode === 'upload' ? (
+                  <label className="flex flex-col items-center justify-center p-3.5 rounded-2xl border-2 border-dashed border-coffee-200 bg-cream-50/60 hover:bg-cream-100 hover:border-terracotta-400 cursor-pointer transition-all group">
+                    <div className="w-9 h-9 rounded-xl bg-terracotta-100 text-terracotta-700 flex items-center justify-center mb-1 group-hover:scale-105 transition-transform">
+                      <Camera className="w-4 h-4" />
+                    </div>
+                    <span className="text-xs font-bold text-coffee-900">
+                      Fotoğraf Seç veya Kamerayla Çek
+                    </span>
+                    <span className="text-[10px] text-coffee-500 mt-0.5">
+                      PNG, JPG, WEBP (Otomatik sıkıştırılır)
+                    </span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                    />
+                  </label>
+                ) : (
+                  <div className="relative">
+                    <input
+                      type="url"
+                      value={formImageUrl}
+                      onChange={e => setFormImageUrl(e.target.value)}
+                      placeholder="https://images.unsplash.com/... veya görsel linki"
+                      className="w-full px-3 py-2 rounded-xl border border-coffee-200 bg-cream-50 text-xs text-coffee-950 focus:outline-none focus:ring-2 focus:ring-terracotta-500"
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Anahtarlar (Popüler & Satışta) */}

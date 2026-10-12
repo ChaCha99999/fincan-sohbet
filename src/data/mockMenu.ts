@@ -18,6 +18,8 @@ export const DEFAULT_MENU_ITEMS: MenuItem[] = [
     price: 90,
     currency: '₺',
     is_popular: true,
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=400&auto=format&fit=crop&q=80',
   },
   {
     id: 'm2',
@@ -26,6 +28,8 @@ export const DEFAULT_MENU_ITEMS: MenuItem[] = [
     description: '%100 Arabica çekirdeklerden yoğun ve kadifemsi gövde.',
     price: 85,
     currency: '₺',
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=400&auto=format&fit=crop&q=80',
   },
   {
     id: 'm3',
@@ -34,6 +38,8 @@ export const DEFAULT_MENU_ITEMS: MenuItem[] = [
     description: 'Double espresso üzerine sıcak su eklenerek hazırlanan dengeli lezzet.',
     price: 110,
     currency: '₺',
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1551030173-122aabc4489c?w=400&auto=format&fit=crop&q=80',
   },
   {
     id: 'm4',
@@ -43,6 +49,8 @@ export const DEFAULT_MENU_ITEMS: MenuItem[] = [
     price: 125,
     currency: '₺',
     is_popular: true,
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1534778101976-62847782c213?w=400&auto=format&fit=crop&q=80',
   },
   {
     id: 'm5',
@@ -52,6 +60,8 @@ export const DEFAULT_MENU_ITEMS: MenuItem[] = [
     price: 130,
     currency: '₺',
     is_popular: true,
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1577968897966-3d4325b36b61?w=400&auto=format&fit=crop&q=80',
   },
   {
     id: 'm6',
@@ -60,6 +70,8 @@ export const DEFAULT_MENU_ITEMS: MenuItem[] = [
     description: 'Eşit oranda espresso ve buharlanmış ılık süt.',
     price: 115,
     currency: '₺',
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400&auto=format&fit=crop&q=80',
   },
   {
     id: 'm7',
@@ -69,6 +81,8 @@ export const DEFAULT_MENU_ITEMS: MenuItem[] = [
     price: 145,
     currency: '₺',
     is_popular: true,
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&auto=format&fit=crop&q=80',
   },
 
   // Soğuk Kahveler
@@ -80,6 +94,8 @@ export const DEFAULT_MENU_ITEMS: MenuItem[] = [
     price: 135,
     currency: '₺',
     is_popular: true,
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=400&auto=format&fit=crop&q=80',
   },
   {
     id: 'm9',
@@ -89,6 +105,8 @@ export const DEFAULT_MENU_ITEMS: MenuItem[] = [
     price: 145,
     currency: '₺',
     is_popular: true,
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=400&auto=format&fit=crop&q=80',
   },
   {
     id: 'm10',
@@ -97,6 +115,8 @@ export const DEFAULT_MENU_ITEMS: MenuItem[] = [
     description: 'Bol buz, soğuk filtrelenmiş su ve taze duble espresso.',
     price: 115,
     currency: '₺',
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1551030173-122aabc4489c?w=400&auto=format&fit=crop&q=80',
   },
   {
     id: 'm11',
@@ -105,6 +125,8 @@ export const DEFAULT_MENU_ITEMS: MenuItem[] = [
     description: 'Vanilya şurubu, soğuk süt, buz, espresso ve üzeri ev yapımı karamel sos.',
     price: 150,
     currency: '₺',
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&auto=format&fit=crop&q=80',
   },
   {
     id: 'm12',
@@ -113,6 +135,8 @@ export const DEFAULT_MENU_ITEMS: MenuItem[] = [
     description: 'Premium tonik, bol buz, taze narenciye dilimi ve espresso katmanı.',
     price: 140,
     currency: '₺',
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1558818498-28c1e002b655?w=400&auto=format&fit=crop&q=80',
   },
 
   // Tatlılar & Fırın
@@ -124,6 +148,8 @@ export const DEFAULT_MENU_ITEMS: MenuItem[] = [
     price: 185,
     currency: '₺',
     is_popular: true,
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=400&auto=format&fit=crop&q=80',
   },
   {
     id: 'm14',
@@ -133,6 +159,8 @@ export const DEFAULT_MENU_ITEMS: MenuItem[] = [
     price: 140,
     currency: '₺',
     is_popular: true,
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&auto=format&fit=crop&q=80',
   },
   {
     id: 'm15',
@@ -141,6 +169,8 @@ export const DEFAULT_MENU_ITEMS: MenuItem[] = [
     description: 'Yoğun bitter çikolatalı ıslak kek, vanilyalı dondurma eşliğinde.',
     price: 165,
     currency: '₺',
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&auto=format&fit=crop&q=80',
   },
   {
     id: 'm16',
@@ -149,6 +179,8 @@ export const DEFAULT_MENU_ITEMS: MenuItem[] = [
     description: 'Krem peynirli glaze sosu, ceviz ve taze zencefil dokunuşu.',
     price: 130,
     currency: '₺',
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&auto=format&fit=crop&q=80',
   },
   {
     id: 'm17',
@@ -157,6 +189,8 @@ export const DEFAULT_MENU_ITEMS: MenuItem[] = [
     description: 'Hafif vanilyalı krema, muz dilimleri ve çıtır Lotus bisküvi parçaları.',
     price: 155,
     currency: '₺',
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=400&auto=format&fit=crop&q=80',
   },
 
   // Çay & Diğer
@@ -167,6 +201,8 @@ export const DEFAULT_MENU_ITEMS: MenuItem[] = [
     description: 'Rize mayıs hasadı yapraklarından taze demlenmiş.',
     price: 45,
     currency: '₺',
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=400&auto=format&fit=crop&q=80',
   },
   {
     id: 'm19',
@@ -175,6 +211,8 @@ export const DEFAULT_MENU_ITEMS: MenuItem[] = [
     description: 'Kakule, tarçın, zencefil ve karanfilli baharatlı çay harmanı, sıcak süt.',
     price: 135,
     currency: '₺',
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=400&auto=format&fit=crop&q=80',
   },
   {
     id: 'm20',
@@ -184,6 +222,8 @@ export const DEFAULT_MENU_ITEMS: MenuItem[] = [
     price: 145,
     currency: '₺',
     is_popular: true,
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=400&auto=format&fit=crop&q=80',
   },
   {
     id: 'm21',
@@ -192,5 +232,7 @@ export const DEFAULT_MENU_ITEMS: MenuItem[] = [
     description: 'Katkısız, sipariş anında taze sıkılmış Finike portakalları.',
     price: 120,
     currency: '₺',
+    is_available: true,
+    image_url: 'https://images.unsplash.com/photo-1613478223719-2ab802602423?w=400&auto=format&fit=crop&q=80',
   },
 ];

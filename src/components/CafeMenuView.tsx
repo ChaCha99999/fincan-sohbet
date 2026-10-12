@@ -169,12 +169,27 @@ export const CafeMenuView: React.FC<CafeMenuViewProps> = ({
             return (
               <div
                 key={item.id}
-                className={`p-3.5 sm:p-4 rounded-2xl bg-white border shadow-warm-sm transition-all flex items-start justify-between gap-3 text-left ${
+                className={`p-3.5 sm:p-4 rounded-2xl bg-white border shadow-warm-sm transition-all flex items-start gap-3 text-left ${
                   isAvailable 
                     ? 'border-coffee-200/80 hover:border-terracotta-300' 
                     : 'border-red-200 opacity-60 bg-cream-50'
                 }`}
               >
+                {/* Ürün Görseli (Varsa) */}
+                {item.image_url && (
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden bg-cream-100 shrink-0 border border-coffee-200/60 shadow-xs">
+                    <img
+                      src={item.image_url}
+                      alt={item.name}
+                      className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                      loading="lazy"
+                      onError={(e) => {
+                        (e.target as HTMLElement).style.display = 'none';
+                      }}
+                    />
+                  </div>
+                )}
+
                 <div className="space-y-1 flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <h3 className="font-bold text-sm text-coffee-950 leading-snug">
@@ -197,17 +212,17 @@ export const CafeMenuView: React.FC<CafeMenuViewProps> = ({
                       {item.description}
                     </p>
                   )}
-                <span className="text-[10px] font-medium text-coffee-500 uppercase tracking-wider block pt-0.5">
-                  {item.category}
-                </span>
-              </div>
+                  <span className="text-[10px] font-medium text-coffee-500 uppercase tracking-wider block pt-0.5">
+                    {item.category}
+                  </span>
+                </div>
 
-              <div className="text-right shrink-0 pt-0.5">
-                <span className="font-serif font-black text-base sm:text-lg text-terracotta-700 block">
-                  {item.price} {item.currency || '₺'}
-                </span>
+                <div className="text-right shrink-0 pt-0.5">
+                  <span className="font-serif font-black text-base sm:text-lg text-terracotta-700 block">
+                    {item.price} {item.currency || '₺'}
+                  </span>
+                </div>
               </div>
-            </div>
           );
         })
         )}

@@ -18,6 +18,7 @@ export interface MenuItem {
   is_available?: boolean;
   sort_order?: number;
   tags?: string[];
+  image_url?: string | null;
   created_at?: string;
 }
 

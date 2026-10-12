@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS public.menu_items (
     description TEXT,
     price NUMERIC(10, 2) NOT NULL,
     currency TEXT NOT NULL DEFAULT '₺',
+    image_url TEXT,
     is_popular BOOLEAN NOT NULL DEFAULT false,
     is_available BOOLEAN NOT NULL DEFAULT true,
     sort_order INTEGER NOT NULL DEFAULT 1,
