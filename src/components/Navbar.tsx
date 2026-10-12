@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Coffee, Menu, X, Sparkles, Shield, ArrowRight } from 'lucide-react';
 import { APP_CONFIG } from '../lib/config';
 
@@ -10,15 +10,42 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({ onOpenLeadModal }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const isCurrent = (path: string) => location.pathname === path;
+
+  const handleHomeClick = (e: React.MouseEvent) => {
+    setMobileMenuOpen(false);
+    if (location.pathname === '/') {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const handleScrollTo = (e: React.MouseEvent, sectionId: string) => {
+    setMobileMenuOpen(false);
+    if (location.pathname === '/') {
+      e.preventDefault();
+      const el = document.getElementById(sectionId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+        window.history.pushState(null, '', `/#${sectionId}`);
+      }
+    } else {
+      navigate(`/#${sectionId}`);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-40 bg-cream-50/95 backdrop-blur-md border-b border-coffee-900/10 transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
         
-        {/* Brand Logo */}
-        <Link to="/" className="flex items-center gap-3 shrink-0 group">
+        {/* Brand Logo (Scrolls to top if on home) */}
+        <Link 
+          to="/" 
+          onClick={handleHomeClick}
+          className="flex items-center gap-3 shrink-0 group cursor-pointer"
+        >
           <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-terracotta-600 border-2 border-coffee-950 flex items-center justify-center text-cream-50 shadow-print-sm transition-transform group-hover:-translate-y-0.5 shrink-0">
             <Coffee className="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
@@ -32,35 +59,43 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenLeadModal }) => {
           </div>
         </Link>
 
-        {/* Desktop Navigation (visible on lg and above to prevent crowding) */}
+        {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-semibold text-coffee-800 shrink-0">
           <Link
             to="/"
-            className={`whitespace-nowrap transition-colors hover:text-terracotta-600 ${isCurrent('/') ? 'text-terracotta-600 font-bold' : ''}`}
+            onClick={handleHomeClick}
+            className={`whitespace-nowrap transition-colors hover:text-terracotta-600 cursor-pointer ${
+              isCurrent('/') && !location.hash ? 'text-terracotta-600 font-bold' : ''
+            }`}
           >
             Ana Sayfa
           </Link>
           <a
             href="/#nasil-calisir"
-            className="whitespace-nowrap transition-colors hover:text-terracotta-600"
+            onClick={(e) => handleScrollTo(e, 'nasil-calisir')}
+            className="whitespace-nowrap transition-colors hover:text-terracotta-600 cursor-pointer"
           >
             Nasıl Çalışır?
           </a>
           <Link
             to="/games"
-            className={`whitespace-nowrap transition-colors hover:text-terracotta-600 ${isCurrent('/games') ? 'text-terracotta-600 font-bold' : ''}`}
+            className={`whitespace-nowrap transition-colors hover:text-terracotta-600 ${
+              isCurrent('/games') ? 'text-terracotta-600 font-bold' : ''
+            }`}
           >
             Oyunlar & Sorular
           </Link>
           <a
             href="/#kafeler-icin"
-            className="whitespace-nowrap transition-colors hover:text-terracotta-600"
+            onClick={(e) => handleScrollTo(e, 'kafeler-icin')}
+            className="whitespace-nowrap transition-colors hover:text-terracotta-600 cursor-pointer"
           >
             Kafeler İçin
           </a>
           <a
             href="/#fiyat"
-            className="whitespace-nowrap transition-colors hover:text-terracotta-600"
+            onClick={(e) => handleScrollTo(e, 'fiyat')}
+            className="whitespace-nowrap transition-colors hover:text-terracotta-600 cursor-pointer"
           >
             Fiyatlandırma
           </a>
@@ -110,14 +145,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenLeadModal }) => {
         <div className="lg:hidden border-b-2 border-coffee-950/20 bg-cream-50 px-5 pt-3 pb-6 space-y-3 animate-fadeIn">
           <Link
             to="/"
-            onClick={() => setMobileMenuOpen(false)}
+            onClick={handleHomeClick}
             className="block py-2.5 text-base font-bold text-coffee-900 border-b border-coffee-200/60"
           >
             Ana Sayfa
           </Link>
           <a
             href="/#nasil-calisir"
-            onClick={() => setMobileMenuOpen(false)}
+            onClick={(e) => handleScrollTo(e, 'nasil-calisir')}
             className="block py-2.5 text-base font-bold text-coffee-900 border-b border-coffee-200/60"
           >
             Nasıl Çalışır?
@@ -131,14 +166,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenLeadModal }) => {
           </Link>
           <a
             href="/#kafeler-icin"
-            onClick={() => setMobileMenuOpen(false)}
+            onClick={(e) => handleScrollTo(e, 'kafeler-icin')}
             className="block py-2.5 text-base font-bold text-coffee-900 border-b border-coffee-200/60"
           >
             Kafeler İçin
           </a>
           <a
             href="/#fiyat"
-            onClick={() => setMobileMenuOpen(false)}
+            onClick={(e) => handleScrollTo(e, 'fiyat')}
             className="block py-2.5 text-base font-bold text-coffee-900 border-b border-coffee-200/60"
           >
             Fiyatlandırma

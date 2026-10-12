@@ -204,7 +204,7 @@ export const LandingPage: React.FC = () => {
       </div>
 
       {/* 3. HOW IT WORKS (3 Editorial Ticket Cards) */}
-      <section id="nasil-calisir" className="max-w-6xl mx-auto px-4 sm:px-6">
+      <section id="nasil-calisir" className="scroll-mt-24 sm:scroll-mt-28 max-w-6xl mx-auto px-4 sm:px-6">
         <div className="text-center max-w-xl mx-auto space-y-3 mb-14">
           <span className="eyebrow text-terracotta-600">
             Sıfır Sürtünme • 3 Basit Adım
@@ -425,7 +425,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* 5. MASA DENEYİMİ VE SERVİS ÇAĞRISI ÖZELLİKLERİ */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6">
+      <section id="kafeler-icin" className="scroll-mt-24 sm:scroll-mt-28 max-w-6xl mx-auto px-4 sm:px-6">
         <div className="rounded-4xl bg-cream-100 border-2 border-coffee-950 p-8 sm:p-12 shadow-print-sm space-y-10">
           
           <div className="text-center max-w-2xl mx-auto space-y-3">
@@ -492,7 +492,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* 6. CAFE B2B SECTION (With Barista Owner Photo) */}
-      <section id="kafeler-icin" className="max-w-6xl mx-auto px-4 sm:px-6">
+      <section id="b2b" className="scroll-mt-24 sm:scroll-mt-28 max-w-6xl mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
           {/* Left: Barista Photo */}
@@ -615,7 +615,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* 8. PRICING SECTION */}
-      <section id="fiyat" className="max-w-4xl mx-auto px-4 sm:px-6">
+      <section id="fiyat" className="scroll-mt-24 sm:scroll-mt-28 max-w-4xl mx-auto px-4 sm:px-6">
         <div className="text-center space-y-3 mb-12">
           <span className="eyebrow text-terracotta-600">
             Şeffaf ve Sade Model
