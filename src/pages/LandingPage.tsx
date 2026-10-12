@@ -8,7 +8,6 @@ import {
   Split, 
   Users, 
   HeartHandshake, 
-  Sparkles, 
   ArrowRight, 
   CheckCircle2, 
   ChevronDown 
@@ -48,132 +47,50 @@ export const LandingPage: React.FC = () => {
       <LeadModal isOpen={leadModalOpen} onClose={() => setLeadModalOpen(false)} />
 
       {/* 1. HERO SECTION */}
-      <section className="relative pt-8 sm:pt-16 pb-12 overflow-hidden">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Left Column: Headlines & CTA */}
-            <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-caramel-100 text-caramel-900 text-xs font-bold border border-caramel-200 shadow-warm-sm">
-                <Sparkles className="w-3.5 h-3.5 text-terracotta-600" />
-                <span>Kafeler İçin Masa Sosyalleşme Platformu</span>
-              </div>
+      <section className="relative pt-10 sm:pt-20 pb-16 overflow-hidden">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-7">
+          <h1 className="font-serif font-black text-4xl sm:text-5xl lg:text-6xl text-coffee-950 tracking-tight leading-[1.18] max-w-3xl mx-auto">
+            Kahvenin Yanına <br className="hidden sm:inline" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-terracotta-600 via-caramel-600 to-terracotta-700">
+              Güzel Bir Sohbet.
+            </span>
+          </h1>
 
-              <h1 className="font-serif font-black text-4xl sm:text-5xl lg:text-6xl text-coffee-950 tracking-tight leading-[1.15]">
-                Kahvenin Yanına <br className="hidden sm:inline" />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-terracotta-600 via-caramel-600 to-terracotta-700">
-                  Güzel Bir Sohbet.
-                </span>
-              </h1>
+          <p className="text-base sm:text-lg text-coffee-700 max-w-2xl mx-auto leading-relaxed font-normal">
+            Aynı masada oturup telefonuna dalan dostlara, ilk buluşmanın sessizliğine veya derin sohbet arayanlara... Masadaki QR kodu okutun, fincanlar soğumadan sohbeti başlatın.
+          </p>
 
-              <p className="text-base sm:text-lg text-coffee-700 max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal">
-                Aynı masada oturup telefonuna dalan dostlara, ilk buluşmanın sessizliğine veya derin sohbet arayanlara... Masadaki QR kodu okutun, fincanlar soğumadan sohbeti başlatın.
-              </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-2">
+            <Link
+              to="/t/demo-masa-1"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-terracotta-600 hover:bg-terracotta-700 text-white font-bold text-base shadow-warm hover:shadow-warm-lg transition-all duration-200 flex items-center justify-center gap-2 group"
+            >
+              <Coffee className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+              Masa Deneyimini Dene
+            </Link>
 
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
-                <Link
-                  to="/t/demo-masa-1"
-                  className="w-full sm:w-auto px-7 py-4 rounded-2xl bg-terracotta-600 hover:bg-terracotta-700 text-white font-bold text-base shadow-warm hover:shadow-warm-lg transition-all duration-200 flex items-center justify-center gap-2 group"
-                >
-                  <Coffee className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-                  Masa Deneyimini Dene
-                </Link>
+            <button
+              onClick={() => setLeadModalOpen(true)}
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white hover:bg-cream-100 text-coffee-900 border-2 border-coffee-200 font-bold text-base shadow-warm-sm transition-colors flex items-center justify-center gap-2"
+            >
+              Kafen İçin Başvur
+              <ArrowRight className="w-4 h-4 text-terracotta-600" />
+            </button>
+          </div>
 
-                <button
-                  onClick={() => setLeadModalOpen(true)}
-                  className="w-full sm:w-auto px-7 py-4 rounded-2xl bg-white hover:bg-cream-100 text-coffee-900 border-2 border-coffee-200 font-bold text-base shadow-warm-sm transition-colors flex items-center justify-center gap-2"
-                >
-                  Kafen İçin Başvur
-                  <ArrowRight className="w-4 h-4 text-terracotta-600" />
-                </button>
-              </div>
-
-              <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-4 text-xs text-coffee-600">
-                <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                  Uygulama indirme yok
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                  Şifre veya üyelik yok
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                  200+ özgün Türkçe soru
-                </span>
-              </div>
-            </div>
-
-            {/* Right Column: Interactive Phone Mockup Preview */}
-            <div className="lg:col-span-5 flex justify-center">
-              <div className="relative w-full max-w-[320px] sm:max-w-[340px]">
-                {/* Decorative background glow */}
-                <div className="absolute -inset-4 bg-gradient-to-r from-terracotta-200/50 to-caramel-200/40 rounded-[44px] blur-xl -z-10" />
-
-                {/* Smartphone Device Frame */}
-                <div className="rounded-[40px] border-8 border-coffee-950 bg-cream-50 p-4 shadow-warm-lg space-y-4">
-                  {/* Phone Speaker & Camera Notch */}
-                  <div className="w-24 h-4 bg-coffee-950 rounded-full mx-auto" />
-
-                  {/* Mock Screen Content */}
-                  <div className="space-y-3 pt-1">
-                    {/* Cafe identity banner */}
-                    <div className="flex items-center justify-between p-2.5 bg-white rounded-xl border border-coffee-200 text-left">
-                      <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-lg bg-terracotta-100 text-terracotta-600 flex items-center justify-center text-xs">
-                          ☕
-                        </div>
-                        <div>
-                          <p className="text-[11px] font-bold text-coffee-900 leading-none">Örnek Kafe</p>
-                          <p className="text-[10px] text-terracotta-700 font-semibold">Masa 04 (Bahçe)</p>
-                        </div>
-                      </div>
-                      <span className="text-[9px] bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold px-1.5 py-0.5 rounded-full">
-                        Aktif
-                      </span>
-                    </div>
-
-                    {/* Question Card Demo */}
-                    <div className="bg-white rounded-2xl p-4 border border-coffee-200 shadow-warm-sm text-center space-y-2">
-                      <span className="text-[9px] font-bold uppercase tracking-wider text-terracotta-700 bg-terracotta-50 px-2 py-0.5 rounded-full inline-block">
-                        Sohbeti Başlat
-                      </span>
-                      <p className="font-serif font-bold text-sm text-coffee-950 leading-snug">
-                        "Eğer 24 saatliğine tüm sorumluluklardan muaf olsan, sabah ilk ne yapardın?"
-                      </p>
-                      <div className="pt-1">
-                        <Link
-                          to="/t/demo-masa-1"
-                          className="inline-flex items-center gap-1 text-[11px] font-bold text-terracotta-700 hover:underline"
-                        >
-                          <Sparkles className="w-3 h-3" />
-                          Şimdi Masada Oyna →
-                        </Link>
-                      </div>
-                    </div>
-
-                    {/* Quick Choice Preview */}
-                    <div className="grid grid-cols-2 gap-2 text-left">
-                      <div className="p-2.5 rounded-xl bg-white border border-coffee-200">
-                        <span className="text-[9px] font-black text-terracotta-700 block">A</span>
-                        <p className="text-[10px] font-semibold text-coffee-900 leading-tight">Sıcak Filtre Kahve</p>
-                      </div>
-                      <div className="p-2.5 rounded-xl bg-white border border-coffee-200">
-                        <span className="text-[9px] font-black text-caramel-700 block">B</span>
-                        <p className="text-[10px] font-semibold text-coffee-900 leading-tight">Buzlu Cold Brew</p>
-                      </div>
-                    </div>
-
-                    {/* Bottom simulated button */}
-                    <Link
-                      to="/t/demo-masa-1"
-                      className="block w-full py-2.5 rounded-xl bg-coffee-900 text-white text-center text-xs font-bold shadow-warm"
-                    >
-                      Yeni Soru Getir
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs text-coffee-600">
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              Uygulama indirme yok
+            </span>
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              Şifre veya üyelik yok
+            </span>
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              200+ özgün Türkçe soru
+            </span>
           </div>
         </div>
       </section>
