@@ -1,20 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { DemoBanner } from './components/DemoBanner';
 import { LeadModal } from './components/LeadModal';
-import { LandingPage } from './pages/LandingPage';
 import { TableLandingPage } from './pages/TableLandingPage';
 import { GameCategoriesPage } from './pages/GameCategoriesPage';
 import { GamePlayPage } from './pages/GamePlayPage';
-import { PrivacyPage } from './pages/PrivacyPage';
-import { AdminLoginPage } from './pages/AdminLoginPage';
-import { AdminDashboardPage } from './pages/AdminDashboardPage';
-import { AdminCafesPage } from './pages/AdminCafesPage';
-import { AdminTablesPage } from './pages/AdminTablesPage';
-import { AdminQuestionsPage } from './pages/AdminQuestionsPage';
-import { Coffee, ArrowLeft } from 'lucide-react';
+import { Coffee, ArrowLeft, Loader2 } from 'lucide-react';
+
+// Tembel yüklenen sayfalar (müşteri QR açılış hızını maksimuma çıkarır)
+const LandingPage = lazy(() => import('./pages/LandingPage').then(m => ({ default: m.LandingPage })));
+const PrivacyPage = lazy(() => import('./pages/PrivacyPage').then(m => ({ default: m.PrivacyPage })));
+const AdminLoginPage = lazy(() => import('./pages/AdminLoginPage').then(m => ({ default: m.AdminLoginPage })));
+const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage').then(m => ({ default: m.AdminDashboardPage })));
+const AdminCafesPage = lazy(() => import('./pages/AdminCafesPage').then(m => ({ default: m.AdminCafesPage })));
+const AdminTablesPage = lazy(() => import('./pages/AdminTablesPage').then(m => ({ default: m.AdminTablesPage })));
+const AdminQuestionsPage = lazy(() => import('./pages/AdminQuestionsPage').then(m => ({ default: m.AdminQuestionsPage })));
+
+const PageLoader: React.FC = () => (
+  <div className="min-h-screen bg-cream-50 flex items-center justify-center p-6">
+    <div className="flex flex-col items-center gap-3 text-coffee-700">
+      <Loader2 className="w-8 h-8 animate-spin text-terracotta-600" />
+      <span className="text-xs font-semibold uppercase tracking-wider text-coffee-600">Yükleniyor...</span>
+    </div>
+  </div>
+);
 
 const PublicLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [leadModalOpen, setLeadModalOpen] = useState(false);
@@ -24,7 +35,9 @@ const PublicLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       <DemoBanner />
       <Navbar onOpenLeadModal={() => setLeadModalOpen(true)} />
       <main className="flex-1">
-        {children}
+        <Suspense fallback={<PageLoader />}>
+          {children}
+        </Suspense>
       </main>
       <Footer />
       <LeadModal isOpen={leadModalOpen} onClose={() => setLeadModalOpen(false)} />
@@ -89,13 +102,48 @@ export const App: React.FC = () => {
         <Route path="/play/:gameSlug" element={<GamePlayPage />} />
 
         {/* Yönetici Girişi */}
-        <Route path="/admin/login" element={<AdminLoginPage />} />
+        <Route
+          path="/admin/login"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <AdminLoginPage />
+            </Suspense>
+          }
+        />
 
         {/* Yönetim Paneli Rotaları */}
-        <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
-        <Route path="/admin/cafes" element={<AdminCafesPage />} />
-        <Route path="/admin/cafes/:id/tables" element={<AdminTablesPage />} />
-        <Route path="/admin/questions" element={<AdminQuestionsPage />} />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <AdminDashboardPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/admin/cafes"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <AdminCafesPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/admin/cafes/:id/tables"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <AdminTablesPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/admin/questions"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <AdminQuestionsPage />
+            </Suspense>
+          }
+        />
 
         {/* 404 */}
         <Route path="*" element={<NotFoundPage />} />
