@@ -6,6 +6,17 @@ export type GameType =
 
 export type CafeStatus = 'active' | 'inactive';
 
+export interface MenuItem {
+  id: string;
+  category: string;
+  name: string;
+  description?: string;
+  price: number;
+  currency?: string;
+  is_popular?: boolean;
+  tags?: string[];
+}
+
 export interface Cafe {
   id: string;
   name: string;
@@ -14,6 +25,10 @@ export interface Cafe {
   created_at: string;
   updated_at?: string;
   table_count?: number;
+  menu_url?: string | null;
+  wifi_name?: string | null;
+  wifi_password?: string | null;
+  instagram?: string | null;
 }
 
 export interface Table {
@@ -28,6 +43,10 @@ export interface Table {
     name: string;
     slug: string;
     status: CafeStatus;
+    menu_url?: string | null;
+    wifi_name?: string | null;
+    wifi_password?: string | null;
+    instagram?: string | null;
   };
 }
 

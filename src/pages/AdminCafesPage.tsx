@@ -21,6 +21,10 @@ export const AdminCafesPage: React.FC = () => {
 
   const [formName, setFormName] = useState('');
   const [formSlug, setFormSlug] = useState('');
+  const [formMenuUrl, setFormMenuUrl] = useState('');
+  const [formWifiName, setFormWifiName] = useState('');
+  const [formWifiPassword, setFormWifiPassword] = useState('');
+  const [formInstagram, setFormInstagram] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -39,6 +43,10 @@ export const AdminCafesPage: React.FC = () => {
   const openCreateModal = () => {
     setFormName('');
     setFormSlug('');
+    setFormMenuUrl('');
+    setFormWifiName('');
+    setFormWifiPassword('');
+    setFormInstagram('');
     setFormError(null);
     setActiveCafe(null);
     setModalMode('create');
@@ -47,6 +55,10 @@ export const AdminCafesPage: React.FC = () => {
   const openEditModal = (cafe: Cafe) => {
     setFormName(cafe.name);
     setFormSlug(cafe.slug);
+    setFormMenuUrl(cafe.menu_url || '');
+    setFormWifiName(cafe.wifi_name || '');
+    setFormWifiPassword(cafe.wifi_password || '');
+    setFormInstagram(cafe.instagram || '');
     setFormError(null);
     setActiveCafe(cafe);
     setModalMode('edit');
@@ -86,10 +98,19 @@ export const AdminCafesPage: React.FC = () => {
 
     setSubmitting(true);
     try {
+      const cafeDetails = {
+        name: formName.trim(),
+        slug: formSlug.trim(),
+        menu_url: formMenuUrl.trim() || null,
+        wifi_name: formWifiName.trim() || null,
+        wifi_password: formWifiPassword.trim() || null,
+        instagram: formInstagram.trim() || null,
+      };
+
       if (modalMode === 'create') {
-        await createCafe(formName.trim(), formSlug.trim());
+        await createCafe(cafeDetails.name, cafeDetails.slug, cafeDetails);
       } else if (modalMode === 'edit' && activeCafe) {
-        await updateCafe(activeCafe.id, { name: formName.trim(), slug: formSlug.trim() });
+        await updateCafe(activeCafe.id, cafeDetails);
       }
       setModalMode(null);
       loadCafes();
@@ -270,6 +291,65 @@ export const AdminCafesPage: React.FC = () => {
                 <span className="text-[10px] text-coffee-500 mt-1 block">
                   Küçük harf, rakam ve tire (-) içerebilir.
                 </span>
+              </div>
+
+              {/* Dış Menü URL'i (İsteğe bağlı) */}
+              <div>
+                <label className="block text-xs font-semibold text-coffee-800 mb-1">
+                  Özel QR Menü Bağlantısı (İsteğe Bağlı)
+                </label>
+                <input
+                  type="url"
+                  value={formMenuUrl}
+                  onChange={e => setFormMenuUrl(e.target.value)}
+                  placeholder="https://kafemenu.com/menu veya PDF linki"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-coffee-200 bg-cream-50 text-xs text-coffee-950 focus:outline-none focus:ring-2 focus:ring-terracotta-500/40"
+                />
+                <span className="text-[10px] text-coffee-500 mt-1 block">
+                  Boş bırakılırsa müşterilere Fincan Sohbet'in dahili şık kahve menüsü gösterilir.
+                </span>
+              </div>
+
+              {/* Masa Wi-Fi Bilgileri */}
+              <div className="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label className="block text-xs font-semibold text-coffee-800 mb-1">
+                    Wi-Fi Adı (SSID)
+                  </label>
+                  <input
+                    type="text"
+                    value={formWifiName}
+                    onChange={e => setFormWifiName(e.target.value)}
+                    placeholder="Kafe_Misafir"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-coffee-200 bg-cream-50 text-xs text-coffee-950 focus:outline-none focus:ring-2 focus:ring-terracotta-500/40"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-coffee-800 mb-1">
+                    Wi-Fi Şifresi
+                  </label>
+                  <input
+                    type="text"
+                    value={formWifiPassword}
+                    onChange={e => setFormWifiPassword(e.target.value)}
+                    placeholder="kahve123"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-coffee-200 bg-cream-50 text-xs text-coffee-950 font-mono focus:outline-none focus:ring-2 focus:ring-terracotta-500/40"
+                  />
+                </div>
+              </div>
+
+              {/* Instagram */}
+              <div>
+                <label className="block text-xs font-semibold text-coffee-800 mb-1">
+                  Instagram Hesabı (İsteğe Bağlı)
+                </label>
+                <input
+                  type="text"
+                  value={formInstagram}
+                  onChange={e => setFormInstagram(e.target.value)}
+                  placeholder="@modafincankahve"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-coffee-200 bg-cream-50 text-xs text-coffee-950 focus:outline-none focus:ring-2 focus:ring-terracotta-500/40"
+                />
               </div>
 
               <div className="flex items-center justify-end gap-2 pt-2">

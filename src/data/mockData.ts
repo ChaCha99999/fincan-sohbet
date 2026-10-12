@@ -8,6 +8,9 @@ export const MOCK_CAFES: Cafe[] = [
     status: 'active',
     created_at: new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString(),
     table_count: 8,
+    wifi_name: 'ModaFincan_Misafir',
+    wifi_password: 'kahvevekitap',
+    instagram: '@modafincankahve',
   },
   {
     id: 'cafe-alsancak-02',
@@ -16,6 +19,9 @@ export const MOCK_CAFES: Cafe[] = [
     status: 'active',
     created_at: new Date(Date.now() - 15 * 24 * 3600 * 1000).toISOString(),
     table_count: 5,
+    wifi_name: 'DibekSohbet_Wifi',
+    wifi_password: 'alsancak2026',
+    instagram: '@alsancakdibek',
   },
   {
     id: 'cafe-kavaklidere-03',
@@ -40,6 +46,9 @@ export const MOCK_TABLES: Table[] = [
       name: 'Moda Fincan Kahve & Kitap',
       slug: 'moda-fincan',
       status: 'active',
+      wifi_name: 'ModaFincan_Misafir',
+      wifi_password: 'kahvevekitap',
+      instagram: '@modafincankahve',
     },
   },
   {
@@ -54,6 +63,9 @@ export const MOCK_TABLES: Table[] = [
       name: 'Moda Fincan Kahve & Kitap',
       slug: 'moda-fincan',
       status: 'active',
+      wifi_name: 'ModaFincan_Misafir',
+      wifi_password: 'kahvevekitap',
+      instagram: '@modafincankahve',
     },
   },
   {

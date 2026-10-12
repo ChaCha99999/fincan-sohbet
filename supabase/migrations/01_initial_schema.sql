@@ -11,6 +11,10 @@ CREATE TABLE IF NOT EXISTS public.cafes (
     name TEXT NOT NULL,
     slug TEXT NOT NULL UNIQUE,
     status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'inactive')),
+    menu_url TEXT,
+    wifi_name TEXT,
+    wifi_password TEXT,
+    instagram TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
 );
@@ -180,7 +184,11 @@ RETURNS TABLE (
     created_at TIMESTAMPTZ,
     cafe_name TEXT,
     cafe_slug TEXT,
-    cafe_status TEXT
+    cafe_status TEXT,
+    menu_url TEXT,
+    wifi_name TEXT,
+    wifi_password TEXT,
+    instagram TEXT
 )
 LANGUAGE plpgsql
 SECURITY DEFINER
@@ -197,7 +205,11 @@ BEGIN
         t.created_at,
         c.name AS cafe_name,
         c.slug AS cafe_slug,
-        c.status AS cafe_status
+        c.status AS cafe_status,
+        c.menu_url,
+        c.wifi_name,
+        c.wifi_password,
+        c.instagram
     FROM public.tables t
     JOIN public.cafes c ON c.id = t.cafe_id
     WHERE LOWER(t.public_token) = LOWER(TRIM(p_token))

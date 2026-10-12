@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { INITIAL_QUESTIONS } from '../data/questionsSeed';
 import { INITIAL_CATEGORIES } from '../data/categories';
 import { validateTableToken, generatePublicToken } from '../lib/api';
+import { DEFAULT_MENU_ITEMS, MENU_CATEGORIES } from '../data/mockMenu';
 
 describe('Soru Havuzu ve Kategoriler (Question Pool & Categories)', () => {
   it('Toplam en az 150 (hedef 200) özgün soru bulunmalıdır', () => {
@@ -54,13 +55,15 @@ describe('Masa Doğrulama ve Token Mantığı (Table Validation)', () => {
     expect(/^[a-z0-9]+$/.test(token)).toBe(true);
   });
 
-  it('Geçerli ve aktif masa tokeni başarıyla doğrulanmalıdır', async () => {
+  it('Geçerli ve aktif masa tokeni başarıyla doğrulanmalıdır ve Wi-Fi bilgilerini içermelidir', async () => {
     const result = await validateTableToken('demo-masa-1');
     expect(result.isValid).toBe(true);
     expect(result.isCafeActive).toBe(true);
     expect(result.isTableActive).toBe(true);
     expect(result.table?.label).toContain('Masa 01');
     expect(result.table?.cafe?.name).toBe('Moda Fincan Kahve & Kitap');
+    expect(result.table?.cafe?.wifi_name).toBe('ModaFincan_Misafir');
+    expect(result.table?.cafe?.wifi_password).toBe('kahvevekitap');
   });
 
   it('Pasif masa tokeni geçersiz sayılmalı ve masa pasif hatası vermelidir', async () => {
@@ -82,5 +85,15 @@ describe('Masa Doğrulama ve Token Mantığı (Table Validation)', () => {
     expect(result.isValid).toBe(false);
     expect(result.table).toBeUndefined();
     expect(result.errorMessage).toContain('Masa bulunamadı');
+  });
+});
+
+describe('Kafe Menü Modülü (Cafe Menu Module)', () => {
+  it('Dahili menüde en az 20 adet ürün ve 4 kategori bulunmalıdır', () => {
+    expect(DEFAULT_MENU_ITEMS.length).toBeGreaterThanOrEqual(20);
+    expect(MENU_CATEGORIES).toContain('Sıcak Kahveler');
+    expect(MENU_CATEGORIES).toContain('Soğuk Kahveler');
+    expect(MENU_CATEGORIES).toContain('Tatlılar & Fırın');
+    expect(MENU_CATEGORIES).toContain('Çay & Diğer');
   });
 });

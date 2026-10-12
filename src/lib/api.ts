@@ -57,6 +57,7 @@ export const validateTableToken = async (token: string): Promise<TableValidation
         const isCafeActive = item.cafe_status === 'active';
         const isTableActive = item.is_active === true;
 
+        const localCafeMatch = localCafes.find(c => c.id === item.cafe_id || c.name === item.cafe_name || c.slug === item.cafe_slug);
         const tableObj: Table = {
           id: item.table_id,
           cafe_id: item.cafe_id,
@@ -69,6 +70,10 @@ export const validateTableToken = async (token: string): Promise<TableValidation
             name: item.cafe_name,
             slug: item.cafe_slug,
             status: item.cafe_status,
+            menu_url: item.menu_url || localCafeMatch?.menu_url || null,
+            wifi_name: item.wifi_name || localCafeMatch?.wifi_name || null,
+            wifi_password: item.wifi_password || localCafeMatch?.wifi_password || null,
+            instagram: item.instagram || localCafeMatch?.instagram || null,
           },
         };
 
@@ -127,6 +132,10 @@ export const validateTableToken = async (token: string): Promise<TableValidation
       name: cafe.name,
       slug: cafe.slug,
       status: cafe.status,
+      menu_url: cafe.menu_url,
+      wifi_name: cafe.wifi_name,
+      wifi_password: cafe.wifi_password,
+      instagram: cafe.instagram,
     } : undefined,
   };
 
@@ -348,13 +357,25 @@ export const getCafes = async (): Promise<Cafe[]> => {
   }));
 };
 
-export const createCafe = async (name: string, slug: string): Promise<Cafe> => {
+export const createCafe = async (
+  name: string, 
+  slug: string, 
+  details?: { menu_url?: string | null; wifi_name?: string | null; wifi_password?: string | null; instagram?: string | null }
+): Promise<Cafe> => {
   const cleanSlug = slug.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-');
 
   if (isSupabaseConfigured && supabase) {
     const { data, error } = await supabase
       .from('cafes')
-      .insert([{ name, slug: cleanSlug, status: 'active' }])
+      .insert([{ 
+        name, 
+        slug: cleanSlug, 
+        status: 'active',
+        menu_url: details?.menu_url || null,
+        wifi_name: details?.wifi_name || null,
+        wifi_password: details?.wifi_password || null,
+        instagram: details?.instagram || null,
+      }])
       .select()
       .single();
 
@@ -369,6 +390,10 @@ export const createCafe = async (name: string, slug: string): Promise<Cafe> => {
     status: 'active',
     created_at: new Date().toISOString(),
     table_count: 0,
+    menu_url: details?.menu_url || null,
+    wifi_name: details?.wifi_name || null,
+    wifi_password: details?.wifi_password || null,
+    instagram: details?.instagram || null,
   };
   localCafes.unshift(newCafe);
   return newCafe;
