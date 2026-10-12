@@ -6,14 +6,90 @@
   html {
     scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
+    text-rendering: optimizeLegibility;
   }
-  
+
   body {
-    background-color: #FAF8F5;
-    color: #261C15;
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    background-color: #FBF7F0;
+    color: #241A14;
+    font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+    font-feature-settings: 'ss01', 'cv11';
+  }
+
+  h1, h2, h3, h4, .font-serif {
+    font-optical-sizing: auto;
+    letter-spacing: -0.015em;
+  }
+
+  :focus-visible {
+    outline: 2px solid #D9542C;
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  ::selection {
+    background: #F8DB8F;
+    color: #17100C;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
+
+@layer components {
+  /* Kâğıt dokusu (hafif grain) — dekoratif katman */
+  .paper-grain {
+    position: relative;
+    isolation: isolate;
+  }
+  .paper-grain::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: .35;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .14 0 0 0 0 .1 0 0 0 0 .08 0 0 0 .18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Bölüm etiketi — gazete başlık üstü stili */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-[0.18em] text-terracotta-600;
+  }
+  .eyebrow::before {
+    content: '';
+    @apply inline-block w-6 h-px bg-current;
+  }
+
+  /* Birincil buton */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-terracotta-500 px-6 py-3.5 text-sm font-bold text-white shadow-print-sm ring-1 ring-coffee-900 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-print hover:bg-terracotta-600 active:translate-y-0 active:shadow-none;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-cream-50 px-6 py-3.5 text-sm font-bold text-coffee-950 ring-1 ring-coffee-900 transition-all duration-200 hover:bg-cream-200;
+  }
+  .btn-dark {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-coffee-950 px-6 py-3.5 text-sm font-bold text-cream-50 transition-all duration-200 hover:bg-coffee-800;
+  }
+
+  /* Bilet/kart kenarı — kesik çizgi ayırıcı */
+  .ticket-divider {
+    background-image: linear-gradient(to right, currentColor 50%, transparent 0);
+    background-size: 10px 1px;
+    background-repeat: repeat-x;
+    height: 1px;
+  }
+}
+
+/* Yatay kayan şerit — hover'da durur */
+.marquee-track:hover { animation-play-state: paused; }
 
 /* Custom Print Styles for Table QR Cards */
 @media print {

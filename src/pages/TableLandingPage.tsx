@@ -255,23 +255,23 @@ export const TableLandingPage: React.FC = () => {
     <main className="min-h-screen bg-cream-50 flex flex-col justify-between p-4 sm:p-6 max-w-lg mx-auto">
       <div className="space-y-4">
         {/* Üst Kafe ve Masa Bilgi Kartı */}
-        <header className="flex items-center justify-between p-3.5 bg-white rounded-2xl shadow-warm-sm border border-coffee-200/80">
+        <header className="flex items-center justify-between p-4 bg-cream-100 rounded-3xl shadow-print-sm border-2 border-coffee-950">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-terracotta-100 text-terracotta-700 flex items-center justify-center shrink-0">
+            <div className="w-11 h-11 rounded-2xl bg-terracotta-600 text-cream-50 flex items-center justify-center shrink-0 border-2 border-coffee-950 shadow-xs">
               <Coffee className="w-5 h-5" />
             </div>
             <div className="text-left">
-              <h2 className="font-bold text-coffee-950 text-sm leading-tight">
+              <h2 className="font-serif font-bold text-coffee-950 text-base leading-tight">
                 {table.cafe?.name || 'Fincan Sohbet'}
               </h2>
-              <p className="text-xs font-semibold text-terracotta-700">
+              <p className="text-xs font-bold text-terracotta-700 uppercase tracking-wide">
                 {table.label}
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <LanguageSwitch />
-            <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-medium border border-emerald-200/60">
+            <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-pistachio-100 text-pistachio-900 text-[11px] font-bold border border-pistachio-400">
               <ShieldCheck className="w-3.5 h-3.5" />
               <span>{t.tableActive}</span>
             </div>
@@ -279,12 +279,12 @@ export const TableLandingPage: React.FC = () => {
         </header>
 
         {/* Sekmeli Üst Geçiş Menüsü (Masa / Menü / Oyunlar) */}
-        <nav className="flex items-center bg-cream-200/80 p-1 rounded-2xl border border-coffee-200">
+        <nav className="flex items-center bg-cream-200/90 p-1 rounded-2xl border-2 border-coffee-950/20">
           <button
             onClick={() => setActiveView('portal')}
             className={`flex-1 py-2 px-2 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
               activeView === 'portal'
-                ? 'bg-white text-coffee-950 shadow-warm-sm'
+                ? 'bg-cream-50 text-coffee-950 border border-coffee-950/20 shadow-sm'
                 : 'text-coffee-700 hover:text-coffee-950'
             }`}
           >
@@ -296,7 +296,7 @@ export const TableLandingPage: React.FC = () => {
             onClick={() => setActiveView('menu')}
             className={`flex-1 py-2 px-2 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
               activeView === 'menu'
-                ? 'bg-white text-coffee-950 shadow-warm-sm'
+                ? 'bg-cream-50 text-coffee-950 border border-coffee-950/20 shadow-sm'
                 : 'text-coffee-700 hover:text-coffee-950'
             }`}
           >
@@ -308,7 +308,7 @@ export const TableLandingPage: React.FC = () => {
             onClick={() => setActiveView('games')}
             className={`flex-1 py-2 px-2 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
               activeView === 'games'
-                ? 'bg-white text-coffee-950 shadow-warm-sm'
+                ? 'bg-cream-50 text-coffee-950 border border-coffee-950/20 shadow-sm'
                 : 'text-coffee-700 hover:text-coffee-950'
             }`}
           >
@@ -321,26 +321,26 @@ export const TableLandingPage: React.FC = () => {
         {table.cafe?.waiter_call_enabled !== false && (
           <section className="space-y-2">
             {callFeedback && (
-              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 flex items-center justify-between gap-2 animate-fadeIn shadow-warm-sm">
+              <div className="p-3.5 rounded-2xl bg-pistachio-100 border-2 border-coffee-950 text-xs font-bold text-coffee-950 flex items-center justify-between gap-2 shadow-print-sm">
                 <span>{callFeedback}</span>
               </div>
             )}
 
             {activeCall ? (
-              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 shadow-warm-sm flex items-center justify-between gap-3 animate-fadeIn">
+              <div className="p-4 rounded-3xl bg-caramel-100 border-2 border-coffee-950 shadow-print-sm flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-xs animate-pulse">
+                  <div className="w-10 h-10 rounded-2xl bg-caramel-400 text-coffee-950 border-2 border-coffee-950 flex items-center justify-center shrink-0 shadow-xs animate-pulse">
                     {activeCall.request_type === 'waiter' ? <Bell className="w-5 h-5" /> : <Receipt className="w-5 h-5" />}
                   </div>
                   <div className="text-left">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-xs text-amber-950">
+                      <span className="font-bold text-xs text-coffee-950">
                         {activeCall.request_type === 'waiter' ? t.waiterCalled || 'Garson Çağrıldı' : t.billRequested || 'Hesap İstendi'}
                       </span>
-                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold border border-coffee-950 ${
                         activeCall.status === 'in_progress'
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-amber-200 text-amber-900'
+                          ? 'bg-blue-100 text-blue-900'
+                          : 'bg-caramel-300 text-coffee-950'
                       }`}>
                         {activeCall.status === 'in_progress' ? 'Garson Yolda' : 'Beklemede'}
                       </span>
@@ -353,16 +353,16 @@ export const TableLandingPage: React.FC = () => {
 
                 <button
                   onClick={handleCancelCall}
-                  className="px-2.5 py-1.5 rounded-xl border border-amber-300 bg-white hover:bg-amber-100 text-[11px] font-bold text-amber-900 transition-colors shrink-0 shadow-xs"
+                  className="px-3 py-1.5 rounded-xl border-2 border-coffee-950 bg-cream-50 hover:bg-cream-200 text-[11px] font-bold text-coffee-950 transition-colors shrink-0 shadow-xs"
                 >
                   {t.cancelCall}
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-2.5">
+              <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={() => handleOpenCallModal('waiter')}
-                  className="py-3 px-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-warm-sm hover:shadow-warm flex items-center justify-center gap-2 font-bold text-xs transition-all active:scale-98"
+                  className="py-3 px-3.5 rounded-2xl bg-pistachio-600 hover:bg-pistachio-700 text-cream-50 border-2 border-coffee-950 shadow-print-sm flex items-center justify-center gap-2 font-bold text-xs transition-transform active:translate-y-0.5"
                 >
                   <Bell className="w-4 h-4" />
                   <span>{t.callWaiter}</span>
@@ -370,7 +370,7 @@ export const TableLandingPage: React.FC = () => {
 
                 <button
                   onClick={() => handleOpenCallModal('bill')}
-                  className="py-3 px-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white shadow-warm-sm hover:shadow-warm flex items-center justify-center gap-2 font-bold text-xs transition-all active:scale-98"
+                  className="py-3 px-3.5 rounded-2xl bg-terracotta-600 hover:bg-terracotta-700 text-cream-50 border-2 border-coffee-950 shadow-print-sm flex items-center justify-center gap-2 font-bold text-xs transition-transform active:translate-y-0.5"
                 >
                   <Receipt className="w-4 h-4" />
                   <span>{t.requestBill}</span>
@@ -404,23 +404,23 @@ export const TableLandingPage: React.FC = () => {
               {/* KART 1: KAFE MENÜSÜNÜ İNCELE */}
               <button
                 onClick={() => setActiveView('menu')}
-                className="w-full text-left p-5 rounded-3xl bg-gradient-to-br from-white to-cream-100/70 border-2 border-caramel-200 hover:border-caramel-400 shadow-warm hover:shadow-warm-md transition-all group active:scale-[0.99] relative overflow-hidden"
+                className="w-full text-left p-5 rounded-3xl bg-cream-100 border-2 border-coffee-950 shadow-print-sm hover:shadow-print transition-all group active:translate-y-0.5 relative overflow-hidden"
               >
                 <div className="flex items-start justify-between gap-3">
-                  <div className="w-13 h-13 rounded-2xl bg-caramel-100 text-caramel-800 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                    <BookOpen className="w-7 h-7" />
+                  <div className="w-12 h-12 rounded-2xl bg-caramel-300 text-coffee-950 border-2 border-coffee-950 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <BookOpen className="w-6 h-6" />
                   </div>
-                  <span className="px-2.5 py-1 rounded-full bg-caramel-50 text-caramel-800 border border-caramel-200/80 text-[10px] font-bold uppercase tracking-wider">
+                  <span className="px-2.5 py-1 rounded-full bg-cream-50 text-coffee-950 border border-coffee-950 text-[10px] font-bold uppercase tracking-wider">
                     {t.orderBeforeBadge}
                   </span>
                 </div>
 
                 <div className="mt-3.5 space-y-1">
-                  <h3 className="font-serif font-extrabold text-lg sm:text-xl text-coffee-950 group-hover:text-caramel-900 transition-colors flex items-center justify-between">
+                  <h3 className="font-serif font-extrabold text-lg sm:text-xl text-coffee-950 group-hover:text-terracotta-700 transition-colors flex items-center justify-between">
                     <span>{t.exploreMenuTitle}</span>
-                    <ChevronRight className="w-5 h-5 text-caramel-600 group-hover:translate-x-1 transition-transform" />
+                    <ChevronRight className="w-5 h-5 text-coffee-950 group-hover:translate-x-1 transition-transform" />
                   </h3>
-                  <p className="text-xs text-coffee-600 leading-relaxed">
+                  <p className="text-xs text-coffee-700 leading-relaxed">
                     {t.exploreMenuDesc}
                   </p>
                 </div>
@@ -429,21 +429,21 @@ export const TableLandingPage: React.FC = () => {
               {/* KART 2: KONUŞACAK KONU ARIYORUZ (SOHBET VE OYUNLAR) */}
               <button
                 onClick={() => setActiveView('games')}
-                className="w-full text-left p-5 rounded-3xl bg-gradient-to-br from-terracotta-600 to-terracotta-700 text-white shadow-warm hover:shadow-warm-md transition-all group active:scale-[0.99] relative overflow-hidden"
+                className="w-full text-left p-5 rounded-3xl bg-terracotta-600 text-cream-50 border-2 border-coffee-950 shadow-print-sm hover:shadow-print transition-all group active:translate-y-0.5 relative overflow-hidden"
               >
                 <div className="flex items-start justify-between gap-3">
-                  <div className="w-13 h-13 rounded-2xl bg-white/20 text-white flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                    <MessageCircle className="w-7 h-7" />
+                  <div className="w-12 h-12 rounded-2xl bg-cream-50 text-terracotta-600 border-2 border-coffee-950 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <MessageCircle className="w-6 h-6" />
                   </div>
-                  <span className="px-2.5 py-1 rounded-full bg-white/20 text-white text-[10px] font-bold uppercase tracking-wider backdrop-blur-xs">
+                  <span className="px-2.5 py-1 rounded-full bg-cream-50 text-terracotta-700 border border-coffee-950 text-[10px] font-bold uppercase tracking-wider">
                     {t.fourGamesBadge}
                   </span>
                 </div>
 
-                <div className="mt-3.5 space-y-1 text-white">
-                  <h3 className="font-serif font-extrabold text-lg sm:text-xl text-white flex items-center justify-between">
+                <div className="mt-3.5 space-y-1 text-cream-50">
+                  <h3 className="font-serif font-extrabold text-lg sm:text-xl text-cream-50 flex items-center justify-between">
                     <span>{t.findTopicTitle}</span>
-                    <ChevronRight className="w-5 h-5 text-white/90 group-hover:translate-x-1 transition-transform" />
+                    <ChevronRight className="w-5 h-5 text-cream-50 group-hover:translate-x-1 transition-transform" />
                   </h3>
                   <p className="text-xs text-cream-100 leading-relaxed">
                     {t.findTopicDesc}
@@ -454,24 +454,24 @@ export const TableLandingPage: React.FC = () => {
               {/* KART 3: MASALAR ARASI KAFE TRIVIA (PUB QUIZ) */}
               <button
                 onClick={() => navigate('/play/kafe-trivia')}
-                className="w-full text-left p-5 rounded-3xl bg-gradient-to-br from-amber-600 via-amber-700 to-terracotta-700 text-white shadow-warm hover:shadow-warm-md transition-all group active:scale-[0.99] relative overflow-hidden"
+                className="w-full text-left p-5 rounded-3xl bg-caramel-400 text-coffee-950 border-2 border-coffee-950 shadow-print-sm hover:shadow-print transition-all group active:translate-y-0.5 relative overflow-hidden"
               >
                 <div className="flex items-start justify-between gap-3">
-                  <div className="w-13 h-13 rounded-2xl bg-white/20 text-white flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                    <Trophy className="w-7 h-7 text-amber-200" />
+                  <div className="w-12 h-12 rounded-2xl bg-cream-50 text-coffee-950 border-2 border-coffee-950 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <Trophy className="w-6 h-6 text-caramel-700" />
                   </div>
-                  <span className="px-2.5 py-1 rounded-full bg-amber-400 text-amber-950 text-[10px] font-black uppercase tracking-wider">
-                    Yeni • Masalar Arası
+                  <span className="px-2.5 py-1 rounded-full bg-cream-50 text-coffee-950 border border-coffee-950 text-[10px] font-black uppercase tracking-wider">
+                    Masalar Arası
                   </span>
                 </div>
 
-                <div className="mt-3.5 space-y-1 text-white">
-                  <h3 className="font-serif font-extrabold text-lg sm:text-xl text-white flex items-center justify-between">
+                <div className="mt-3.5 space-y-1 text-coffee-950">
+                  <h3 className="font-serif font-extrabold text-lg sm:text-xl text-coffee-950 flex items-center justify-between">
                     <span>Kafe Trivia & Bilgi Yarışması</span>
-                    <ChevronRight className="w-5 h-5 text-white/90 group-hover:translate-x-1 transition-transform" />
+                    <ChevronRight className="w-5 h-5 text-coffee-950 group-hover:translate-x-1 transition-transform" />
                   </h3>
-                  <p className="text-xs text-amber-100 leading-relaxed">
-                    10 kategori (Futbol, Arabalar, Müzik, Genel Kültür...) arasından seçin, diğer masalarla canlı yarışın!
+                  <p className="text-xs text-coffee-800 leading-relaxed">
+                    10 kategori (Futbol, Sinema, Müzik, Genel Kültür...) arasından seçin, diğer masalarla canlı yarışın!
                   </p>
                 </div>
               </button>
@@ -479,23 +479,23 @@ export const TableLandingPage: React.FC = () => {
               {/* KART 4: MASALAR ARASI HIZLI DÜELLO (1V1) */}
               <button
                 onClick={() => navigate('/play/masa-duellosu')}
-                className="w-full text-left p-5 rounded-3xl bg-gradient-to-br from-red-600 via-rose-700 to-coffee-950 text-white shadow-warm hover:shadow-warm-md transition-all group active:scale-[0.99] relative overflow-hidden"
+                className="w-full text-left p-5 rounded-3xl bg-coffee-900 text-cream-50 border-2 border-coffee-950 shadow-print-sm hover:shadow-print transition-all group active:translate-y-0.5 relative overflow-hidden"
               >
                 <div className="flex items-start justify-between gap-3">
-                  <div className="w-13 h-13 rounded-2xl bg-white/20 text-white flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                    <Swords className="w-7 h-7 text-rose-200" />
+                  <div className="w-12 h-12 rounded-2xl bg-terracotta-600 text-cream-50 border-2 border-coffee-950 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <Swords className="w-6 h-6 text-cream-50" />
                   </div>
-                  <span className="px-2.5 py-1 rounded-full bg-red-400 text-red-950 text-[10px] font-black uppercase tracking-wider">
+                  <span className="px-2.5 py-1 rounded-full bg-terracotta-600 text-cream-50 border border-coffee-950 text-[10px] font-black uppercase tracking-wider">
                     1'e 1 Düello
                   </span>
                 </div>
 
-                <div className="mt-3.5 space-y-1 text-white">
-                  <h3 className="font-serif font-extrabold text-lg sm:text-xl text-white flex items-center justify-between">
+                <div className="mt-3.5 space-y-1 text-cream-50">
+                  <h3 className="font-serif font-extrabold text-lg sm:text-xl text-cream-50 flex items-center justify-between">
                     <span>Masalar Arası Düello</span>
-                    <ChevronRight className="w-5 h-5 text-white/90 group-hover:translate-x-1 transition-transform" />
+                    <ChevronRight className="w-5 h-5 text-cream-50 group-hover:translate-x-1 transition-transform" />
                   </h3>
-                  <p className="text-xs text-rose-100 leading-relaxed">
+                  <p className="text-xs text-cream-200 leading-relaxed">
                     Kafedeki bir masaya meydan okuyun, 5 hızlı soruda kozlarınızı paylaşın!
                   </p>
                 </div>
@@ -504,23 +504,23 @@ export const TableLandingPage: React.FC = () => {
               {/* KART 5: ORTAK KAFE NABZI (CANLI OYLAMALAR) */}
               <button
                 onClick={() => navigate('/play/kafe-nabzi')}
-                className="w-full text-left p-5 rounded-3xl bg-gradient-to-br from-teal-700 via-emerald-800 to-coffee-950 text-white shadow-warm hover:shadow-warm-md transition-all group active:scale-[0.99] relative overflow-hidden"
+                className="w-full text-left p-5 rounded-3xl bg-pistachio-600 text-cream-50 border-2 border-coffee-950 shadow-print-sm hover:shadow-print transition-all group active:translate-y-0.5 relative overflow-hidden"
               >
                 <div className="flex items-start justify-between gap-3">
-                  <div className="w-13 h-13 rounded-2xl bg-white/20 text-white flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                    <BarChart3 className="w-7 h-7 text-emerald-200" />
+                  <div className="w-12 h-12 rounded-2xl bg-cream-50 text-pistachio-700 border-2 border-coffee-950 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <BarChart3 className="w-6 h-6" />
                   </div>
-                  <span className="px-2.5 py-1 rounded-full bg-emerald-400 text-emerald-950 text-[10px] font-black uppercase tracking-wider">
+                  <span className="px-2.5 py-1 rounded-full bg-cream-50 text-pistachio-800 border border-coffee-950 text-[10px] font-black uppercase tracking-wider">
                     Canlı Oylama
                   </span>
                 </div>
 
-                <div className="mt-3.5 space-y-1 text-white">
-                  <h3 className="font-serif font-extrabold text-lg sm:text-xl text-white flex items-center justify-between">
+                <div className="mt-3.5 space-y-1 text-cream-50">
+                  <h3 className="font-serif font-extrabold text-lg sm:text-xl text-cream-50 flex items-center justify-between">
                     <span>Ortak Kafe Nabzı & Anketler</span>
-                    <ChevronRight className="w-5 h-5 text-white/90 group-hover:translate-x-1 transition-transform" />
+                    <ChevronRight className="w-5 h-5 text-cream-50 group-hover:translate-x-1 transition-transform" />
                   </h3>
-                  <p className="text-xs text-emerald-100 leading-relaxed">
+                  <p className="text-xs text-cream-100 leading-relaxed">
                     Müzik tercihi, menemen ikilemi ve kafe modunu oylayın, canlı sonuçları görün!
                   </p>
                 </div>
@@ -529,18 +529,18 @@ export const TableLandingPage: React.FC = () => {
 
             {/* Hızlı Wi-Fi Bilgisi Kartı */}
             {(table.cafe?.wifi_name || table.cafe?.wifi_password) && (
-              <div className="p-3.5 rounded-2xl bg-white border border-coffee-200/80 shadow-warm-sm flex items-center justify-between gap-3">
+              <div className="p-4 rounded-3xl bg-cream-100 border-2 border-coffee-950 shadow-print-sm flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-caramel-100 text-caramel-800 flex items-center justify-center shrink-0">
-                    <Wifi className="w-4 h-4" />
+                  <div className="w-10 h-10 rounded-2xl bg-cream-50 border-2 border-coffee-950 text-coffee-950 flex items-center justify-center shrink-0">
+                    <Wifi className="w-5 h-5" />
                   </div>
                   <div className="text-left text-xs">
-                    <span className="text-coffee-500 font-medium">Masa Wi-Fi:</span>
-                    <p className="font-bold text-coffee-900">
+                    <span className="text-coffee-600 font-bold uppercase tracking-wider text-[10px]">Masa Wi-Fi:</span>
+                    <p className="font-bold text-coffee-950">
                       {table.cafe.wifi_name || 'Kafe Wi-Fi'} 
                       {table.cafe.wifi_password && (
-                        <span className="text-coffee-600 font-normal ml-1">
-                          (Şifre: <code className="bg-cream-100 px-1 py-0.5 rounded font-mono text-[11px] font-bold text-coffee-800">{table.cafe.wifi_password}</code>)
+                        <span className="text-coffee-700 font-normal ml-1">
+                          (Şifre: <code className="bg-cream-200 px-1.5 py-0.5 rounded font-mono text-[11px] font-bold text-coffee-950 border border-coffee-950/20">{table.cafe.wifi_password}</code>)
                         </span>
                       )}
                     </p>
@@ -549,11 +549,11 @@ export const TableLandingPage: React.FC = () => {
                 {table.cafe?.wifi_password && (
                   <button
                     onClick={handleCopyWifi}
-                    className="p-2 rounded-lg text-coffee-600 hover:text-coffee-950 hover:bg-cream-100 transition-colors shrink-0"
+                    className="p-2.5 rounded-xl border border-coffee-950/20 text-coffee-800 hover:text-coffee-950 hover:bg-cream-200 transition-colors shrink-0"
                     title="Şifreyi Kopyala"
                   >
                     {copiedWifi ? (
-                      <Check className="w-4 h-4 text-emerald-600" />
+                      <Check className="w-4 h-4 text-pistachio-600" />
                     ) : (
                       <Copy className="w-4 h-4" />
                     )}
@@ -566,9 +566,9 @@ export const TableLandingPage: React.FC = () => {
             <div>
               <button
                 onClick={handleShare}
-                className="w-full py-3 px-4 rounded-xl bg-white hover:bg-cream-100 border border-coffee-200/80 text-coffee-800 text-xs font-semibold flex items-center justify-center gap-2 transition-colors shadow-warm-sm"
+                className="w-full btn-secondary !py-3 !text-xs text-center justify-center"
               >
-                {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Share2 className="w-4 h-4 text-terracotta-600" />}
+                {copied ? <Check className="w-4 h-4 text-pistachio-600" /> : <Share2 className="w-4 h-4 text-terracotta-600" />}
                 <span>{copied ? 'Masa Bağlantısı Kopyalandı!' : 'Masayı Arkadaşlarınla Paylaş'}</span>
               </button>
             </div>
@@ -603,7 +603,7 @@ export const TableLandingPage: React.FC = () => {
             {/* Hızlı Başlat Butonu */}
             <button
               onClick={() => navigate('/play/sohbeti-baslat')}
-              className="w-full py-4 px-4 rounded-2xl bg-gradient-to-r from-terracotta-600 to-terracotta-700 hover:from-terracotta-700 hover:to-terracotta-800 text-white font-bold text-base shadow-warm flex items-center justify-center gap-2 transition-transform active:scale-98"
+              className="w-full btn-primary !py-4 !text-base flex items-center justify-center gap-2"
             >
               <MessageCircle className="w-5 h-5" />
               <span>Hemen Sohbeti Başlat</span>
@@ -613,13 +613,15 @@ export const TableLandingPage: React.FC = () => {
             {/* Masalar Arası Kafe Trivia Butonu */}
             <button
               onClick={() => navigate('/play/kafe-trivia')}
-              className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-bold text-sm shadow-warm flex items-center justify-between gap-2 transition-transform active:scale-98"
+              className="w-full py-3.5 px-5 rounded-3xl bg-caramel-400 hover:bg-caramel-500 text-coffee-950 border-2 border-coffee-950 shadow-print-sm flex items-center justify-between gap-2 transition-transform active:translate-y-0.5"
             >
-              <div className="flex items-center gap-2.5">
-                <Trophy className="w-5 h-5 text-amber-200" />
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-cream-50 border-2 border-coffee-950 flex items-center justify-center text-coffee-950 shrink-0">
+                  <Trophy className="w-5 h-5 text-caramel-700" />
+                </div>
                 <span className="text-left leading-tight">
                   <span className="block font-black text-sm">Masalar Arası Kafe Trivia</span>
-                  <span className="block text-[11px] text-amber-100 font-normal">10 tematik kategori ile canlı yarışın</span>
+                  <span className="block text-[11px] text-coffee-800 font-medium">10 tematik kategori ile canlı yarışın</span>
                 </span>
               </div>
               <ArrowRight className="w-4 h-4 ml-1 shrink-0" />
@@ -628,13 +630,15 @@ export const TableLandingPage: React.FC = () => {
             {/* Masalar Arası Hızlı Düello Butonu */}
             <button
               onClick={() => navigate('/play/masa-duellosu')}
-              className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-700 hover:to-rose-800 text-white font-bold text-sm shadow-warm flex items-center justify-between gap-2 transition-transform active:scale-98"
+              className="w-full py-3.5 px-5 rounded-3xl bg-coffee-900 hover:bg-coffee-950 text-cream-50 border-2 border-coffee-950 shadow-print-sm flex items-center justify-between gap-2 transition-transform active:translate-y-0.5"
             >
-              <div className="flex items-center gap-2.5">
-                <Swords className="w-5 h-5 text-rose-200" />
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-terracotta-600 border-2 border-coffee-950 flex items-center justify-center text-cream-50 shrink-0">
+                  <Swords className="w-5 h-5" />
+                </div>
                 <span className="text-left leading-tight">
                   <span className="block font-black text-sm">Masalar Arası Hızlı Düello</span>
-                  <span className="block text-[11px] text-rose-100 font-normal">Başka bir masaya meydan okuyun (1v1)</span>
+                  <span className="block text-[11px] text-cream-200 font-normal">Başka bir masaya meydan okuyun (1v1)</span>
                 </span>
               </div>
               <ArrowRight className="w-4 h-4 ml-1 shrink-0" />
@@ -643,13 +647,15 @@ export const TableLandingPage: React.FC = () => {
             {/* Ortak Kafe Nabzı Butonu */}
             <button
               onClick={() => navigate('/play/kafe-nabzi')}
-              className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-teal-700 to-emerald-800 hover:from-teal-800 hover:to-emerald-900 text-white font-bold text-sm shadow-warm flex items-center justify-between gap-2 transition-transform active:scale-98"
+              className="w-full py-3.5 px-5 rounded-3xl bg-pistachio-600 hover:bg-pistachio-700 text-cream-50 border-2 border-coffee-950 shadow-print-sm flex items-center justify-between gap-2 transition-transform active:translate-y-0.5"
             >
-              <div className="flex items-center gap-2.5">
-                <BarChart3 className="w-5 h-5 text-emerald-200" />
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-cream-50 border-2 border-coffee-950 flex items-center justify-center text-pistachio-800 shrink-0">
+                  <BarChart3 className="w-5 h-5" />
+                </div>
                 <span className="text-left leading-tight">
                   <span className="block font-black text-sm">Ortak Kafe Nabzı & Anketler</span>
-                  <span className="block text-[11px] text-emerald-100 font-normal">Günün canlı oylamalarına katılın</span>
+                  <span className="block text-[11px] text-cream-100 font-normal">Günün canlı oylamalarına katılın</span>
                 </span>
               </div>
               <ArrowRight className="w-4 h-4 ml-1 shrink-0" />
@@ -658,7 +664,7 @@ export const TableLandingPage: React.FC = () => {
             {/* Kategoriler Listesi */}
             <div className="space-y-2.5 pt-1">
               <div className="flex items-center justify-between px-1">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-coffee-600">
+                <h3 className="eyebrow text-coffee-600">
                   Tüm Oyunlar ({categories.length})
                 </h3>
               </div>
@@ -667,10 +673,10 @@ export const TableLandingPage: React.FC = () => {
                 <button
                   key={cat.id}
                   onClick={() => navigate(`/play/${cat.slug}`)}
-                  className="w-full text-left p-3.5 sm:p-4 rounded-2xl bg-white border border-coffee-200/80 hover:border-terracotta-400 hover:shadow-warm transition-all group flex items-center justify-between gap-3"
+                  className="w-full text-left p-4 rounded-3xl bg-cream-100 border-2 border-coffee-950/20 hover:border-coffee-950 hover:shadow-print-sm transition-all group flex items-center justify-between gap-3 active:translate-y-0.5"
                 >
                   <div className="flex items-center gap-3.5">
-                    <div className="w-11 h-11 rounded-2xl bg-cream-100 group-hover:bg-terracotta-50 flex items-center justify-center shrink-0 transition-colors">
+                    <div className="w-11 h-11 rounded-2xl bg-cream-50 border border-coffee-950/20 group-hover:border-coffee-950 flex items-center justify-center shrink-0 transition-colors">
                       {getCategoryIcon(cat.slug)}
                     </div>
                     <div>
@@ -684,7 +690,7 @@ export const TableLandingPage: React.FC = () => {
                   </div>
 
                   <div className="flex items-center gap-2 shrink-0">
-                    <span className="text-[11px] text-coffee-500 font-medium flex items-center gap-1 bg-cream-100 px-2 py-0.5 rounded-lg">
+                    <span className="text-[11px] text-coffee-600 font-semibold flex items-center gap-1 bg-cream-200/80 px-2 py-0.5 rounded-lg border border-coffee-950/10">
                       <Clock className="w-3 h-3" />
                       {cat.estimated_time}
                     </span>
@@ -698,7 +704,7 @@ export const TableLandingPage: React.FC = () => {
             <div className="pt-2">
               <button
                 onClick={() => setActiveView('menu')}
-                className="w-full py-3 px-4 rounded-xl bg-white hover:bg-cream-100 border border-coffee-200 text-coffee-800 text-xs font-semibold flex items-center justify-center gap-2 transition-colors shadow-warm-sm"
+                className="w-full btn-secondary !py-3 !text-xs text-center justify-center"
               >
                 <BookOpen className="w-4 h-4 text-caramel-700" />
                 <span>Kafe Menüsüne Göz At</span>
