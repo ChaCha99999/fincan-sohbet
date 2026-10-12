@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { Table } from '../types';
 
 const SESSION_STORAGE_KEY = 'fincan_active_table';
@@ -13,7 +13,7 @@ export const useTableSession = () => {
     }
   });
 
-  const setActiveTable = (table: Table | null) => {
+  const setActiveTable = useCallback((table: Table | null) => {
     setActiveTableState(table);
     try {
       if (table) {
@@ -24,7 +24,7 @@ export const useTableSession = () => {
     } catch (e) {
       console.warn('SessionStorage error:', e);
     }
-  };
+  }, []);
 
   useEffect(() => {
     const handleStorage = () => {

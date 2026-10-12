@@ -67,40 +67,47 @@ export const TableLandingPage: React.FC = () => {
 
     const init = async () => {
       if (!token) {
-        setErrorMessage('Masa bağlantı kodu eksik.');
-        setLoading(false);
+        if (isMounted) {
+          setErrorMessage('Masa bağlantı kodu eksik.');
+          setLoading(false);
+        }
         return;
       }
 
       setLoading(true);
       setErrorMessage(null);
 
-      const [validation, cats] = await Promise.all([
-        validateTableToken(token),
-        getCategories(),
-      ]);
+      try {
+        const [validation, cats] = await Promise.all([
+          validateTableToken(token),
+          getCategories(),
+        ]);
 
-      if (!isMounted) return;
+        if (!isMounted) return;
 
-      setCategories(cats);
+        setCategories(cats);
 
-      if (!validation.isValid) {
-        setErrorMessage(validation.errorMessage || 'Bu masa şu anda kullanılamıyor.');
-        setTable(validation.table || null);
-        setActiveTable(null);
-        setLoading(false);
-        return;
+        if (!validation.isValid) {
+          setErrorMessage(validation.errorMessage || 'Bu masa şu anda kullanılamıyor.');
+          setTable(validation.table || null);
+          setActiveTable(null);
+        } else if (validation.table) {
+          setTable(validation.table);
+          setActiveTable(validation.table);
+
+          // Masa açılış olayını logla
+          logUsageEvent(validation.table.cafe_id, validation.table.id, 'table_open', null);
+        }
+      } catch (err: any) {
+        console.error('Table init error:', err);
+        if (isMounted) {
+          setErrorMessage('Masa bilgileri yüklenirken bir sorun oluştu.');
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
       }
-
-      if (validation.table) {
-        setTable(validation.table);
-        setActiveTable(validation.table);
-
-        // Masa açılış olayını logla
-        logUsageEvent(validation.table.cafe_id, validation.table.id, 'table_open', null);
-      }
-
-      setLoading(false);
     };
 
     init();
@@ -108,7 +115,7 @@ export const TableLandingPage: React.FC = () => {
     return () => {
       isMounted = false;
     };
-  }, [token, setActiveTable]);
+  }, [token]);
 
   // Loading State
   if (loading) {

@@ -30,6 +30,15 @@ export const generatePublicToken = (): string => {
   return token;
 };
 
+// Ağ donmalarına karşı güvenli zaman aşımı yardımcısı (3500ms sonra yerel veriye düşer)
+const withTimeout = <T = any>(promise: Promise<T> | PromiseLike<T>, ms = 3500): Promise<T> => {
+  return Promise.race([
+    promise as Promise<T>,
+    new Promise<T>((_, reject) => setTimeout(() => reject(new Error('Ağ isteği zaman aşımına uğradı')), ms)),
+  ]);
+};
+
+
 // ==========================================
 // MASA DOĞRULAMA (TABLE VALIDATION)
 // ==========================================
@@ -48,9 +57,12 @@ export const validateTableToken = async (token: string): Promise<TableValidation
   // 1. Supabase üzerinden RPC çağrısı
   if (isSupabaseConfigured && supabase) {
     try {
-      const { data, error } = await supabase.rpc('get_table_by_token', {
-        p_token: cleanToken,
-      });
+      const { data, error } = await withTimeout(
+        supabase.rpc('get_table_by_token', {
+          p_token: cleanToken,
+        }) as any,
+        3500
+      );
 
       if (error) {
         console.error('Supabase RPC Error:', error.message);
@@ -216,11 +228,14 @@ export const logUsageEvent = async (
 export const getCategories = async (): Promise<Category[]> => {
   if (isSupabaseConfigured && supabase) {
     try {
-      const { data, error } = await supabase
-        .from('categories')
-        .select('*')
-        .eq('is_active', true)
-        .order('sort_order', { ascending: true });
+      const { data, error } = await withTimeout(
+        supabase
+          .from('categories')
+          .select('*')
+          .eq('is_active', true)
+          .order('sort_order', { ascending: true }) as any,
+        3500
+      );
 
       if (!error && data && data.length > 0) {
         return data as Category[];
