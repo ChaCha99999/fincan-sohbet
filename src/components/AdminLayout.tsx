@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, 
@@ -6,10 +6,12 @@ import {
   HelpCircle, 
   LogOut, 
   ExternalLink, 
-  Coffee
+  Coffee,
+  Bell
 } from 'lucide-react';
 import { useAdminAuth } from '../hooks/useAdminAuth';
 import { APP_CONFIG } from '../lib/config';
+import { getActiveServiceRequestsCount } from '../lib/api';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -21,6 +23,24 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, subti
   const { isAuthenticated, isLoading, userEmail, logout } = useAdminAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const [pendingCallsCount, setPendingCallsCount] = useState<number>(0);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchCount = () => {
+      getActiveServiceRequestsCount().then(count => {
+        if (isMounted) setPendingCallsCount(count);
+      });
+    };
+
+    fetchCount();
+    const interval = setInterval(fetchCount, 8000);
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, []);
 
   if (isLoading) {
     return (
@@ -63,6 +83,25 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, subti
             <span className="text-xs text-coffee-300 hidden md:inline truncate max-w-xs">
               {userEmail}
             </span>
+
+            {/* Masa Çağrıları Hızlı Zil Butonu */}
+            <Link
+              to="/admin/calls"
+              className={`relative p-2 rounded-xl border transition-colors flex items-center gap-1.5 ${
+                location.pathname.startsWith('/admin/calls')
+                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/50'
+                  : 'bg-coffee-900 text-coffee-300 hover:text-white border-coffee-800'
+              }`}
+              title="Masa Çağrıları (Garson & Hesap)"
+            >
+              <Bell className="w-4 h-4" />
+              {pendingCallsCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-amber-500 text-white font-black text-[10px] flex items-center justify-center animate-bounce shadow-sm">
+                  {pendingCallsCount}
+                </span>
+              )}
+            </Link>
+
             <Link
               to="/"
               target="_blank"
@@ -97,6 +136,23 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, subti
           >
             <LayoutDashboard className="w-4 h-4" />
             Genel Bakış
+          </Link>
+
+          <Link
+            to="/admin/calls"
+            className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-colors whitespace-nowrap ${
+              location.pathname.startsWith('/admin/calls')
+                ? 'bg-coffee-900 text-white shadow-warm-sm'
+                : 'bg-white text-coffee-700 hover:bg-cream-100 border border-coffee-200'
+            }`}
+          >
+            <Bell className="w-4 h-4 text-amber-500" />
+            <span>Masa Çağrıları</span>
+            {pendingCallsCount > 0 && (
+              <span className="px-1.5 py-0.5 rounded-full bg-amber-500 text-white text-[10px] font-black animate-pulse">
+                {pendingCallsCount}
+              </span>
+            )}
           </Link>
 
           <Link

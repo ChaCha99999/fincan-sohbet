@@ -20,14 +20,23 @@ import {
   ChevronRight,
   Trophy,
   Swords,
-  BarChart3
+  BarChart3,
+  Bell,
+  Receipt
 } from 'lucide-react';
-import { validateTableToken, logUsageEvent, getCategories } from '../lib/api';
-import type { Table, Category, GameType } from '../types';
+import { 
+  validateTableToken, 
+  logUsageEvent, 
+  getCategories,
+  getActiveTableServiceRequest,
+  updateServiceRequestStatus
+} from '../lib/api';
+import type { Table, Category, GameType, ServiceRequest, ServiceRequestType } from '../types';
 import { useTableSession } from '../hooks/useTableSession';
 import { CafeMenuView } from '../components/CafeMenuView';
 import { useTranslation } from '../lib/i18n';
 import { LanguageSwitch } from '../components/LanguageSwitch';
+import { ServiceCallModal } from '../components/ServiceCallModal';
 
 type ActiveViewMode = 'portal' | 'menu' | 'games';
 
@@ -44,6 +53,12 @@ export const TableLandingPage: React.FC = () => {
   const [copied, setCopied] = useState<boolean>(false);
   const [copiedWifi, setCopiedWifi] = useState<boolean>(false);
   const [activeView, setActiveView] = useState<ActiveViewMode>('portal');
+
+  // Garson & Hesap Çağrısı State'leri
+  const [callModalOpen, setCallModalOpen] = useState(false);
+  const [callModalMode, setCallModalMode] = useState<ServiceRequestType>('waiter');
+  const [activeCall, setActiveCall] = useState<ServiceRequest | null>(null);
+  const [callFeedback, setCallFeedback] = useState<string | null>(null);
 
   const handleShare = () => {
     const url = window.location.href;
@@ -65,6 +80,36 @@ export const TableLandingPage: React.FC = () => {
       navigator.clipboard.writeText(table.cafe.wifi_password);
       setCopiedWifi(true);
       setTimeout(() => setCopiedWifi(false), 2000);
+    }
+  };
+
+  const handleOpenCallModal = (mode: ServiceRequestType) => {
+    setCallModalMode(mode);
+    setCallModalOpen(true);
+  };
+
+  const handleCallSuccess = (req: ServiceRequest) => {
+    setActiveCall(req);
+    const msg = req.request_type === 'waiter' 
+      ? 'Garson çağrınız personele iletildi.' 
+      : 'Hesap isteğiniz kasaya ve servis personeline iletildi.';
+    setCallFeedback(msg);
+    setTimeout(() => setCallFeedback(null), 5000);
+  };
+
+  const handleCancelCall = async () => {
+    if (activeCall) {
+      try {
+        await updateServiceRequestStatus(activeCall.id, 'cancelled');
+        if (typeof window !== 'undefined' && table?.id) {
+          localStorage.removeItem(`fincan_active_call_${table.id}`);
+        }
+        setActiveCall(null);
+        setCallFeedback('Çağrınız iptal edildi.');
+        setTimeout(() => setCallFeedback(null), 3000);
+      } catch (e) {
+        console.error('Cancel call error:', e);
+      }
     }
   };
 
@@ -103,6 +148,15 @@ export const TableLandingPage: React.FC = () => {
 
           // Masa açılış olayını logla
           logUsageEvent(validation.table.cafe_id, validation.table.id, 'table_open', null);
+
+          // Masaya ait aktif garson veya hesap çağrısı var mı kontrol et
+          if (validation.table.cafe?.waiter_call_enabled !== false) {
+            getActiveTableServiceRequest(validation.table.id).then((existingReq) => {
+              if (existingReq && isMounted) {
+                setActiveCall(existingReq);
+              }
+            });
+          }
         }
       } catch (err: any) {
         console.error('Table init error:', err);
@@ -262,6 +316,69 @@ export const TableLandingPage: React.FC = () => {
             <span>{t.tabGames}</span>
           </button>
         </nav>
+
+        {/* MASA SERVİS ÇAĞRILARI (Garson Çağır & Hesap İste) — İşletme Açtıysa Görünür */}
+        {table.cafe?.waiter_call_enabled !== false && (
+          <section className="space-y-2">
+            {callFeedback && (
+              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 flex items-center justify-between gap-2 animate-fadeIn shadow-warm-sm">
+                <span>{callFeedback}</span>
+              </div>
+            )}
+
+            {activeCall ? (
+              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 shadow-warm-sm flex items-center justify-between gap-3 animate-fadeIn">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-xs animate-pulse">
+                    {activeCall.request_type === 'waiter' ? <Bell className="w-5 h-5" /> : <Receipt className="w-5 h-5" />}
+                  </div>
+                  <div className="text-left">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-xs text-amber-950">
+                        {activeCall.request_type === 'waiter' ? t.waiterCalled || 'Garson Çağrıldı' : t.billRequested || 'Hesap İstendi'}
+                      </span>
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                        activeCall.status === 'in_progress'
+                          ? 'bg-blue-100 text-blue-800'
+                          : 'bg-amber-200 text-amber-900'
+                      }`}>
+                        {activeCall.status === 'in_progress' ? 'Garson Yolda' : 'Beklemede'}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-coffee-700 mt-0.5">
+                      {activeCall.note ? `Not: ${activeCall.note}` : (activeCall.request_type === 'waiter' ? t.waiterOnTheWay : t.billOnTheWay)}
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleCancelCall}
+                  className="px-2.5 py-1.5 rounded-xl border border-amber-300 bg-white hover:bg-amber-100 text-[11px] font-bold text-amber-900 transition-colors shrink-0 shadow-xs"
+                >
+                  {t.cancelCall}
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-2.5">
+                <button
+                  onClick={() => handleOpenCallModal('waiter')}
+                  className="py-3 px-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-warm-sm hover:shadow-warm flex items-center justify-center gap-2 font-bold text-xs transition-all active:scale-98"
+                >
+                  <Bell className="w-4 h-4" />
+                  <span>{t.callWaiter}</span>
+                </button>
+
+                <button
+                  onClick={() => handleOpenCallModal('bill')}
+                  className="py-3 px-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white shadow-warm-sm hover:shadow-warm flex items-center justify-center gap-2 font-bold text-xs transition-all active:scale-98"
+                >
+                  <Receipt className="w-4 h-4" />
+                  <span>{t.requestBill}</span>
+                </button>
+              </div>
+            )}
+          </section>
+        )}
 
         {/* ------------------------------------------------------------- */}
         {/* GÖRÜNÜM 1: PORTAL (İKİYE AYRILAN ANA KARŞILAMA EKRANI)           */}
@@ -602,6 +719,19 @@ export const TableLandingPage: React.FC = () => {
           <Link to="/" className="hover:underline">Fincan Sohbet Nedir?</Link>
         </div>
       </footer>
+
+      {/* Garson & Hesap Çağrı Modalı */}
+      {table && (
+        <ServiceCallModal
+          isOpen={callModalOpen}
+          mode={callModalMode}
+          cafeId={table.cafe_id}
+          tableId={table.id}
+          tableLabel={table.label}
+          onClose={() => setCallModalOpen(false)}
+          onSuccess={handleCallSuccess}
+        />
+      )}
     </main>
   );
 };

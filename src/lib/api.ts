@@ -8,11 +8,15 @@ import type {
   TableValidationResult, 
   GameType, 
   EventType,
-  MenuItem
+  MenuItem,
+  ServiceRequest,
+  ServiceRequestType,
+  ServiceRequestStatus,
+  PaymentMethod
 } from '../types';
 import { INITIAL_CATEGORIES } from '../data/categories';
 import { INITIAL_QUESTIONS } from '../data/questionsSeed';
-import { MOCK_CAFES, MOCK_TABLES, MOCK_EVENTS } from '../data/mockData';
+import { MOCK_CAFES, MOCK_TABLES, MOCK_EVENTS, MOCK_SERVICE_REQUESTS } from '../data/mockData';
 import { DEFAULT_MENU_ITEMS } from '../data/mockMenu';
 
 // Local in-memory caches for demo mode
@@ -20,6 +24,7 @@ let localCafes: Cafe[] = [...MOCK_CAFES];
 let localTables: Table[] = [...MOCK_TABLES];
 let localQuestions: Question[] = [...INITIAL_QUESTIONS];
 let localEvents: UsageEvent[] = [...MOCK_EVENTS];
+let localServiceRequests: ServiceRequest[] = [...MOCK_SERVICE_REQUESTS];
 
 export const generatePublicToken = (): string => {
   const chars = 'abcdefghjkmnpqrstuvwxyz23456789';
@@ -100,6 +105,9 @@ export const validateTableToken = async (token: string): Promise<TableValidation
             wifi_name: item.wifi_name || localCafeMatch?.wifi_name || null,
             wifi_password: item.wifi_password || localCafeMatch?.wifi_password || null,
             instagram: item.instagram || localCafeMatch?.instagram || null,
+            waiter_call_enabled: item.waiter_call_enabled !== undefined 
+              ? item.waiter_call_enabled 
+              : (localCafeMatch?.waiter_call_enabled ?? true),
           },
         };
 
@@ -164,6 +172,7 @@ export const validateTableToken = async (token: string): Promise<TableValidation
       wifi_name: cafe.wifi_name,
       wifi_password: cafe.wifi_password,
       instagram: cafe.instagram,
+      waiter_call_enabled: cafe.waiter_call_enabled ?? true,
     } : undefined,
   };
 
@@ -394,6 +403,11 @@ export const getCafes = async (): Promise<Cafe[]> => {
           created_at: c.created_at,
           updated_at: c.updated_at,
           table_count: c.tables ? c.tables[0]?.count || 0 : 0,
+          menu_url: c.menu_url,
+          wifi_name: c.wifi_name,
+          wifi_password: c.wifi_password,
+          instagram: c.instagram,
+          waiter_call_enabled: c.waiter_call_enabled !== undefined ? c.waiter_call_enabled : true,
         }));
       }
     } catch (e) {
@@ -405,33 +419,45 @@ export const getCafes = async (): Promise<Cafe[]> => {
   return localCafes.map(c => ({
     ...c,
     table_count: localTables.filter(t => t.cafe_id === c.id).length,
+    waiter_call_enabled: c.waiter_call_enabled ?? true,
   }));
 };
 
 export const createCafe = async (
   name: string, 
   slug: string, 
-  details?: { menu_url?: string | null; wifi_name?: string | null; wifi_password?: string | null; instagram?: string | null }
+  details?: { 
+    menu_url?: string | null; 
+    wifi_name?: string | null; 
+    wifi_password?: string | null; 
+    instagram?: string | null;
+    waiter_call_enabled?: boolean;
+  }
 ): Promise<Cafe> => {
   const cleanSlug = slug.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-');
+  const waiterCallEnabled = details?.waiter_call_enabled !== undefined ? details.waiter_call_enabled : true;
 
   if (isSupabaseConfigured && supabase) {
-    const { data, error } = await supabase
-      .from('cafes')
-      .insert([{ 
-        name, 
-        slug: cleanSlug, 
-        status: 'active',
-        menu_url: details?.menu_url || null,
-        wifi_name: details?.wifi_name || null,
-        wifi_password: details?.wifi_password || null,
-        instagram: details?.instagram || null,
-      }])
-      .select()
-      .single();
+    try {
+      const { data, error } = await supabase
+        .from('cafes')
+        .insert([{ 
+          name, 
+          slug: cleanSlug, 
+          status: 'active',
+          menu_url: details?.menu_url || null,
+          wifi_name: details?.wifi_name || null,
+          wifi_password: details?.wifi_password || null,
+          instagram: details?.instagram || null,
+          waiter_call_enabled: waiterCallEnabled,
+        }])
+        .select()
+        .single();
 
-    if (error) throw new Error(error.message);
-    return data as Cafe;
+      if (!error && data) return data as Cafe;
+    } catch (e) {
+      console.warn('Supabase createCafe error, using fallback:', e);
+    }
   }
 
   const newCafe: Cafe = {
@@ -445,6 +471,7 @@ export const createCafe = async (
     wifi_name: details?.wifi_name || null,
     wifi_password: details?.wifi_password || null,
     instagram: details?.instagram || null,
+    waiter_call_enabled: waiterCallEnabled,
   };
   localCafes.unshift(newCafe);
   return newCafe;
@@ -452,15 +479,18 @@ export const createCafe = async (
 
 export const updateCafe = async (id: string, updates: Partial<Cafe>): Promise<Cafe> => {
   if (isSupabaseConfigured && supabase) {
-    const { data, error } = await supabase
-      .from('cafes')
-      .update({ ...updates, updated_at: new Date().toISOString() })
-      .eq('id', id)
-      .select()
-      .single();
+    try {
+      const { data, error } = await supabase
+        .from('cafes')
+        .update({ ...updates, updated_at: new Date().toISOString() })
+        .eq('id', id)
+        .select()
+        .single();
 
-    if (error) throw new Error(error.message);
-    return data as Cafe;
+      if (!error && data) return data as Cafe;
+    } catch (e) {
+      console.warn('Supabase updateCafe error, fallback to local:', e);
+    }
   }
 
   const index = localCafes.findIndex(c => c.id === id);
@@ -471,6 +501,10 @@ export const updateCafe = async (id: string, updates: Partial<Cafe>): Promise<Ca
 
 export const toggleCafeStatus = async (id: string, status: 'active' | 'inactive'): Promise<void> => {
   await updateCafe(id, { status });
+};
+
+export const toggleCafeWaiterCall = async (id: string, enabled: boolean): Promise<Cafe> => {
+  return await updateCafe(id, { waiter_call_enabled: enabled });
 };
 
 // ==========================================
@@ -619,6 +653,7 @@ export interface DashboardStats {
   activeTables: number;
   totalTableOpens: number;
   totalGameStarts: number;
+  pendingServiceRequestsCount: number;
   categoryDistribution: Record<string, number>;
   recentEvents: UsageEvent[];
   isRealData: boolean;
@@ -627,15 +662,17 @@ export interface DashboardStats {
 export const getDashboardStats = async (): Promise<DashboardStats> => {
   if (isSupabaseConfigured && supabase) {
     try {
-      const [cafesRes, tablesRes, eventsRes] = await Promise.all([
+      const [cafesRes, tablesRes, eventsRes, callsRes] = await Promise.all([
         supabase.from('cafes').select('id, status'),
         supabase.from('tables').select('id, is_active'),
         supabase.from('events').select('*, cafes(name), tables(label)').order('created_at', { ascending: false }).limit(25),
+        supabase.from('service_requests').select('id').eq('status', 'pending'),
       ]);
 
       const cafes = cafesRes.data || [];
       const tables = tablesRes.data || [];
       const events = eventsRes.data || [];
+      const pendingCalls = callsRes.data || [];
 
       const activeCafes = cafes.filter(c => c.status === 'active').length;
       const activeTables = tables.filter(t => t.is_active).length;
@@ -664,6 +701,7 @@ export const getDashboardStats = async (): Promise<DashboardStats> => {
         activeTables,
         totalTableOpens,
         totalGameStarts,
+        pendingServiceRequestsCount: pendingCalls.length,
         categoryDistribution,
         recentEvents: events.map((e: any) => ({
           id: e.id,
@@ -687,6 +725,7 @@ export const getDashboardStats = async (): Promise<DashboardStats> => {
   const activeTables = localTables.filter(t => t.is_active).length;
   const totalTableOpens = localEvents.filter(e => e.event_type === 'table_open').length;
   const totalGameStarts = localEvents.filter(e => e.event_type === 'game_start').length;
+  const pendingServiceRequestsCount = localServiceRequests.filter(r => r.status === 'pending').length;
 
   const categoryDistribution: Record<string, number> = {
     'sohbeti-baslat': 0,
@@ -709,6 +748,7 @@ export const getDashboardStats = async (): Promise<DashboardStats> => {
     activeTables,
     totalTableOpens,
     totalGameStarts,
+    pendingServiceRequestsCount,
     categoryDistribution,
     recentEvents: localEvents.slice(0, 15),
     isRealData: false, // Clearly indicates local/demo mode
@@ -887,4 +927,259 @@ export const deleteMenuItem = async (id: string, cafeId?: string): Promise<void>
       localStorage.setItem(`fincan_menu_${cafeId}`, JSON.stringify(list));
     }
   }
+};
+
+// ==========================================
+// MASA SERVİS ÇAĞRILARI (SERVICE REQUESTS)
+// ==========================================
+export const createServiceRequest = async (params: {
+  cafe_id: string;
+  table_id: string;
+  request_type: ServiceRequestType;
+  payment_method?: PaymentMethod | null;
+  note?: string | null;
+}): Promise<ServiceRequest> => {
+  const cafe = localCafes.find(c => c.id === params.cafe_id);
+  const table = localTables.find(t => t.id === params.table_id);
+
+  if (isSupabaseConfigured && supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('service_requests')
+        .insert([{
+          cafe_id: params.cafe_id,
+          table_id: params.table_id,
+          request_type: params.request_type,
+          payment_method: params.payment_method || null,
+          note: params.note || null,
+          status: 'pending',
+        }])
+        .select('*, cafes(name), tables(label)')
+        .single();
+
+      if (!error && data) {
+        const item: ServiceRequest = {
+          id: data.id,
+          cafe_id: data.cafe_id,
+          table_id: data.table_id,
+          request_type: data.request_type,
+          payment_method: data.payment_method,
+          note: data.note,
+          status: data.status,
+          created_at: data.created_at,
+          updated_at: data.updated_at,
+          cafe_name: data.cafes?.name || cafe?.name,
+          table_label: data.tables?.label || table?.label,
+        };
+        // Also keep in local cache
+        localServiceRequests.unshift(item);
+        return item;
+      }
+    } catch (e) {
+      console.warn('Supabase createServiceRequest error, using local fallback:', e);
+    }
+  }
+
+  const newReq: ServiceRequest = {
+    id: 'req-' + Date.now(),
+    cafe_id: params.cafe_id,
+    table_id: params.table_id,
+    request_type: params.request_type,
+    payment_method: params.payment_method || null,
+    note: params.note || null,
+    status: 'pending',
+    created_at: new Date().toISOString(),
+    cafe_name: cafe?.name || 'Kafe',
+    table_label: table?.label || 'Masa',
+  };
+
+  localServiceRequests.unshift(newReq);
+
+  // Persist locally for demo sessions
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(`fincan_active_call_${params.table_id}`, JSON.stringify(newReq));
+  }
+
+  return newReq;
+};
+
+export const getServiceRequests = async (filter?: {
+  cafe_id?: string;
+  status?: ServiceRequestStatus | 'all';
+  table_id?: string;
+}): Promise<ServiceRequest[]> => {
+  if (isSupabaseConfigured && supabase) {
+    try {
+      let query = supabase
+        .from('service_requests')
+        .select('*, cafes(name), tables(label)')
+        .order('created_at', { ascending: false });
+
+      if (filter?.cafe_id) {
+        query = query.eq('cafe_id', filter.cafe_id);
+      }
+      if (filter?.table_id) {
+        query = query.eq('table_id', filter.table_id);
+      }
+      if (filter?.status && filter.status !== 'all') {
+        query = query.eq('status', filter.status);
+      }
+
+      const { data, error } = await query;
+      if (!error && data) {
+        return data.map((d: any) => ({
+          id: d.id,
+          cafe_id: d.cafe_id,
+          table_id: d.table_id,
+          request_type: d.request_type,
+          payment_method: d.payment_method,
+          note: d.note,
+          status: d.status,
+          created_at: d.created_at,
+          updated_at: d.updated_at,
+          cafe_name: d.cafes?.name || 'Bilinmeyen Kafe',
+          table_label: d.tables?.label || 'Bilinmeyen Masa',
+        }));
+      }
+    } catch (e) {
+      console.warn('Supabase getServiceRequests error, falling back to local:', e);
+    }
+  }
+
+  return localServiceRequests.filter(req => {
+    if (filter?.cafe_id && req.cafe_id !== filter.cafe_id) return false;
+    if (filter?.table_id && req.table_id !== filter.table_id) return false;
+    if (filter?.status && filter.status !== 'all' && req.status !== filter.status) return false;
+    return true;
+  });
+};
+
+export const updateServiceRequestStatus = async (
+  id: string,
+  status: ServiceRequestStatus
+): Promise<ServiceRequest> => {
+  if (isSupabaseConfigured && supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('service_requests')
+        .update({ status, updated_at: new Date().toISOString() })
+        .eq('id', id)
+        .select('*, cafes(name), tables(label)')
+        .single();
+
+      if (!error && data) {
+        const updated: ServiceRequest = {
+          id: data.id,
+          cafe_id: data.cafe_id,
+          table_id: data.table_id,
+          request_type: data.request_type,
+          payment_method: data.payment_method,
+          note: data.note,
+          status: data.status,
+          created_at: data.created_at,
+          updated_at: data.updated_at,
+          cafe_name: data.cafes?.name,
+          table_label: data.tables?.label,
+        };
+        const idx = localServiceRequests.findIndex(r => r.id === id);
+        if (idx !== -1) localServiceRequests[idx] = updated;
+        return updated;
+      }
+    } catch (e) {
+      console.warn('Supabase updateServiceRequestStatus error, using local fallback:', e);
+    }
+  }
+
+  const idx = localServiceRequests.findIndex(r => r.id === id);
+  if (idx !== -1) {
+    localServiceRequests[idx] = {
+      ...localServiceRequests[idx],
+      status,
+      updated_at: new Date().toISOString(),
+    };
+    return localServiceRequests[idx];
+  }
+
+  throw new Error('Servis çağrısı bulunamadı');
+};
+
+export const getActiveServiceRequestsCount = async (cafeId?: string): Promise<number> => {
+  if (isSupabaseConfigured && supabase) {
+    try {
+      let query = supabase
+        .from('service_requests')
+        .select('id', { count: 'exact', head: true })
+        .eq('status', 'pending');
+
+      if (cafeId) {
+        query = query.eq('cafe_id', cafeId);
+      }
+
+      const { count, error } = await query;
+      if (!error && count !== null) {
+        return count;
+      }
+    } catch (e) {
+      console.warn('Supabase count error, using local fallback:', e);
+    }
+  }
+
+  return localServiceRequests.filter(r => {
+    if (cafeId && r.cafe_id !== cafeId) return false;
+    return r.status === 'pending';
+  }).length;
+};
+
+export const getActiveTableServiceRequest = async (tableId: string): Promise<ServiceRequest | null> => {
+  if (isSupabaseConfigured && supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('service_requests')
+        .select('*, cafes(name), tables(label)')
+        .eq('table_id', tableId)
+        .in('status', ['pending', 'in_progress'])
+        .order('created_at', { ascending: false })
+        .limit(1);
+
+      if (!error && data && data.length > 0) {
+        const d = data[0];
+        return {
+          id: d.id,
+          cafe_id: d.cafe_id,
+          table_id: d.table_id,
+          request_type: d.request_type,
+          payment_method: d.payment_method,
+          note: d.note,
+          status: d.status,
+          created_at: d.created_at,
+          updated_at: d.updated_at,
+          cafe_name: d.cafes?.name,
+          table_label: d.tables?.label,
+        };
+      }
+    } catch (e) {
+      console.warn('Supabase getActiveTableServiceRequest error, fallback to local:', e);
+    }
+  }
+
+  // Check local state
+  const found = localServiceRequests.find(
+    r => r.table_id === tableId && (r.status === 'pending' || r.status === 'in_progress')
+  );
+  if (found) return found;
+
+  // Check local storage
+  if (typeof window !== 'undefined') {
+    const stored = localStorage.getItem(`fincan_active_call_${tableId}`);
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        if (parsed && (parsed.status === 'pending' || parsed.status === 'in_progress')) {
+          return parsed;
+        }
+      } catch {}
+    }
+  }
+
+  return null;
 };

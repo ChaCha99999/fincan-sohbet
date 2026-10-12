@@ -60,6 +60,20 @@ export const translations = {
     point: 'Puan',
     voteThisPlayer: 'Bu Kişiye Oy Ver',
     nextRound: 'Sonraki Soru',
+
+    // Servis & Garson Çağrısı
+    callWaiter: 'Garson Çağır',
+    requestBill: 'Hesap İste',
+    waiterCalled: 'Garson Masaya Çağrıldı',
+    billRequested: 'Hesap İstendi',
+    callWaiterDesc: 'Sipariş vermek veya masaya servis rica etmek için',
+    requestBillDesc: 'Nakit veya kart ile adisyon / hesap isteyin',
+    serviceCallSent: 'İsteğiniz İletildi!',
+    waiterOnTheWay: 'Garsonumuz masanıza yönlendirildi.',
+    billOnTheWay: 'Hesap isteğiniz kasaya ve garsona iletildi.',
+    cancelCall: 'Çağrıyı İptal Et',
+    callCancelled: 'Çağrınız iptal edildi.',
+    activeCallBadge: 'Aktif Masa Çağrısı',
   },
   en: {
     // General
@@ -116,6 +130,20 @@ export const translations = {
     point: 'Pts',
     voteThisPlayer: 'Vote for this Person',
     nextRound: 'Next Question',
+
+    // Service & Waiter Call
+    callWaiter: 'Call Waiter',
+    requestBill: 'Request Bill',
+    waiterCalled: 'Waiter Called',
+    billRequested: 'Bill Requested',
+    callWaiterDesc: 'Call a waiter to place an order or make a request',
+    requestBillDesc: 'Ask for the check with cash or card',
+    serviceCallSent: 'Request Sent!',
+    waiterOnTheWay: 'A waiter is on their way to your table.',
+    billOnTheWay: 'Your bill request has been sent to the staff.',
+    cancelCall: 'Cancel Request',
+    callCancelled: 'Request has been cancelled.',
+    activeCallBadge: 'Active Table Request',
   }
 };
 

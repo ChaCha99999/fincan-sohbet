@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { 
   Store, 
   QrCode, 
   Play, 
   Layers, 
   Database, 
-  RefreshCw 
+  RefreshCw,
+  Bell,
+  ArrowRight
 } from 'lucide-react';
 import { AdminLayout } from '../components/AdminLayout';
 import { getDashboardStats } from '../lib/api';
@@ -94,9 +97,36 @@ export const AdminDashboardPage: React.FC = () => {
         </div>
       ) : (
         <div className="space-y-6">
-          {/* 4 Core Metric Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* 1. Cafes */}
+          {/* 5 Core Metric Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {/* 1. Masa Çağrıları (Garson & Hesap) */}
+            <Link
+              to="/admin/calls"
+              className="p-5 rounded-3xl bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-300 hover:border-amber-500 shadow-warm-sm space-y-2 transition-all group"
+            >
+              <div className="flex items-center justify-between text-amber-800">
+                <span className="text-xs font-bold uppercase tracking-wider">Masa Çağrıları</span>
+                <Bell className="w-4 h-4 text-amber-600 group-hover:scale-110 transition-transform" />
+              </div>
+              <div className="flex items-baseline justify-between">
+                <span className="font-serif font-black text-3xl text-coffee-950">
+                  {stats.pendingServiceRequestsCount || 0}
+                </span>
+                <span className={`text-[11px] font-bold px-2 py-0.5 rounded-md ${
+                  (stats.pendingServiceRequestsCount || 0) > 0
+                    ? 'bg-amber-500 text-white animate-pulse'
+                    : 'bg-emerald-100 text-emerald-800'
+                }`}>
+                  {(stats.pendingServiceRequestsCount || 0) > 0 ? 'Bekliyor' : 'Aktif Yok'}
+                </span>
+              </div>
+              <p className="text-[11px] text-amber-900 font-semibold flex items-center justify-between pt-0.5">
+                <span>Garson & Hesap</span>
+                <ArrowRight className="w-3.5 h-3.5 text-amber-700 group-hover:translate-x-1 transition-transform" />
+              </p>
+            </Link>
+
+            {/* 2. Cafes */}
             <div className="p-5 rounded-3xl bg-white border border-coffee-200 shadow-warm-sm space-y-2">
               <div className="flex items-center justify-between text-coffee-500">
                 <span className="text-xs font-bold uppercase tracking-wider">Kayıtlı Kafe</span>
@@ -115,7 +145,7 @@ export const AdminDashboardPage: React.FC = () => {
               </p>
             </div>
 
-            {/* 2. Tables */}
+            {/* 3. Tables */}
             <div className="p-5 rounded-3xl bg-white border border-coffee-200 shadow-warm-sm space-y-2">
               <div className="flex items-center justify-between text-coffee-500">
                 <span className="text-xs font-bold uppercase tracking-wider">Tanımlı Masa</span>
@@ -134,7 +164,7 @@ export const AdminDashboardPage: React.FC = () => {
               </p>
             </div>
 
-            {/* 3. Table Opens */}
+            {/* 4. Table Opens */}
             <div className="p-5 rounded-3xl bg-white border border-coffee-200 shadow-warm-sm space-y-2">
               <div className="flex items-center justify-between text-coffee-500">
                 <span className="text-xs font-bold uppercase tracking-wider">QR Okutma</span>
@@ -153,7 +183,7 @@ export const AdminDashboardPage: React.FC = () => {
               </p>
             </div>
 
-            {/* 4. Game Starts */}
+            {/* 5. Game Starts */}
             <div className="p-5 rounded-3xl bg-white border border-coffee-200 shadow-warm-sm space-y-2">
               <div className="flex items-center justify-between text-coffee-500">
                 <span className="text-xs font-bold uppercase tracking-wider">Oyun Başlatma</span>

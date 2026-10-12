@@ -1,4 +1,4 @@
-import type { Cafe, Table, UsageEvent } from '../types';
+import type { Cafe, Table, UsageEvent, ServiceRequest } from '../types';
 
 export const MOCK_CAFES: Cafe[] = [
   {
@@ -11,6 +11,7 @@ export const MOCK_CAFES: Cafe[] = [
     wifi_name: 'ModaFincan_Misafir',
     wifi_password: 'kahvevekitap',
     instagram: '@modafincankahve',
+    waiter_call_enabled: true,
   },
   {
     id: 'cafe-alsancak-02',
@@ -22,6 +23,7 @@ export const MOCK_CAFES: Cafe[] = [
     wifi_name: 'DibekSohbet_Wifi',
     wifi_password: 'alsancak2026',
     instagram: '@alsancakdibek',
+    waiter_call_enabled: true,
   },
   {
     id: 'cafe-kavaklidere-03',
@@ -30,6 +32,7 @@ export const MOCK_CAFES: Cafe[] = [
     status: 'inactive',
     created_at: new Date(Date.now() - 5 * 24 * 3600 * 1000).toISOString(),
     table_count: 3,
+    waiter_call_enabled: false,
   },
 ];
 
@@ -49,6 +52,7 @@ export const MOCK_TABLES: Table[] = [
       wifi_name: 'ModaFincan_Misafir',
       wifi_password: 'kahvevekitap',
       instagram: '@modafincankahve',
+      waiter_call_enabled: true,
     },
   },
   {
@@ -66,6 +70,7 @@ export const MOCK_TABLES: Table[] = [
       wifi_name: 'ModaFincan_Misafir',
       wifi_password: 'kahvevekitap',
       instagram: '@modafincankahve',
+      waiter_call_enabled: true,
     },
   },
   {
@@ -80,6 +85,7 @@ export const MOCK_TABLES: Table[] = [
       name: 'Moda Fincan Kahve & Kitap',
       slug: 'moda-fincan',
       status: 'active',
+      waiter_call_enabled: true,
     },
   },
   {
@@ -94,6 +100,7 @@ export const MOCK_TABLES: Table[] = [
       name: 'Alsancak Dibek & Sohbet',
       slug: 'alsancak-dibek',
       status: 'active',
+      waiter_call_enabled: true,
     },
   },
   {
@@ -108,6 +115,7 @@ export const MOCK_TABLES: Table[] = [
       name: 'Kavaklıdere Çınar Kafe',
       slug: 'kavaklidere-cinar',
       status: 'inactive',
+      waiter_call_enabled: false,
     },
   },
 ];
@@ -162,5 +170,53 @@ export const MOCK_EVENTS: UsageEvent[] = [
     created_at: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
     cafe_name: 'Moda Fincan Kahve & Kitap',
     table_label: 'Masa 02 (Pencere Kenarı)',
+  },
+];
+
+export const MOCK_SERVICE_REQUESTS: ServiceRequest[] = [
+  {
+    id: 'req-01',
+    cafe_id: 'cafe-moda-01',
+    table_id: 'tbl-moda-01',
+    request_type: 'waiter',
+    note: 'Peçete ve ekstra bardak rica ediyoruz',
+    status: 'pending',
+    created_at: new Date(Date.now() - 3 * 60 * 1000).toISOString(),
+    cafe_name: 'Moda Fincan Kahve & Kitap',
+    table_label: 'Masa 01 (Bahçe)',
+  },
+  {
+    id: 'req-02',
+    cafe_id: 'cafe-moda-01',
+    table_id: 'tbl-moda-02',
+    request_type: 'bill',
+    payment_method: 'card',
+    note: 'Ayrı ayrı kredi kartı ile çektireceğiz',
+    status: 'pending',
+    created_at: new Date(Date.now() - 7 * 60 * 1000).toISOString(),
+    cafe_name: 'Moda Fincan Kahve & Kitap',
+    table_label: 'Masa 02 (Pencere Kenarı)',
+  },
+  {
+    id: 'req-03',
+    cafe_id: 'cafe-alsancak-02',
+    table_id: 'tbl-alsancak-01',
+    request_type: 'waiter',
+    note: 'Sipariş vermek istiyoruz',
+    status: 'in_progress',
+    created_at: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
+    cafe_name: 'Alsancak Dibek & Sohbet',
+    table_label: 'Masa 04 (Teras)',
+  },
+  {
+    id: 'req-04',
+    cafe_id: 'cafe-moda-01',
+    table_id: 'tbl-moda-01',
+    request_type: 'bill',
+    payment_method: 'cash',
+    status: 'completed',
+    created_at: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
+    cafe_name: 'Moda Fincan Kahve & Kitap',
+    table_label: 'Masa 01 (Bahçe)',
   },
 ];

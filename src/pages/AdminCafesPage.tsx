@@ -8,10 +8,11 @@ import {
   X, 
   Save, 
   AlertCircle,
-  UtensilsCrossed 
+  UtensilsCrossed,
+  Bell
 } from 'lucide-react';
 import { AdminLayout } from '../components/AdminLayout';
-import { getCafes, createCafe, updateCafe, toggleCafeStatus } from '../lib/api';
+import { getCafes, createCafe, updateCafe, toggleCafeStatus, toggleCafeWaiterCall } from '../lib/api';
 import type { Cafe } from '../types';
 
 export const AdminCafesPage: React.FC = () => {
@@ -26,6 +27,7 @@ export const AdminCafesPage: React.FC = () => {
   const [formWifiName, setFormWifiName] = useState('');
   const [formWifiPassword, setFormWifiPassword] = useState('');
   const [formInstagram, setFormInstagram] = useState('');
+  const [formWaiterCallEnabled, setFormWaiterCallEnabled] = useState(true);
   const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -48,6 +50,7 @@ export const AdminCafesPage: React.FC = () => {
     setFormWifiName('');
     setFormWifiPassword('');
     setFormInstagram('');
+    setFormWaiterCallEnabled(true);
     setFormError(null);
     setActiveCafe(null);
     setModalMode('create');
@@ -60,6 +63,7 @@ export const AdminCafesPage: React.FC = () => {
     setFormWifiName(cafe.wifi_name || '');
     setFormWifiPassword(cafe.wifi_password || '');
     setFormInstagram(cafe.instagram || '');
+    setFormWaiterCallEnabled(cafe.waiter_call_enabled !== false);
     setFormError(null);
     setActiveCafe(cafe);
     setModalMode('edit');
@@ -106,6 +110,7 @@ export const AdminCafesPage: React.FC = () => {
         wifi_name: formWifiName.trim() || null,
         wifi_password: formWifiPassword.trim() || null,
         instagram: formInstagram.trim() || null,
+        waiter_call_enabled: formWaiterCallEnabled,
       };
 
       if (modalMode === 'create') {
@@ -132,6 +137,12 @@ export const AdminCafesPage: React.FC = () => {
       await toggleCafeStatus(cafe.id, nextStatus);
       loadCafes();
     }
+  };
+
+  const handleToggleWaiterCall = async (cafe: Cafe) => {
+    const nextState = cafe.waiter_call_enabled === false;
+    await toggleCafeWaiterCall(cafe.id, nextState);
+    loadCafes();
   };
 
   return (
@@ -214,6 +225,26 @@ export const AdminCafesPage: React.FC = () => {
                       <Layers className="w-3.5 h-3.5 text-caramel-600" />
                       <span>{cafe.table_count || 0} Tanımlı Masa</span>
                     </div>
+
+                    {/* Masa Servis Çağrıları Durumu */}
+                    <div className="flex items-center justify-between text-xs pt-1.5 border-t border-coffee-100/80">
+                      <div className="flex items-center gap-1.5 text-coffee-600">
+                        <Bell className="w-3.5 h-3.5 text-amber-600" />
+                        <span className="text-[11px]">Masa Çağrısı:</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleToggleWaiterCall(cafe)}
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold border transition-colors ${
+                          cafe.waiter_call_enabled !== false
+                            ? 'bg-amber-50 text-amber-800 border-amber-300 hover:bg-amber-100'
+                            : 'bg-gray-100 text-gray-600 border-gray-300 hover:bg-gray-200'
+                        }`}
+                        title="Bu işletme için garson çağırma & hesap isteme özelliğini açıp kapatın"
+                      >
+                        {cafe.waiter_call_enabled !== false ? 'Açık' : 'Kapalı (Self-servis)'}
+                      </button>
+                    </div>
                   </div>
 
                   {/* Actions */}
@@ -225,6 +256,14 @@ export const AdminCafesPage: React.FC = () => {
                     >
                       <Edit3 className="w-4 h-4" />
                     </button>
+
+                    <Link
+                      to={`/admin/calls?cafe=${cafe.id}`}
+                      className="p-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200/80 transition-colors"
+                      title="Bu Kafenin Masa Çağrılarını Gör"
+                    >
+                      <Bell className="w-4 h-4" />
+                    </Link>
 
                     <Link
                       to={`/admin/cafes/${cafe.id}/menu`}
@@ -360,6 +399,26 @@ export const AdminCafesPage: React.FC = () => {
                   placeholder="@modafincankahve"
                   className="w-full px-3.5 py-2.5 rounded-xl border border-coffee-200 bg-cream-50 text-xs text-coffee-950 focus:outline-none focus:ring-2 focus:ring-terracotta-500/40"
                 />
+              </div>
+
+              {/* Garson Çağır & Hesap İste Toggle */}
+              <div className="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200 flex items-start gap-3">
+                <input
+                  type="checkbox"
+                  id="formWaiterCallEnabled"
+                  checked={formWaiterCallEnabled}
+                  onChange={e => setFormWaiterCallEnabled(e.target.checked)}
+                  className="mt-0.5 w-4 h-4 text-terracotta-600 rounded border-coffee-300 focus:ring-terracotta-500 cursor-pointer"
+                />
+                <label htmlFor="formWaiterCallEnabled" className="text-xs cursor-pointer select-none">
+                  <span className="font-bold text-coffee-950 flex items-center gap-1.5">
+                    <Bell className="w-3.5 h-3.5 text-amber-600" />
+                    Garson Çağır & Hesap İste Özelliği (Masa Servisi)
+                  </span>
+                  <span className="text-coffee-600 block mt-0.5 text-[11px] leading-relaxed">
+                    Müşterilerin masadaki ekrandan garson çağırmasını ve hesap istemesini sağlar. Self-servis veya kasada ödeme alan işletmeler için kapatabilirsiniz.
+                  </span>
+                </label>
               </div>
 
               <div className="flex items-center justify-end gap-2 pt-2">

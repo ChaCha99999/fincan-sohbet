@@ -18,6 +18,7 @@ const AdminCafesPage = lazy(() => import('./pages/AdminCafesPage').then(m => ({ 
 const AdminTablesPage = lazy(() => import('./pages/AdminTablesPage').then(m => ({ default: m.AdminTablesPage })));
 const AdminMenuPage = lazy(() => import('./pages/AdminMenuPage').then(m => ({ default: m.AdminMenuPage })));
 const AdminQuestionsPage = lazy(() => import('./pages/AdminQuestionsPage').then(m => ({ default: m.AdminQuestionsPage })));
+const AdminServiceRequestsPage = lazy(() => import('./pages/AdminServiceRequestsPage').then(m => ({ default: m.AdminServiceRequestsPage })));
 
 const PageLoader: React.FC = () => (
   <div className="min-h-screen bg-cream-50 flex items-center justify-center p-6">
@@ -118,6 +119,14 @@ export const App: React.FC = () => {
           element={
             <Suspense fallback={<PageLoader />}>
               <AdminDashboardPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/admin/calls"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <AdminServiceRequestsPage />
             </Suspense>
           }
         />

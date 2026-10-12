@@ -7,7 +7,13 @@ import {
   getMenuItems,
   createMenuItem,
   updateMenuItem,
-  deleteMenuItem
+  deleteMenuItem,
+  createServiceRequest,
+  getServiceRequests,
+  updateServiceRequestStatus,
+  toggleCafeWaiterCall,
+  getActiveServiceRequestsCount,
+  getActiveTableServiceRequest
 } from '../lib/api';
 import { DEFAULT_MENU_ITEMS, MENU_CATEGORIES } from '../data/mockMenu';
 import { TRIVIA_CATEGORIES, TRIVIA_QUESTIONS } from '../data/triviaQuestions';
@@ -276,6 +282,87 @@ describe('Ortak Kafe Nabzı Modülü (Live Cafe Polls)', () => {
     });
   });
 });
+
+describe('Garson Çağır & Hesap İste Modülü (Waiter Call & Service Requests)', () => {
+  it('Kafenin waiter_call_enabled özelliği varsayılan olarak aktif olmalı veya doğrulamada dönmelidir', async () => {
+    const res = await validateTableToken('demo-masa-1');
+    expect(res.isValid).toBe(true);
+    expect(res.table?.cafe?.waiter_call_enabled).toBe(true);
+  });
+
+  it('waiter_call_enabled pasif olan kafede bu özellik false olarak gelmelidir', async () => {
+    const res = await validateTableToken('demo-pasif-kafe-masa');
+    expect(res.table?.cafe?.waiter_call_enabled).toBe(false);
+  });
+
+  it('Yeni garson çağırma isteği oluşturulabilmelidir', async () => {
+    const req = await createServiceRequest({
+      cafe_id: 'cafe-moda-01',
+      table_id: 'tbl-moda-01',
+      request_type: 'waiter',
+      note: 'Su rica ediyoruz',
+    });
+
+    expect(req.id).toBeDefined();
+    expect(req.request_type).toBe('waiter');
+    expect(req.status).toBe('pending');
+    expect(req.note).toBe('Su rica ediyoruz');
+  });
+
+  it('Ödeme türü ile hesap isteme çağrısı oluşturulabilmelidir', async () => {
+    const req = await createServiceRequest({
+      cafe_id: 'cafe-moda-01',
+      table_id: 'tbl-moda-02',
+      request_type: 'bill',
+      payment_method: 'card',
+      note: 'POS cihazı rica ediyoruz',
+    });
+
+    expect(req.id).toBeDefined();
+    expect(req.request_type).toBe('bill');
+    expect(req.payment_method).toBe('card');
+    expect(req.status).toBe('pending');
+  });
+
+  it('Servis çağrısı durumu güncellenebilmelidir (pending -> in_progress -> completed)', async () => {
+    const req = await createServiceRequest({
+      cafe_id: 'cafe-moda-01',
+      table_id: 'tbl-moda-01',
+      request_type: 'waiter',
+    });
+
+    const inProgress = await updateServiceRequestStatus(req.id, 'in_progress');
+    expect(inProgress.status).toBe('in_progress');
+
+    const completed = await updateServiceRequestStatus(req.id, 'completed');
+    expect(completed.status).toBe('completed');
+  });
+
+  it('İşletme bazlı veya genel servis çağrıları filtrelenebilmelidir', async () => {
+    const all = await getServiceRequests({ cafe_id: 'cafe-moda-01' });
+    expect(Array.isArray(all)).toBe(true);
+    expect(all.length).toBeGreaterThan(0);
+  });
+
+  it('Aktif çağrı sayısı ve masaya ait aktif çağrı sorgulanabilmelidir', async () => {
+    const count = await getActiveServiceRequestsCount('cafe-moda-01');
+    expect(count).toBeGreaterThanOrEqual(0);
+
+    const activeTableReq = await getActiveTableServiceRequest('tbl-moda-01');
+    expect(activeTableReq === null || typeof activeTableReq === 'object').toBe(true);
+  });
+
+  it('Admin panelden işletmenin masa çağrısı özelliği açılıp kapatılabilmelidir (toggle)', async () => {
+    // Kapat
+    const updatedDisabled = await toggleCafeWaiterCall('cafe-moda-01', false);
+    expect(updatedDisabled.waiter_call_enabled).toBe(false);
+
+    // Tekrar Aç
+    const updatedEnabled = await toggleCafeWaiterCall('cafe-moda-01', true);
+    expect(updatedEnabled.waiter_call_enabled).toBe(true);
+  });
+});
+
 
 
 

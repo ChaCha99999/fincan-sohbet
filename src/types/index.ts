@@ -37,6 +37,7 @@ export interface Cafe {
   wifi_name?: string | null;
   wifi_password?: string | null;
   instagram?: string | null;
+  waiter_call_enabled?: boolean;
 }
 
 export interface Table {
@@ -55,7 +56,26 @@ export interface Table {
     wifi_name?: string | null;
     wifi_password?: string | null;
     instagram?: string | null;
+    waiter_call_enabled?: boolean;
   };
+}
+
+export type ServiceRequestType = 'waiter' | 'bill';
+export type ServiceRequestStatus = 'pending' | 'in_progress' | 'completed' | 'cancelled';
+export type PaymentMethod = 'cash' | 'card' | 'meal_card' | 'other';
+
+export interface ServiceRequest {
+  id: string;
+  cafe_id: string;
+  table_id: string;
+  request_type: ServiceRequestType;
+  payment_method?: PaymentMethod | null;
+  note?: string | null;
+  status: ServiceRequestStatus;
+  created_at: string;
+  updated_at?: string;
+  cafe_name?: string;
+  table_label?: string;
 }
 
 export interface Category {
