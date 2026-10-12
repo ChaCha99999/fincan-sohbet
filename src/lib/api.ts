@@ -7,11 +7,13 @@ import type {
   UsageEvent, 
   TableValidationResult, 
   GameType, 
-  EventType 
+  EventType,
+  MenuItem
 } from '../types';
 import { INITIAL_CATEGORIES } from '../data/categories';
 import { INITIAL_QUESTIONS } from '../data/questionsSeed';
 import { MOCK_CAFES, MOCK_TABLES, MOCK_EVENTS } from '../data/mockData';
+import { DEFAULT_MENU_ITEMS } from '../data/mockMenu';
 
 // Local in-memory caches for demo mode
 let localCafes: Cafe[] = [...MOCK_CAFES];
@@ -662,4 +664,142 @@ export const getDashboardStats = async (): Promise<DashboardStats> => {
     recentEvents: localEvents.slice(0, 15),
     isRealData: false, // Clearly indicates local/demo mode
   };
+};
+
+// ==========================================
+// KAFE MENÜ YÖNETİMİ (MENU ITEMS)
+// ==========================================
+let localMenuItems: MenuItem[] = [...DEFAULT_MENU_ITEMS];
+
+export const getMenuItems = async (cafeId?: string): Promise<MenuItem[]> => {
+  if (isSupabaseConfigured && supabase) {
+    try {
+      let query = supabase.from('menu_items').select('*').order('sort_order', { ascending: true });
+      if (cafeId) {
+        query = query.eq('cafe_id', cafeId);
+      }
+      const { data, error } = await query;
+      if (!error && data && data.length > 0) {
+        return data as MenuItem[];
+      }
+    } catch (e) {
+      console.warn('Supabase menu_items error, falling back to local:', e);
+    }
+  }
+
+  // Check localStorage for persisted local customizations per cafe
+  if (typeof window !== 'undefined' && cafeId) {
+    const stored = localStorage.getItem(`fincan_menu_${cafeId}`);
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      } catch {}
+    }
+  }
+
+  return localMenuItems;
+};
+
+export const createMenuItem = async (item: Omit<MenuItem, 'id' | 'created_at'>): Promise<MenuItem> => {
+  if (isSupabaseConfigured && supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('menu_items')
+        .insert([{
+          cafe_id: item.cafe_id,
+          category: item.category,
+          name: item.name,
+          description: item.description || null,
+          price: item.price,
+          currency: item.currency || '₺',
+          is_popular: item.is_popular || false,
+          is_available: item.is_available !== false,
+          sort_order: item.sort_order || 1,
+        }])
+        .select()
+        .single();
+
+      if (!error && data) {
+        return data as MenuItem;
+      }
+    } catch (e) {
+      console.warn('Supabase createMenuItem error, using local fallback:', e);
+    }
+  }
+
+  const newItem: MenuItem = {
+    ...item,
+    id: 'menu-' + Date.now(),
+    currency: item.currency || '₺',
+    is_popular: item.is_popular || false,
+    is_available: item.is_available !== false,
+    created_at: new Date().toISOString(),
+  };
+
+  localMenuItems = [newItem, ...localMenuItems];
+
+  if (typeof window !== 'undefined' && item.cafe_id) {
+    const stored = localStorage.getItem(`fincan_menu_${item.cafe_id}`);
+    const list: MenuItem[] = stored ? JSON.parse(stored) : [...localMenuItems];
+    if (!list.find(x => x.id === newItem.id)) {
+      list.unshift(newItem);
+    }
+    localStorage.setItem(`fincan_menu_${item.cafe_id}`, JSON.stringify(list));
+  }
+
+  return newItem;
+};
+
+export const updateMenuItem = async (id: string, updates: Partial<MenuItem>): Promise<MenuItem> => {
+  if (isSupabaseConfigured && supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('menu_items')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (!error && data) {
+        return data as MenuItem;
+      }
+    } catch (e) {
+      console.warn('Supabase updateMenuItem error, using local fallback:', e);
+    }
+  }
+
+  const index = localMenuItems.findIndex(m => m.id === id);
+  if (index !== -1) {
+    localMenuItems[index] = { ...localMenuItems[index], ...updates };
+    const cafeId = localMenuItems[index].cafe_id;
+    if (typeof window !== 'undefined' && cafeId) {
+      localStorage.setItem(`fincan_menu_${cafeId}`, JSON.stringify(localMenuItems));
+    }
+    return localMenuItems[index];
+  }
+
+  throw new Error('Ürün bulunamadı');
+};
+
+export const deleteMenuItem = async (id: string, cafeId?: string): Promise<void> => {
+  if (isSupabaseConfigured && supabase) {
+    try {
+      const { error } = await supabase.from('menu_items').delete().eq('id', id);
+      if (!error) return;
+    } catch (e) {
+      console.warn('Supabase deleteMenuItem error, using local fallback:', e);
+    }
+  }
+
+  localMenuItems = localMenuItems.filter(m => m.id !== id);
+  if (typeof window !== 'undefined' && cafeId) {
+    const stored = localStorage.getItem(`fincan_menu_${cafeId}`);
+    if (stored) {
+      const list: MenuItem[] = JSON.parse(stored).filter((m: MenuItem) => m.id !== id);
+      localStorage.setItem(`fincan_menu_${cafeId}`, JSON.stringify(list));
+    }
+  }
 };

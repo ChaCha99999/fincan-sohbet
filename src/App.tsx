@@ -16,6 +16,7 @@ const AdminLoginPage = lazy(() => import('./pages/AdminLoginPage').then(m => ({ 
 const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage').then(m => ({ default: m.AdminDashboardPage })));
 const AdminCafesPage = lazy(() => import('./pages/AdminCafesPage').then(m => ({ default: m.AdminCafesPage })));
 const AdminTablesPage = lazy(() => import('./pages/AdminTablesPage').then(m => ({ default: m.AdminTablesPage })));
+const AdminMenuPage = lazy(() => import('./pages/AdminMenuPage').then(m => ({ default: m.AdminMenuPage })));
 const AdminQuestionsPage = lazy(() => import('./pages/AdminQuestionsPage').then(m => ({ default: m.AdminQuestionsPage })));
 
 const PageLoader: React.FC = () => (
@@ -133,6 +134,14 @@ export const App: React.FC = () => {
           element={
             <Suspense fallback={<PageLoader />}>
               <AdminTablesPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/admin/cafes/:id/menu"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <AdminMenuPage />
             </Suspense>
           }
         />

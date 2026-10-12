@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Search, 
   ExternalLink, 
@@ -11,8 +11,9 @@ import {
   Info,
   ArrowRight
 } from 'lucide-react';
-import type { Cafe, Table } from '../types';
+import type { Cafe, Table, MenuItem } from '../types';
 import { DEFAULT_MENU_ITEMS, MENU_CATEGORIES } from '../data/mockMenu';
+import { getMenuItems } from '../lib/api';
 
 interface CafeMenuViewProps {
   cafe?: Table['cafe'] | Cafe | null;
@@ -25,12 +26,29 @@ export const CafeMenuView: React.FC<CafeMenuViewProps> = ({
   tableLabel,
   onSwitchToGames,
 }) => {
+  const [menuItems, setMenuItems] = useState<MenuItem[]>(DEFAULT_MENU_ITEMS);
   const [selectedCategory, setSelectedCategory] = useState<string>('Tümü');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [copiedWifi, setCopiedWifi] = useState<boolean>(false);
 
+  useEffect(() => {
+    if (cafe?.id) {
+      getMenuItems(cafe.id).then((items) => {
+        if (items && items.length > 0) {
+          setMenuItems(items);
+        }
+      });
+    }
+  }, [cafe?.id]);
+
+  const categoryList = useMemo(() => {
+    const defaultCats = MENU_CATEGORIES.filter(c => c !== 'Tümü');
+    const customCats = menuItems.map(i => i.category).filter(c => !defaultCats.includes(c as any));
+    return ['Tümü', ...Array.from(new Set([...defaultCats, ...customCats]))];
+  }, [menuItems]);
+
   const filteredItems = useMemo(() => {
-    return DEFAULT_MENU_ITEMS.filter((item) => {
+    return menuItems.filter((item) => {
       const matchesCategory =
         selectedCategory === 'Tümü' || item.category === selectedCategory;
       const matchesSearch =
@@ -38,7 +56,7 @@ export const CafeMenuView: React.FC<CafeMenuViewProps> = ({
         (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase()));
       return matchesCategory && matchesSearch;
     });
-  }, [selectedCategory, searchQuery]);
+  }, [menuItems, selectedCategory, searchQuery]);
 
   const handleCopyWifi = () => {
     if (cafe?.wifi_password) {
@@ -122,7 +140,7 @@ export const CafeMenuView: React.FC<CafeMenuViewProps> = ({
 
       {/* Kategori Butonları (Yatay Kaydırılabilir) */}
       <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1">
-        {MENU_CATEGORIES.map((cat) => (
+        {categoryList.map((cat) => (
           <button
             key={cat}
             onClick={() => setSelectedCategory(cat)}
@@ -146,28 +164,39 @@ export const CafeMenuView: React.FC<CafeMenuViewProps> = ({
             <p className="text-xs text-coffee-500">Arama kelimesini değiştirmeyi veya filtreyi temizlemeyi deneyin.</p>
           </div>
         ) : (
-          filteredItems.map((item) => (
-            <div
-              key={item.id}
-              className="p-3.5 sm:p-4 rounded-2xl bg-white border border-coffee-200/80 shadow-warm-sm hover:border-terracotta-300 transition-all flex items-start justify-between gap-3 text-left"
-            >
-              <div className="space-y-1 flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h3 className="font-bold text-sm text-coffee-950 leading-snug">
-                    {item.name}
-                  </h3>
-                  {item.is_popular && (
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-caramel-100 text-caramel-800 text-[10px] font-bold">
-                      <Sparkles className="w-3 h-3" />
-                      Popüler
-                    </span>
+          filteredItems.map((item) => {
+            const isAvailable = item.is_available !== false;
+            return (
+              <div
+                key={item.id}
+                className={`p-3.5 sm:p-4 rounded-2xl bg-white border shadow-warm-sm transition-all flex items-start justify-between gap-3 text-left ${
+                  isAvailable 
+                    ? 'border-coffee-200/80 hover:border-terracotta-300' 
+                    : 'border-red-200 opacity-60 bg-cream-50'
+                }`}
+              >
+                <div className="space-y-1 flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="font-bold text-sm text-coffee-950 leading-snug">
+                      {item.name}
+                    </h3>
+                    {item.is_popular && isAvailable && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-caramel-100 text-caramel-800 text-[10px] font-bold">
+                        <Sparkles className="w-3 h-3" />
+                        Popüler
+                      </span>
+                    )}
+                    {!isAvailable && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-[10px] font-bold">
+                        Tükendi
+                      </span>
+                    )}
+                  </div>
+                  {item.description && (
+                    <p className="text-xs text-coffee-600 leading-relaxed line-clamp-2">
+                      {item.description}
+                    </p>
                   )}
-                </div>
-                {item.description && (
-                  <p className="text-xs text-coffee-600 leading-relaxed line-clamp-2">
-                    {item.description}
-                  </p>
-                )}
                 <span className="text-[10px] font-medium text-coffee-500 uppercase tracking-wider block pt-0.5">
                   {item.category}
                 </span>
@@ -179,7 +208,8 @@ export const CafeMenuView: React.FC<CafeMenuViewProps> = ({
                 </span>
               </div>
             </div>
-          ))
+          );
+        })
         )}
       </div>
 

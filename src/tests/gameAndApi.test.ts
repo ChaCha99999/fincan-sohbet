@@ -1,7 +1,14 @@
 import { describe, it, expect } from 'vitest';
 import { INITIAL_QUESTIONS } from '../data/questionsSeed';
 import { INITIAL_CATEGORIES } from '../data/categories';
-import { validateTableToken, generatePublicToken } from '../lib/api';
+import { 
+  validateTableToken, 
+  generatePublicToken,
+  getMenuItems,
+  createMenuItem,
+  updateMenuItem,
+  deleteMenuItem
+} from '../lib/api';
 import { DEFAULT_MENU_ITEMS, MENU_CATEGORIES } from '../data/mockMenu';
 
 describe('Soru Havuzu ve Kategoriler (Question Pool & Categories)', () => {
@@ -95,5 +102,28 @@ describe('Kafe Menü Modülü (Cafe Menu Module)', () => {
     expect(MENU_CATEGORIES).toContain('Soğuk Kahveler');
     expect(MENU_CATEGORIES).toContain('Tatlılar & Fırın');
     expect(MENU_CATEGORIES).toContain('Çay & Diğer');
+  });
+
+  it('Menüye yeni ürün ekleme, fiyat güncelleme ve silme çalışmalıdır', async () => {
+    const testItem = await createMenuItem({
+      category: 'Sıcak Kahveler',
+      name: 'Özel Zencefilli Mocha',
+      price: 160,
+      description: 'Zencefilli çikolata ve espresso',
+      is_popular: true,
+      is_available: true,
+    });
+
+    expect(testItem.id).toBeDefined();
+    expect(testItem.name).toBe('Özel Zencefilli Mocha');
+    expect(testItem.price).toBe(160);
+
+    const updated = await updateMenuItem(testItem.id, { price: 175, is_available: false });
+    expect(updated.price).toBe(175);
+    expect(updated.is_available).toBe(false);
+
+    await deleteMenuItem(testItem.id);
+    const items = await getMenuItems();
+    expect(items.find(i => i.id === testItem.id)).toBeUndefined();
   });
 });

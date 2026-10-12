@@ -7,7 +7,8 @@ import {
   Edit3, 
   X, 
   Save, 
-  AlertCircle 
+  AlertCircle,
+  UtensilsCrossed 
 } from 'lucide-react';
 import { AdminLayout } from '../components/AdminLayout';
 import { getCafes, createCafe, updateCafe, toggleCafeStatus } from '../lib/api';
@@ -226,11 +227,20 @@ export const AdminCafesPage: React.FC = () => {
                     </button>
 
                     <Link
+                      to={`/admin/cafes/${cafe.id}/menu`}
+                      className="flex-1 py-2 px-2.5 rounded-xl bg-caramel-50 hover:bg-caramel-800 hover:text-white text-caramel-900 border border-caramel-200/80 font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
+                      title="Menü ve Fiyatları Yönet"
+                    >
+                      <UtensilsCrossed className="w-3.5 h-3.5" />
+                      Menü
+                    </Link>
+
+                    <Link
                       to={`/admin/cafes/${cafe.id}/tables`}
-                      className="flex-1 py-2 px-3 rounded-xl bg-cream-100 hover:bg-coffee-900 hover:text-white text-coffee-900 font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
+                      className="flex-1 py-2 px-2.5 rounded-xl bg-cream-100 hover:bg-coffee-900 hover:text-white text-coffee-900 font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
                     >
                       <Layers className="w-3.5 h-3.5" />
-                      Masaları Yönet ({cafe.table_count || 0})
+                      Masalar ({cafe.table_count || 0})
                     </Link>
                   </div>
                 </div>

@@ -8,13 +8,17 @@ export type CafeStatus = 'active' | 'inactive';
 
 export interface MenuItem {
   id: string;
+  cafe_id?: string;
   category: string;
   name: string;
   description?: string;
   price: number;
   currency?: string;
   is_popular?: boolean;
+  is_available?: boolean;
+  sort_order?: number;
   tags?: string[];
+  created_at?: string;
 }
 
 export interface Cafe {
