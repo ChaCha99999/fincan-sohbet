@@ -15,10 +15,13 @@ import {
 import { getCategories } from '../lib/api';
 import type { Category, GameType } from '../types';
 import { useTableSession } from '../hooks/useTableSession';
+import { useTranslation } from '../lib/i18n';
+import { LanguageSwitch } from '../components/LanguageSwitch';
 
 export const GameCategoriesPage: React.FC = () => {
   const navigate = useNavigate();
   const { activeTable } = useTableSession();
+  const { t, lang } = useTranslation();
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -36,7 +39,7 @@ export const GameCategoriesPage: React.FC = () => {
           icon: <MessageCircle className="w-7 h-7 text-terracotta-600" />,
           bgColor: 'bg-terracotta-50',
           borderColor: 'border-terracotta-200',
-          badgeText: '50+ Samimi Soru',
+          badgeText: lang === 'en' ? '50+ Warm Questions' : '50+ Samimi Soru',
           badgeColor: 'bg-terracotta-100 text-terracotta-800',
           accent: 'from-terracotta-500 to-terracotta-700',
         };
@@ -45,7 +48,7 @@ export const GameCategoriesPage: React.FC = () => {
           icon: <Split className="w-7 h-7 text-caramel-600" />,
           bgColor: 'bg-caramel-50',
           borderColor: 'border-caramel-200',
-          badgeText: '50+ Çarpıcı İkilem',
+          badgeText: lang === 'en' ? '50+ Dilemmas' : '50+ Çarpıcı İkilem',
           badgeColor: 'bg-caramel-100 text-caramel-800',
           accent: 'from-caramel-500 to-caramel-600',
         };
@@ -54,7 +57,7 @@ export const GameCategoriesPage: React.FC = () => {
           icon: <Users className="w-7 h-7 text-coffee-700" />,
           bgColor: 'bg-coffee-50',
           borderColor: 'border-coffee-200',
-          badgeText: '50+ Grup Sorusu',
+          badgeText: lang === 'en' ? '50+ Group Questions' : '50+ Grup Sorusu',
           badgeColor: 'bg-coffee-100 text-coffee-800',
           accent: 'from-coffee-700 to-coffee-900',
         };
@@ -63,7 +66,7 @@ export const GameCategoriesPage: React.FC = () => {
           icon: <HeartHandshake className="w-7 h-7 text-rose-600" />,
           bgColor: 'bg-rose-50',
           borderColor: 'border-rose-200',
-          badgeText: '50+ Tahmin & Puan',
+          badgeText: lang === 'en' ? '50+ Guess & Score' : '50+ Tahmin & Puan',
           badgeColor: 'bg-rose-100 text-rose-800',
           accent: 'from-rose-500 to-rose-700',
         };
@@ -72,10 +75,32 @@ export const GameCategoriesPage: React.FC = () => {
           icon: <Sparkles className="w-7 h-7 text-terracotta-600" />,
           bgColor: 'bg-cream-100',
           borderColor: 'border-coffee-200',
-          badgeText: 'Mini Oyun',
+          badgeText: lang === 'en' ? 'Mini Game' : 'Mini Oyun',
           badgeColor: 'bg-cream-200 text-coffee-800',
           accent: 'from-terracotta-500 to-terracotta-700',
         };
+    }
+  };
+
+  const getCategoryName = (cat: Category) => {
+    if (lang !== 'en') return cat.name;
+    switch (cat.slug) {
+      case 'sohbeti-baslat': return 'Start the Conversation';
+      case 'ikilemde-kal': return 'Stay in Dilemma';
+      case 'kim-daha-muhtemel': return "Who's More Likely?";
+      case 'ne-kadar-taniyoruz': return 'How Well Do We Know Each Other?';
+      default: return cat.name;
+    }
+  };
+
+  const getCategoryDesc = (cat: Category) => {
+    if (lang !== 'en') return cat.description;
+    switch (cat.slug) {
+      case 'sohbeti-baslat': return 'Icebreaker and intimate questions to warm up the table and break the silence.';
+      case 'ikilemde-kal': return 'Intriguing, funny would-you-rather questions that spark friendly debate.';
+      case 'kim-daha-muhtemel': return 'Vote on who is most likely to do what in your friend circle!';
+      case 'ne-kadar-taniyoruz': return 'Guess each other’s tastes and secrets to collect friendship points!';
+      default: return cat.description;
     }
   };
 
@@ -90,7 +115,7 @@ export const GameCategoriesPage: React.FC = () => {
               className="inline-flex items-center gap-1.5 text-xs font-semibold text-coffee-700 hover:text-coffee-950 transition-colors p-1"
             >
               <ArrowLeft className="w-4 h-4" />
-              Masa Ekranına Dön
+              {t.backToTable}
             </Link>
           ) : (
             <Link
@@ -98,25 +123,28 @@ export const GameCategoriesPage: React.FC = () => {
               className="inline-flex items-center gap-1.5 text-xs font-semibold text-coffee-700 hover:text-coffee-950 transition-colors p-1"
             >
               <ArrowLeft className="w-4 h-4" />
-              Ana Sayfa
+              {t.backToHome}
             </Link>
           )}
 
-          {activeTable && (
-            <span className="text-[11px] font-bold text-terracotta-700 bg-white border border-coffee-200 px-3 py-1 rounded-full shadow-warm-sm flex items-center gap-1.5">
-              <Coffee className="w-3 h-3 text-terracotta-500" />
-              {activeTable.label}
-            </span>
-          )}
+          <div className="flex items-center gap-2">
+            <LanguageSwitch />
+            {activeTable && (
+              <span className="text-[11px] font-bold text-terracotta-700 bg-white border border-coffee-200 px-3 py-1 rounded-full shadow-warm-sm flex items-center gap-1.5">
+                <Coffee className="w-3 h-3 text-terracotta-500" />
+                {activeTable.label}
+              </span>
+            )}
+          </div>
         </nav>
 
         {/* Header */}
         <header className="space-y-1.5">
           <h1 className="font-serif font-black text-2xl sm:text-3xl text-coffee-950">
-            Bir Oyun Seçin
+            {t.chooseGameTitle}
           </h1>
           <p className="text-xs sm:text-sm text-coffee-700 leading-relaxed">
-            Telefonu masanın ortasına koyun. Sırayla soruları okuyun ve kahvenin tadını çıkarın.
+            {t.chooseGameDesc}
           </p>
         </header>
 
@@ -152,10 +180,10 @@ export const GameCategoriesPage: React.FC = () => {
                           </span>
                         </div>
                         <h2 className="font-serif font-bold text-lg text-coffee-950 leading-snug">
-                          {cat.name}
+                          {getCategoryName(cat)}
                         </h2>
                         <p className="text-xs text-coffee-700 mt-1 leading-relaxed">
-                          {cat.description}
+                          {getCategoryDesc(cat)}
                         </p>
                       </div>
                     </div>
@@ -166,7 +194,7 @@ export const GameCategoriesPage: React.FC = () => {
                     className={`w-full py-3 px-4 rounded-xl bg-gradient-to-r ${visual.accent} hover:opacity-95 text-white font-bold text-sm shadow-warm flex items-center justify-center gap-2 transition-transform active:scale-98`}
                   >
                     <Play className="w-4 h-4 fill-white" />
-                    Oyunu Başlat
+                    {t.startGame}
                     <ChevronRight className="w-4 h-4 ml-auto" />
                   </button>
                 </div>
@@ -179,7 +207,7 @@ export const GameCategoriesPage: React.FC = () => {
       {/* Footer Info */}
       <footer className="text-center pt-8 pb-4 space-y-2 border-t border-coffee-200/50 mt-8">
         <p className="text-[11px] text-coffee-500">
-          Tüm oyunlar tek bir telefon üzerinden oynanır. Ek bir cihaz veya uygulama gerekmez.
+          {t.singlePhoneNotice}
         </p>
       </footer>
     </main>

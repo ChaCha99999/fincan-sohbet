@@ -21,7 +21,7 @@ export const Footer: React.FC = () => {
               </span>
             </div>
             <p className="text-coffee-300 text-sm max-w-sm leading-relaxed">
-              Kafeler için QR ve NFC tabanlı masa sosyalleşme ve mini oyun platformu. Bu bir QR menü değildir; masadaki insanların sohbetini başlatan dijital bir deneyimdir.
+              Kafeler için QR ve NFC tabanlı dijital menü, hızlı Wi-Fi paylaşımı ve masayı canlandıran mini sohbet oyunları platformu.
             </p>
             <div className="p-3.5 rounded-2xl bg-coffee-900/80 border border-coffee-800/80 text-xs text-caramel-300 italic">
               "{APP_CONFIG.slogan}"

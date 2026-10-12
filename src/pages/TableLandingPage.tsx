@@ -23,6 +23,8 @@ import { validateTableToken, logUsageEvent, getCategories } from '../lib/api';
 import type { Table, Category, GameType } from '../types';
 import { useTableSession } from '../hooks/useTableSession';
 import { CafeMenuView } from '../components/CafeMenuView';
+import { useTranslation } from '../lib/i18n';
+import { LanguageSwitch } from '../components/LanguageSwitch';
 
 type ActiveViewMode = 'portal' | 'menu' | 'games';
 
@@ -30,6 +32,7 @@ export const TableLandingPage: React.FC = () => {
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
   const { setActiveTable } = useTableSession();
+  const { t } = useTranslation();
 
   const [loading, setLoading] = useState(true);
   const [table, setTable] = useState<Table | null>(null);
@@ -115,7 +118,7 @@ export const TableLandingPage: React.FC = () => {
     return () => {
       isMounted = false;
     };
-  }, [token]);
+  }, [token, setActiveTable]);
 
   // Loading State
   if (loading) {
@@ -209,9 +212,12 @@ export const TableLandingPage: React.FC = () => {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-medium border border-emerald-200/60">
-            <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Masa Aktif</span>
+          <div className="flex items-center gap-2">
+            <LanguageSwitch />
+            <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-medium border border-emerald-200/60">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>{t.tableActive}</span>
+            </div>
           </div>
         </header>
 
@@ -226,7 +232,7 @@ export const TableLandingPage: React.FC = () => {
             }`}
           >
             <Sparkles className="w-3.5 h-3.5 text-caramel-600" />
-            <span>Masa</span>
+            <span>{t.tabPortal}</span>
           </button>
 
           <button
@@ -238,7 +244,7 @@ export const TableLandingPage: React.FC = () => {
             }`}
           >
             <BookOpen className="w-3.5 h-3.5 text-terracotta-600" />
-            <span>Kafe Menüsü</span>
+            <span>{t.tabMenu}</span>
           </button>
 
           <button
@@ -250,7 +256,7 @@ export const TableLandingPage: React.FC = () => {
             }`}
           >
             <MessageCircle className="w-3.5 h-3.5 text-coffee-800" />
-            <span>Sohbet & Oyun</span>
+            <span>{t.tabGames}</span>
           </button>
         </nav>
 
@@ -263,13 +269,13 @@ export const TableLandingPage: React.FC = () => {
             <div className="text-center pt-2 pb-1 space-y-1.5">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-caramel-100 text-caramel-800 text-[11px] font-semibold">
                 <Coffee className="w-3.5 h-3.5" />
-                Masaya Hoş Geldiniz!
+                {t.welcomeTable}
               </span>
               <h1 className="font-serif font-extrabold text-2xl sm:text-3xl text-coffee-950 leading-tight">
-                Ne Yapmak İstersiniz?
+                {t.whatToDo}
               </h1>
               <p className="text-xs text-coffee-700 max-w-xs mx-auto">
-                Siparişinizi vermeden önce menüye göz atabilir veya kahvenizi beklerken sohbete başlayabilirsiniz.
+                {t.whatToDoDesc}
               </p>
             </div>
 
@@ -285,17 +291,17 @@ export const TableLandingPage: React.FC = () => {
                     <BookOpen className="w-7 h-7" />
                   </div>
                   <span className="px-2.5 py-1 rounded-full bg-caramel-50 text-caramel-800 border border-caramel-200/80 text-[10px] font-bold uppercase tracking-wider">
-                    Sipariş Öncesi
+                    {t.orderBeforeBadge}
                   </span>
                 </div>
 
                 <div className="mt-3.5 space-y-1">
                   <h3 className="font-serif font-extrabold text-lg sm:text-xl text-coffee-950 group-hover:text-caramel-900 transition-colors flex items-center justify-between">
-                    <span>Kafe Menüsünü İncele</span>
+                    <span>{t.exploreMenuTitle}</span>
                     <ChevronRight className="w-5 h-5 text-caramel-600 group-hover:translate-x-1 transition-transform" />
                   </h3>
                   <p className="text-xs text-coffee-600 leading-relaxed">
-                    Sıcak ve soğuk kahveler, taze fırın tatlıları ve tüm ürünlerin güncel fiyat listesi.
+                    {t.exploreMenuDesc}
                   </p>
                 </div>
               </button>
@@ -310,17 +316,17 @@ export const TableLandingPage: React.FC = () => {
                     <MessageCircle className="w-7 h-7" />
                   </div>
                   <span className="px-2.5 py-1 rounded-full bg-white/20 text-white text-[10px] font-bold uppercase tracking-wider backdrop-blur-xs">
-                    4 Mini Oyun
+                    {t.fourGamesBadge}
                   </span>
                 </div>
 
                 <div className="mt-3.5 space-y-1 text-white">
                   <h3 className="font-serif font-extrabold text-lg sm:text-xl text-white flex items-center justify-between">
-                    <span>Konuşacak Konu Arıyoruz!</span>
+                    <span>{t.findTopicTitle}</span>
                     <ChevronRight className="w-5 h-5 text-white/90 group-hover:translate-x-1 transition-transform" />
                   </h3>
                   <p className="text-xs text-cream-100 leading-relaxed">
-                    Sipariş hazırlanırken veya masada sessizlik olunca: Buz kırıcı sorular, ikilemler ve tahmin oyunları.
+                    {t.findTopicDesc}
                   </p>
                 </div>
               </button>

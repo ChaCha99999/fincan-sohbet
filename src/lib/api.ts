@@ -718,6 +718,41 @@ export const getMenuItems = async (cafeId?: string): Promise<MenuItem[]> => {
   return localMenuItems;
 };
 
+export const uploadMenuImage = async (fileBlob: Blob, fileExtension = 'jpg'): Promise<string> => {
+  if (isSupabaseConfigured && supabase) {
+    try {
+      const fileName = `menu-${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${fileExtension}`;
+      const { data, error } = await supabase.storage
+        .from('menu-images')
+        .upload(fileName, fileBlob, {
+          contentType: fileExtension === 'png' ? 'image/png' : 'image/jpeg',
+          upsert: true,
+        });
+
+      if (!error && data) {
+        const { data: publicUrlData } = supabase.storage
+          .from('menu-images')
+          .getPublicUrl(fileName);
+
+        if (publicUrlData?.publicUrl) {
+          return publicUrlData.publicUrl;
+        }
+      } else if (error) {
+        console.warn('Supabase storage upload error, fallback to data-url:', error.message);
+      }
+    } catch (e) {
+      console.warn('Supabase storage exception, fallback to data-url:', e);
+    }
+  }
+
+  // Fallback: Convert Blob to Data URL
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result as string);
+    reader.readAsDataURL(fileBlob);
+  });
+};
+
 export const createMenuItem = async (item: Omit<MenuItem, 'id' | 'created_at'>): Promise<MenuItem> => {
   if (isSupabaseConfigured && supabase) {
     try {

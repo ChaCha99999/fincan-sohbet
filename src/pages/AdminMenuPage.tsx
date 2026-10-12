@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { 
   ArrowLeft, 
@@ -13,10 +13,11 @@ import {
   AlertCircle,
   Eye,
   EyeOff,
-  Camera
+  Camera,
+  Loader2
 } from 'lucide-react';
 import { AdminLayout } from '../components/AdminLayout';
-import { getCafes, getMenuItems, createMenuItem, updateMenuItem, deleteMenuItem } from '../lib/api';
+import { getCafes, getMenuItems, createMenuItem, updateMenuItem, deleteMenuItem, uploadMenuImage } from '../lib/api';
 import type { Cafe, MenuItem } from '../types';
 import { MENU_CATEGORIES } from '../data/mockMenu';
 
@@ -44,12 +45,13 @@ export const AdminMenuPage: React.FC = () => {
   const [formIsAvailable, setFormIsAvailable] = useState(true);
   const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
   // Inline Quick Price Edit
   const [quickPriceId, setQuickPriceId] = useState<string | null>(null);
   const [quickPriceValue, setQuickPriceValue] = useState<number>(0);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     if (!id) return;
     setLoading(true);
     const [allCafes, menuData] = await Promise.all([
@@ -60,11 +62,11 @@ export const AdminMenuPage: React.FC = () => {
     setCafe(current);
     setItems(menuData);
     setLoading(false);
-  };
+  }, [id]);
 
   useEffect(() => {
     loadData();
-  }, [id]);
+  }, [loadData]);
 
   // Kategoriler (Varsayılanlar + Kafenin Eklediği Özel Kategoriler)
   const availableCategories = useMemo(() => {
@@ -118,38 +120,69 @@ export const AdminMenuPage: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 6 * 1024 * 1024) {
-      setFormError('Lütfen 6 MB altında bir fotoğraf seçin.');
+    if (file.size > 8 * 1024 * 1024) {
+      setFormError('Lütfen 8 MB altında bir fotoğraf seçin.');
       return;
     }
+
+    setIsUploadingImage(true);
+    setFormError(null);
 
     const reader = new FileReader();
     reader.onload = (event) => {
       const img = new Image();
       img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const maxDim = 500;
-        let width = img.width;
-        let height = img.height;
-        if (width > height) {
-          if (width > maxDim) {
-            height *= maxDim / width;
-            width = maxDim;
+        try {
+          const canvas = document.createElement('canvas');
+          const maxDim = 800;
+          let width = img.width;
+          let height = img.height;
+          if (width > height) {
+            if (width > maxDim) {
+              height *= maxDim / width;
+              width = maxDim;
+            }
+          } else {
+            if (height > maxDim) {
+              width *= maxDim / height;
+              height = maxDim;
+            }
           }
-        } else {
-          if (height > maxDim) {
-            width *= maxDim / height;
-            height = maxDim;
-          }
+          canvas.width = Math.round(width);
+          canvas.height = Math.round(height);
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          canvas.toBlob(async (blob) => {
+            if (blob) {
+              try {
+                const uploadedUrl = await uploadMenuImage(blob, 'jpg');
+                setFormImageUrl(uploadedUrl);
+              } catch (err: any) {
+                console.warn('Storage upload error, using local fallback:', err);
+                const compressed = canvas.toDataURL('image/jpeg', 0.82);
+                setFormImageUrl(compressed);
+              } finally {
+                setIsUploadingImage(false);
+              }
+            } else {
+              setIsUploadingImage(false);
+            }
+          }, 'image/jpeg', 0.82);
+        } catch (err) {
+          console.error('Image processing error:', err);
+          setIsUploadingImage(false);
         }
-        canvas.width = Math.round(width);
-        canvas.height = Math.round(height);
-        const ctx = canvas.getContext('2d');
-        ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
-        const compressed = canvas.toDataURL('image/jpeg', 0.8);
-        setFormImageUrl(compressed);
+      };
+      img.onerror = () => {
+        setFormError('Görsel dosyası işlenemedi.');
+        setIsUploadingImage(false);
       };
       img.src = event.target?.result as string;
+    };
+    reader.onerror = () => {
+      setFormError('Dosya okunamadı.');
+      setIsUploadingImage(false);
     };
     reader.readAsDataURL(file);
   };
@@ -669,21 +702,31 @@ export const AdminMenuPage: React.FC = () => {
                   </div>
                 ) : imageInputMode === 'upload' ? (
                   <label className="flex flex-col items-center justify-center p-3.5 rounded-2xl border-2 border-dashed border-coffee-200 bg-cream-50/60 hover:bg-cream-100 hover:border-terracotta-400 cursor-pointer transition-all group">
-                    <div className="w-9 h-9 rounded-xl bg-terracotta-100 text-terracotta-700 flex items-center justify-center mb-1 group-hover:scale-105 transition-transform">
-                      <Camera className="w-4 h-4" />
-                    </div>
-                    <span className="text-xs font-bold text-coffee-900">
-                      Fotoğraf Seç veya Kamerayla Çek
-                    </span>
-                    <span className="text-[10px] text-coffee-500 mt-0.5">
-                      PNG, JPG, WEBP (Otomatik sıkıştırılır)
-                    </span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="hidden"
-                    />
+                    {isUploadingImage ? (
+                      <div className="py-2 flex flex-col items-center gap-1.5 text-coffee-700">
+                        <Loader2 className="w-6 h-6 animate-spin text-terracotta-600" />
+                        <span className="text-xs font-bold">Fotoğraf Buluta Yükleniyor...</span>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="w-9 h-9 rounded-xl bg-terracotta-100 text-terracotta-700 flex items-center justify-center mb-1 group-hover:scale-105 transition-transform">
+                          <Camera className="w-4 h-4" />
+                        </div>
+                        <span className="text-xs font-bold text-coffee-900">
+                          Fotoğraf Seç veya Kamerayla Çek
+                        </span>
+                        <span className="text-[10px] text-coffee-500 mt-0.5">
+                          PNG, JPG, WEBP (Bulut depolamaya aktarılır)
+                        </span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          disabled={isUploadingImage}
+                          onChange={handleImageUpload}
+                          className="hidden"
+                        />
+                      </>
+                    )}
                   </label>
                 ) : (
                   <div className="relative">

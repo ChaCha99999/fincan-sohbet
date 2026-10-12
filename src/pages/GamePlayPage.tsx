@@ -4,6 +4,8 @@ import { ArrowLeft, Coffee, Sparkles } from 'lucide-react';
 import { getQuestions, logUsageEvent } from '../lib/api';
 import type { Question, GameType } from '../types';
 import { useTableSession } from '../hooks/useTableSession';
+import { useTranslation } from '../lib/i18n';
+import { LanguageSwitch } from '../components/LanguageSwitch';
 import { SohbetiBaslatGame } from '../features/games/SohbetiBaslatGame';
 import { IkilemdeKalGame } from '../features/games/IkilemdeKalGame';
 import { KimDahaMuhtemelGame } from '../features/games/KimDahaMuhtemelGame';
@@ -13,6 +15,7 @@ export const GamePlayPage: React.FC = () => {
   const { gameSlug } = useParams<{ gameSlug: string }>();
   const navigate = useNavigate();
   const { activeTable } = useTableSession();
+  const { t, lang } = useTranslation();
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
@@ -54,6 +57,15 @@ export const GamePlayPage: React.FC = () => {
   };
 
   const getGameTitle = () => {
+    if (lang === 'en') {
+      switch (gameSlug) {
+        case 'sohbeti-baslat': return 'Start the Conversation';
+        case 'ikilemde-kal': return 'Stay in Dilemma';
+        case 'kim-daha-muhtemel': return "Who's More Likely?";
+        case 'ne-kadar-taniyoruz': return 'How Well Do We Know Each Other?';
+        default: return 'Mini Game';
+      }
+    }
     switch (gameSlug) {
       case 'sohbeti-baslat':
         return 'Sohbeti Başlat';
@@ -76,7 +88,7 @@ export const GamePlayPage: React.FC = () => {
             <Sparkles className="w-6 h-6" />
           </div>
           <p className="text-xs font-semibold text-coffee-800">
-            Sorular hazırlanıyor...
+            {lang === 'en' ? 'Preparing questions...' : 'Sorular hazırlanıyor...'}
           </p>
         </div>
       </main>
@@ -93,15 +105,18 @@ export const GamePlayPage: React.FC = () => {
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-coffee-700 hover:text-coffee-950 transition-colors p-1"
           >
             <ArrowLeft className="w-4 h-4" />
-            Oyun Seçimine Dön
+            {t.backToGames}
           </Link>
 
-          {activeTable && (
-            <div className="flex items-center gap-1.5 text-[11px] font-bold text-coffee-700 bg-white border border-coffee-200 px-2.5 py-1 rounded-full shadow-warm-sm">
-              <Coffee className="w-3 h-3 text-terracotta-500" />
-              <span>{activeTable.label}</span>
-            </div>
-          )}
+          <div className="flex items-center gap-2">
+            <LanguageSwitch />
+            {activeTable && (
+              <div className="flex items-center gap-1.5 text-[11px] font-bold text-coffee-700 bg-white border border-coffee-200 px-2.5 py-1 rounded-full shadow-warm-sm">
+                <Coffee className="w-3 h-3 text-terracotta-500" />
+                <span>{activeTable.label}</span>
+              </div>
+            )}
+          </div>
         </nav>
 
         {/* Game Title Header */}
@@ -110,7 +125,7 @@ export const GamePlayPage: React.FC = () => {
             {getGameTitle()}
           </h1>
           <span className="text-xs text-coffee-500 font-medium">
-            {questions.length} Soru
+            {questions.length} {lang === 'en' ? 'Questions' : 'Soru'}
           </span>
         </header>
 
@@ -130,7 +145,7 @@ export const GamePlayPage: React.FC = () => {
       </div>
 
       <footer className="text-center pt-8 pb-3 text-[11px] text-coffee-400">
-        Fincan Sohbet • Masadaki Arkadaşlık Deneyimi
+        {lang === 'en' ? 'Fincan Sohbet • Friendship Experience at Your Table' : 'Fincan Sohbet • Masadaki Arkadaşlık Deneyimi'}
       </footer>
     </main>
   );

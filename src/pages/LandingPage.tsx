@@ -22,8 +22,8 @@ export const LandingPage: React.FC = () => {
 
   const faqs = [
     {
-      q: 'Fincan Sohbet bir QR menü uygulaması mıdır?',
-      a: 'Hayır. Fincan Sohbet kesinlikle bir menü veya sipariş uygulaması değildir. Kafede aynı masada oturan insanların sohbet başlatmasını, eğlenceli mini oyunlarla kaliteli vakit geçirmesini sağlayan bir masa sosyalleşme platformudur.',
+      q: 'Fincan Sohbet yalnızca bir QR menü uygulaması mıdır?',
+      a: 'Hayır, sıradan bir QR menüden çok daha fazlasıdır! Masada tek bir QR kod üzerinden hem kafenizin güncel dijital menüsünü ve Wi-Fi bilgilerini sunar, hem de masadaki misafirlerin birbirleriyle eğlenceli mini oyunlarla sohbet etmelerini sağlayan hibrit bir masa deneyim platformudur.',
     },
     {
       q: 'Müşterilerin uygulama indirmesi veya hesap açması gerekiyor mu?',
