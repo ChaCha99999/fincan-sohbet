@@ -48,6 +48,7 @@ export const MasadakiCasusGame: React.FC<{ onFinishGame?: () => void }> = ({ onF
   const [hasPeekedCurrent, setHasPeekedCurrent] = useState(false);
 
   const [currentWordPair, setCurrentWordPair] = useState<UndercoverWordPair | null>(null);
+  const [usedPairIds, setUsedPairIds] = useState<Set<string>>(new Set());
   const [winner, setWinner] = useState<'civilians' | 'undercovers' | 'mr_white' | null>(null);
   const [eliminatedAnnouncement, setEliminatedAnnouncement] = useState<PlayerRole | null>(null);
   const [roundNumber, setRoundNumber] = useState(1);
@@ -92,9 +93,14 @@ export const MasadakiCasusGame: React.FC<{ onFinishGame?: () => void }> = ({ onF
   const handleStartGame = () => {
     if (players.length < 3) return;
 
-    // Pick random word pair
-    const randomIndex = Math.floor(Math.random() * UNDERCOVER_WORD_PAIRS.length);
-    const pair = UNDERCOVER_WORD_PAIRS[randomIndex];
+    // Pick random unseen word pair
+    let availablePairs = UNDERCOVER_WORD_PAIRS.filter((p) => !usedPairIds.has(p.id));
+    if (availablePairs.length === 0) {
+      availablePairs = UNDERCOVER_WORD_PAIRS;
+      setUsedPairIds(new Set());
+    }
+    const pair = availablePairs[Math.floor(Math.random() * availablePairs.length)];
+    setUsedPairIds((prev) => new Set(prev).add(pair.id));
     setCurrentWordPair(pair);
 
     // Shuffle players

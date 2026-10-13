@@ -6,7 +6,8 @@ import {
   RotateCcw, 
   ArrowRight, 
   Trash2,
-  Check
+  Check,
+  Shuffle
 } from 'lucide-react';
 import type { Question } from '../../types';
 
@@ -33,7 +34,10 @@ export const KimDahaMuhtemelGame: React.FC<KimDahaMuhtemelGameProps> = ({
   });
   const [newPlayerInput, setNewPlayerInput] = useState<string>('');
   const [gameStarted, setGameStarted] = useState<boolean>(false);
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [currentIndex, setCurrentIndex] = useState<number>(() => {
+    return questions.length > 0 ? Math.floor(Math.random() * questions.length) : 0;
+  });
+  const [seenIds, setSeenIds] = useState<Set<string>>(new Set());
   const [scores, setScores] = useState<Record<string, number>>({});
   const [selectedPlayerForRound, setSelectedPlayerForRound] = useState<string | null>(null);
 
@@ -84,9 +88,27 @@ export const KimDahaMuhtemelGame: React.FC<KimDahaMuhtemelGameProps> = ({
     }));
   };
 
+  const pickRandomNextQuestion = (currentQId?: string) => {
+    const nextSeen = new Set(seenIds);
+    if (currentQId) nextSeen.add(currentQId);
+
+    const unseenIndices = questions
+      .map((q, idx) => ({ q, idx }))
+      .filter(item => !nextSeen.has(item.q.id));
+
+    if (unseenIndices.length > 0) {
+      const picked = unseenIndices[Math.floor(Math.random() * unseenIndices.length)];
+      setCurrentIndex(picked.idx);
+      setSeenIds(nextSeen);
+    } else {
+      setSeenIds(currentQId ? new Set([currentQId]) : new Set());
+      setCurrentIndex(Math.floor(Math.random() * questions.length));
+    }
+  };
+
   const handleNextRound = () => {
     setSelectedPlayerForRound(null);
-    setCurrentIndex(prev => (prev + 1) % questions.length);
+    pickRandomNextQuestion(currentQuestion?.id);
   };
 
   const handleResetGame = () => {
@@ -94,7 +116,8 @@ export const KimDahaMuhtemelGame: React.FC<KimDahaMuhtemelGameProps> = ({
     players.forEach(p => initialScores[p] = 0);
     setScores(initialScores);
     setSelectedPlayerForRound(null);
-    setCurrentIndex(0);
+    setSeenIds(new Set());
+    setCurrentIndex(Math.floor(Math.random() * questions.length));
   };
 
   // STEP 1: PLAYER SETUP SCREEN
@@ -172,9 +195,19 @@ export const KimDahaMuhtemelGame: React.FC<KimDahaMuhtemelGameProps> = ({
     <div className="space-y-6">
       {/* Current Question Card */}
       <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-warm border-2 border-coffee-200 text-center space-y-4">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-coffee-100 text-coffee-800 text-xs font-bold">
-          <Users className="w-3.5 h-3.5" />
-          Tur #{currentIndex + 1}
+        <div className="flex items-center justify-between">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-coffee-100 text-coffee-800 text-xs font-bold">
+            <Users className="w-3.5 h-3.5" />
+            Tur #{seenIds.size + 1}
+          </div>
+          <button
+            onClick={() => pickRandomNextQuestion(currentQuestion?.id)}
+            className="text-coffee-600 hover:text-coffee-950 p-1.5 rounded-xl hover:bg-cream-100 transition-colors flex items-center gap-1 text-xs font-bold"
+            title="Farklı Soru Getir (Karıştır)"
+          >
+            <Shuffle className="w-3.5 h-3.5 text-terracotta-600" />
+            <span>Karıştır</span>
+          </button>
         </div>
 
         <p className="font-serif font-black text-xl sm:text-2xl text-coffee-950 leading-snug">

@@ -6,7 +6,8 @@ import {
   HelpCircle, 
   X, 
   CheckCircle,
-  Coffee
+  Coffee,
+  Shuffle
 } from 'lucide-react';
 import type { Question } from '../../types';
 
@@ -21,7 +22,9 @@ export const SohbetiBaslatGame: React.FC<SohbetiBaslatGameProps> = ({
 }) => {
   const [selectedTag, setSelectedTag] = useState<string>('Tümü');
   const [seenIds, setSeenIds] = useState<Set<string>>(new Set());
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [currentIndex, setCurrentIndex] = useState<number>(() => {
+    return questions.length > 0 ? Math.floor(Math.random() * questions.length) : 0;
+  });
   const [showRules, setShowRules] = useState<boolean>(false);
   const [cardFlipAnim, setCardFlipAnim] = useState<boolean>(false);
 
@@ -59,10 +62,9 @@ export const SohbetiBaslatGame: React.FC<SohbetiBaslatGameProps> = ({
           setCurrentIndex(randomChoice.idx);
           setSeenIds(nextSeen);
         } else {
-          // If all seen, reset seen set and pick next
+          // If all seen, reset seen set and pick random
           setSeenIds(new Set([currentQuestion.id]));
-          const nextIdx = (currentIndex + 1) % filteredQuestions.length;
-          setCurrentIndex(nextIdx);
+          setCurrentIndex(Math.floor(Math.random() * filteredQuestions.length));
         }
       }
       setCardFlipAnim(false);
@@ -92,7 +94,8 @@ export const SohbetiBaslatGame: React.FC<SohbetiBaslatGameProps> = ({
             key={tag}
             onClick={() => {
               setSelectedTag(tag);
-              setCurrentIndex(0);
+              const subset = tag === 'Tümü' ? questions : questions.filter(q => q.tags?.includes(tag));
+              setCurrentIndex(subset.length > 0 ? Math.floor(Math.random() * subset.length) : 0);
             }}
             className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-colors ${
               selectedTag === tag
@@ -124,13 +127,23 @@ export const SohbetiBaslatGame: React.FC<SohbetiBaslatGameProps> = ({
             )}
           </div>
 
-          <button
-            onClick={() => setShowRules(true)}
-            className="text-coffee-400 hover:text-coffee-700 p-1 rounded-lg transition-colors"
-            title="Nasıl Oynanır?"
-          >
-            <HelpCircle className="w-4 h-4" />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={handleNextQuestion}
+              className="text-coffee-500 hover:text-coffee-950 p-1.5 rounded-xl hover:bg-cream-100 transition-colors flex items-center gap-1 text-[11px] font-bold"
+              title="Rastgele Soru Karıştır"
+            >
+              <Shuffle className="w-3.5 h-3.5 text-terracotta-600" />
+              <span className="hidden sm:inline">Karıştır</span>
+            </button>
+            <button
+              onClick={() => setShowRules(true)}
+              className="text-coffee-400 hover:text-coffee-700 p-1 rounded-lg transition-colors"
+              title="Nasıl Oynanır?"
+            >
+              <HelpCircle className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
         {/* Question Text */}

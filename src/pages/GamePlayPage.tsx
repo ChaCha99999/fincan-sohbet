@@ -68,7 +68,13 @@ export const GamePlayPage: React.FC = () => {
 
     setLoading(true);
     getQuestions({ gameType: gameSlug as GameType, onlyActive: true }).then((data) => {
-      setQuestions(data);
+      // Masada her oyunda soruların tamamen rastgele/karışık sırada gelmesi için Fisher-Yates shuffle
+      const shuffled = [...data];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      setQuestions(shuffled);
       setLoading(false);
 
       // Log game start event if active table is present
