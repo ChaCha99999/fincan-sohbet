@@ -162,7 +162,7 @@ export const CLASSIC_TABOO_CARDS: ClassicTabooCard[] = [
   {
     id: 'taboo-26',
     word: 'BUZUL',
-    tabooWords: ['Kutup', 'Soğuk', 'Erimak', 'Buz', 'Devasa'],
+    tabooWords: ['Kutup', 'Soğuk', 'Erimek', 'Buz', 'Devasa'],
     category: 'Coğrafya'
   },
   {
@@ -488,7 +488,7 @@ export const CLASSIC_TABOO_CARDS: ClassicTabooCard[] = [
   {
     id: 'taboo-79',
     word: 'DONDURMA',
-    tabooWords: ['Külah', 'Soğuk', 'Top', 'Yaz', 'Erimak'],
+    tabooWords: ['Külah', 'Soğuk', 'Top', 'Yaz', 'Erimek'],
     category: 'Tatlı'
   },
   {
@@ -618,5 +618,127 @@ export const CLASSIC_TABOO_CARDS: ClassicTabooCard[] = [
     word: 'DENİZ FENERİ',
     tabooWords: ['Işık', 'Gemi', 'Gece', 'Kıyı', 'Karanlık'],
     category: 'Denizcilik'
+  },
+
+  // 101-120: YENİ EKLENEN KLASİK TABU KARTLARI (Zenginleştirilmiş & Düzeltilmiş)
+  {
+    id: 'taboo-101',
+    word: 'GÖKDELEN',
+    tabooWords: ['Bina', 'Yüksek', 'Kat', 'Şehir', 'Asansör'],
+    category: 'Mimari'
+  },
+  {
+    id: 'taboo-102',
+    word: 'PARAŞÜT',
+    tabooWords: ['Uçak', 'Atlamak', 'Gökyüzü', 'Açılmak', 'Hava'],
+    category: 'Havacılık & Spor'
+  },
+  {
+    id: 'taboo-103',
+    word: 'TELEFON',
+    tabooWords: ['Aramak', 'Mesaj', 'Ekran', 'Akıllı', 'Konuşmak'],
+    category: 'Teknoloji'
+  },
+  {
+    id: 'taboo-104',
+    word: 'BALIK',
+    tabooWords: ['Deniz', 'Yüzmek', 'Akvaryum', 'Olta', 'Pul'],
+    category: 'Hayvanlar'
+  },
+  {
+    id: 'taboo-105',
+    word: 'TREN',
+    tabooWords: ['Ray', 'Gar', 'Lokomotif', 'Vagon', 'Seyahat'],
+    category: 'Ulaşım'
+  },
+  {
+    id: 'taboo-106',
+    word: 'KEMER',
+    tabooWords: ['Pantolon', 'Bel', 'Toka', 'Takmak', 'Sıkmak'],
+    category: 'Giyim'
+  },
+  {
+    id: 'taboo-107',
+    word: 'AYAKKABI',
+    tabooWords: ['Bağcık', 'Taban', 'Giymek', 'Çorap', 'Spor'],
+    category: 'Giyim'
+  },
+  {
+    id: 'taboo-108',
+    word: 'GÖKTAŞI',
+    tabooWords: ['Uzay', 'Düşmek', 'Krater', 'Meteor', 'Atmosfer'],
+    category: 'Uzay & Bilim'
+  },
+  {
+    id: 'taboo-109',
+    word: 'ARABA',
+    tabooWords: ['Tekerlek', 'Direksiyon', 'Motor', 'Benzin', 'Sürmek'],
+    category: 'Araç'
+  },
+  {
+    id: 'taboo-110',
+    word: 'UÇURTMA',
+    tabooWords: ['Rüzgar', 'İp', 'Uçmak', 'Kuyruk', 'Gökyüzü'],
+    category: 'Oyun & Eğlence'
+  },
+  {
+    id: 'taboo-111',
+    word: 'TERMOMETRE',
+    tabooWords: ['Sıcaklık', 'Derece', 'Cıva', 'Ölçmek', 'Ateş'],
+    category: 'Ölçü Aleti'
+  },
+  {
+    id: 'taboo-112',
+    word: 'YELPAZE',
+    tabooWords: ['Sıcak', 'Rüzgar', 'Sallamak', 'Yaz', 'Serinlemek'],
+    category: 'Aksesuar'
+  },
+  {
+    id: 'taboo-113',
+    word: 'KAHVE',
+    tabooWords: ['Fincan', 'Telve', 'Kafein', 'Sıcak', 'Çekirdek'],
+    category: 'İçecek'
+  },
+  {
+    id: 'taboo-114',
+    word: 'VAPUR',
+    tabooWords: ['Deniz', 'İskele', 'Martı', 'Simit', 'Boğaz'],
+    category: 'Ulaşım'
+  },
+  {
+    id: 'taboo-115',
+    word: 'ÇANTA',
+    tabooWords: ['Taşımak', 'Eşya', 'Kol', 'Sırt', 'Fermuar'],
+    category: 'Aksesuar'
+  },
+  {
+    id: 'taboo-116',
+    word: 'KİTAP',
+    tabooWords: ['Sayfa', 'Okumak', 'Yazar', 'Kapak', 'Roman'],
+    category: 'Kültür'
+  },
+  {
+    id: 'taboo-117',
+    word: 'PİYANO',
+    tabooWords: ['Tuş', 'Müzik', 'Çalmak', 'Siyah', 'Beyaz'],
+    category: 'Müzik'
+  },
+  {
+    id: 'taboo-118',
+    word: 'LABİRENT',
+    tabooWords: ['Kaybolmak', 'Çıkış', 'Yol', 'Duvar', 'Bulmaca'],
+    category: 'Oyun & Zeka'
+  },
+  {
+    id: 'taboo-119',
+    word: 'ÇADIR',
+    tabooWords: ['Kamp', 'Kurmak', 'Doğa', 'Orman', 'Uyku Tulumu'],
+    category: 'Doğa & Kamp'
+  },
+  {
+    id: 'taboo-120',
+    word: 'HELİKOPTER',
+    tabooWords: ['Pervane', 'Uçmak', 'Havalanmak', 'Pilot', 'Gökyüzü'],
+    category: 'Havacılık'
   },
 ];

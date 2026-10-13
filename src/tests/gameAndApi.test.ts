@@ -364,9 +364,9 @@ describe('Garson Çağır & Hesap İste Modülü (Waiter Call & Service Requests
 });
 
 describe('Masadaki Casus (Undercover / Köstebek) Modülü', () => {
-  it('En az 50 adet özgün ve dengeli kelime çifti bulunmalıdır', async () => {
+  it('En az 75 adet özgün ve dengeli kelime çifti bulunmalıdır', async () => {
     const { UNDERCOVER_WORD_PAIRS } = await import('../data/undercoverWords');
-    expect(UNDERCOVER_WORD_PAIRS.length).toBeGreaterThanOrEqual(50);
+    expect(UNDERCOVER_WORD_PAIRS.length).toBeGreaterThanOrEqual(75);
   });
 
   it('Her kelime çiftinde sivil ve casus kelimeleri birbirinden farklı ve anlamlı olmalıdır', async () => {
@@ -402,9 +402,9 @@ describe('Masadaki Casus (Undercover / Köstebek) Modülü', () => {
 });
 
 describe('5 Saniye Kuralı (Hızlı Beyin Yakan) Modülü', () => {
-  it('En az 50 adet özgün 5 saniye görevi bulunmalıdır', async () => {
+  it('En az 80 adet özgün 5 saniye görevi bulunmalıdır', async () => {
     const { FIVE_SECONDS_PROMPTS } = await import('../data/fiveSecondsPrompts');
-    expect(FIVE_SECONDS_PROMPTS.length).toBeGreaterThanOrEqual(50);
+    expect(FIVE_SECONDS_PROMPTS.length).toBeGreaterThanOrEqual(80);
   });
 
   it('Tüm görevlerin metni ve kategorisi geçerli olmalıdır', async () => {
@@ -425,9 +425,9 @@ describe('5 Saniye Kuralı (Hızlı Beyin Yakan) Modülü', () => {
 });
 
 describe('Klasik Tabu (Yasak Kelimeler) Modülü', () => {
-  it('En az 100 adet özgün klasik Tabu kartı bulunmalıdır', async () => {
+  it('En az 120 adet özgün klasik Tabu kartı bulunmalıdır', async () => {
     const { CLASSIC_TABOO_CARDS } = await import('../data/classicTabooWords');
-    expect(CLASSIC_TABOO_CARDS.length).toBeGreaterThanOrEqual(100);
+    expect(CLASSIC_TABOO_CARDS.length).toBeGreaterThanOrEqual(120);
   });
 
   it('Her Tabu kartında 1 ana kelime ve tam 5 adet yasaklı kelime bulunmalıdır', async () => {

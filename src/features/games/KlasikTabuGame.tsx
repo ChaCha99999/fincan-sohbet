@@ -311,7 +311,7 @@ export const KlasikTabuGame: React.FC<KlasikTabuGameProps> = ({ onFinishGame }) 
           </div>
 
           {/* Main Taboo Card */}
-          <div className="p-6 rounded-4xl bg-white border-3 border-coffee-950 shadow-print text-center space-y-5 relative overflow-hidden">
+          <div className="p-4 sm:p-6 rounded-3xl sm:rounded-4xl bg-white border-3 border-coffee-950 shadow-print text-center space-y-3 sm:space-y-4 relative overflow-hidden">
             {currentCard.category && (
               <span className="text-[10px] font-bold uppercase tracking-wider text-coffee-500 bg-cream-100 px-3 py-0.5 rounded-full border border-coffee-200 inline-block">
                 {currentCard.category}
@@ -319,25 +319,25 @@ export const KlasikTabuGame: React.FC<KlasikTabuGameProps> = ({ onFinishGame }) 
             )}
 
             {/* TARGET WORD */}
-            <div className="py-2">
+            <div className="py-1 sm:py-2">
               <span className="text-[10px] uppercase font-bold text-terracotta-600 tracking-widest block mb-1">
                 Anlatılacak Kelime:
               </span>
-              <h1 className="font-serif font-black text-3xl sm:text-4xl text-coffee-950 tracking-wide">
+              <h1 className="font-serif font-black text-2xl sm:text-4xl text-coffee-950 tracking-wide">
                 {currentCard.word}
               </h1>
             </div>
 
             {/* TABOO FORBIDDEN WORDS */}
-            <div className="p-4 rounded-3xl bg-rose-50 border-2 border-rose-200 space-y-2.5">
+            <div className="p-3 sm:p-4 rounded-2xl sm:rounded-3xl bg-rose-50 border-2 border-rose-200 space-y-1.5 sm:space-y-2.5">
               <span className="text-[10px] font-black uppercase text-rose-700 tracking-widest block">
                 ⛔ YASAKLI KELİMELER ⛔
               </span>
-              <div className="space-y-1.5">
+              <div className="space-y-1 sm:space-y-1.5">
                 {currentCard.tabooWords.map((taboo) => (
                   <div
                     key={taboo}
-                    className="py-1.5 px-3 rounded-xl bg-white border border-rose-300 text-xs font-bold text-rose-950 shadow-warm-sm"
+                    className="py-1 sm:py-1.5 px-3 rounded-xl bg-white border border-rose-300 text-xs font-bold text-rose-950 shadow-warm-sm"
                   >
                     {taboo}
                   </div>
@@ -347,33 +347,33 @@ export const KlasikTabuGame: React.FC<KlasikTabuGameProps> = ({ onFinishGame }) 
           </div>
 
           {/* Action Buttons */}
-          <div className="grid grid-cols-3 gap-2.5 pt-1">
+          <div className="grid grid-cols-3 gap-2 sm:gap-2.5 pt-1">
             <button
               onClick={handleTaboo}
-              className="py-4 px-2 rounded-2xl bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black text-xs flex flex-col items-center justify-center gap-1 shadow-warm transition-transform"
+              className="py-3 sm:py-4 px-2 rounded-2xl bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black text-xs flex flex-col items-center justify-center gap-1 shadow-warm transition-transform"
             >
-              <X className="w-6 h-6" />
+              <X className="w-5 sm:w-6 h-5 sm:h-6" />
               <span>Tabu! (-1)</span>
             </button>
 
             <button
               onClick={handlePass}
               disabled={remainingPasses <= 0}
-              className={`py-4 px-2 rounded-2xl font-black text-xs flex flex-col items-center justify-center gap-1 border transition-all ${
+              className={`py-3 sm:py-4 px-2 rounded-2xl font-black text-xs flex flex-col items-center justify-center gap-1 border transition-all ${
                 remainingPasses > 0
                   ? 'bg-cream-200 hover:bg-cream-300 text-coffee-800 border-coffee-300 active:scale-95'
                   : 'bg-coffee-100 text-coffee-400 border-coffee-200 cursor-not-allowed'
               }`}
             >
-              <FastForward className="w-6 h-6" />
+              <FastForward className="w-5 sm:w-6 h-5 sm:h-6" />
               <span>Pas ({remainingPasses})</span>
             </button>
 
             <button
               onClick={handleCorrect}
-              className="py-4 px-2 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black text-xs flex flex-col items-center justify-center gap-1 shadow-warm transition-transform"
+              className="py-3 sm:py-4 px-2 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black text-xs flex flex-col items-center justify-center gap-1 shadow-warm transition-transform"
             >
-              <Check className="w-6 h-6" />
+              <Check className="w-5 sm:w-6 h-5 sm:h-6" />
               <span>Doğru! (+1)</span>
             </button>
           </div>

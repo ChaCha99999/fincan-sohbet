@@ -174,11 +174,11 @@ export const GamePlayPage: React.FC = () => {
         </nav>
 
         {/* Game Title Header */}
-        <header className="mb-5 flex items-center justify-between">
-          <h1 className="font-serif font-black text-xl sm:text-2xl text-coffee-950">
+        <header className="mb-5 flex flex-wrap items-baseline justify-between gap-1.5">
+          <h1 className="font-serif font-black text-lg sm:text-2xl text-coffee-950">
             {getGameTitle()}
           </h1>
-          <span className="text-xs text-coffee-500 font-medium">
+          <span className="text-[11px] sm:text-xs text-coffee-500 font-medium shrink-0">
             {gameSlug === 'kafe-trivia' 
               ? (lang === 'en' ? '50+ Questions • 10 Categories' : '50+ Soru • 10 Kategori')
               : gameSlug === 'masa-duellosu'

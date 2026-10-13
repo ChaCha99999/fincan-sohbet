@@ -250,7 +250,13 @@ export const ParmakRuletiGame: React.FC<ParmakRuletiGameProps> = ({ onFinishGame
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         onTouchCancel={handleTouchEnd}
-        className="w-full h-[420px] rounded-4xl bg-coffee-950 border-3 border-coffee-950 shadow-print relative overflow-hidden select-none touch-none flex flex-col items-center justify-center text-center p-6"
+        style={{
+          touchAction: 'none',
+          WebkitTouchCallout: 'none',
+          WebkitUserSelect: 'none',
+          userSelect: 'none'
+        }}
+        className="w-full min-h-[350px] h-[52vh] max-h-[440px] rounded-4xl bg-coffee-950 border-3 border-coffee-950 shadow-print relative overflow-hidden select-none touch-none flex flex-col items-center justify-center text-center p-5"
       >
         {/* Background Ambient Glow */}
         <div className="absolute inset-0 bg-radial from-coffee-900/60 to-transparent pointer-events-none" />

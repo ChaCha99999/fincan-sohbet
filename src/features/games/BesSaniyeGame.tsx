@@ -300,24 +300,24 @@ export const BesSaniyeGame: React.FC<BesSaniyeGameProps> = ({ onFinishGame }) =>
           </div>
 
           {/* Main Question & Timer Card */}
-          <div className="p-6 rounded-4xl bg-white border-3 border-coffee-950 shadow-print text-center space-y-6">
-            <span className="text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-cream-100 text-coffee-700 border border-coffee-200 inline-block">
+          <div className="p-4 sm:p-6 rounded-3xl sm:rounded-4xl bg-white border-3 border-coffee-950 shadow-print text-center space-y-4 sm:space-y-6">
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-cream-100 text-coffee-700 border border-coffee-200 inline-block">
               {currentPrompt.category}
             </span>
 
-            <div className="space-y-2">
-              <span className="text-xs font-black text-terracotta-600 uppercase tracking-widest block">
+            <div className="space-y-1.5 sm:space-y-2">
+              <span className="text-[11px] sm:text-xs font-black text-terracotta-600 uppercase tracking-widest block">
                 5 Saniyede 3 Tane Say:
               </span>
-              <h2 className="font-serif font-black text-2xl sm:text-3xl text-coffee-950 leading-tight">
+              <h2 className="font-serif font-black text-xl sm:text-2xl text-coffee-950 leading-tight">
                 {currentPrompt.prompt}
               </h2>
             </div>
 
             {/* Circular / Big Timer Display */}
-            <div className="flex flex-col items-center justify-center py-2">
+            <div className="flex flex-col items-center justify-center py-1 sm:py-2">
               <div
-                className={`w-32 h-32 rounded-full border-4 flex flex-col items-center justify-center transition-all ${
+                className={`w-28 sm:w-32 h-28 sm:h-32 rounded-full border-4 flex flex-col items-center justify-center transition-all ${
                   isTimerRunning
                     ? timeLeft <= 2.0
                       ? 'border-rose-600 bg-rose-50 text-rose-600 scale-105 animate-pulse'
@@ -327,7 +327,7 @@ export const BesSaniyeGame: React.FC<BesSaniyeGameProps> = ({ onFinishGame }) =>
                     : 'border-coffee-300 bg-cream-50 text-coffee-900'
                 }`}
               >
-                <span className="font-mono font-black text-4xl">
+                <span className="font-mono font-black text-3xl sm:text-4xl">
                   {timeLeft.toFixed(1)}
                 </span>
                 <span className="text-[10px] font-bold uppercase tracking-wider">

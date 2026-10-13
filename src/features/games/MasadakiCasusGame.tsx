@@ -353,6 +353,13 @@ export const MasadakiCasusGame: React.FC<{ onFinishGame?: () => void }> = ({ onF
               setHasPeekedCurrent(true);
             }}
             onTouchEnd={() => setIsPeeking(false)}
+            onTouchCancel={() => setIsPeeking(false)}
+            style={{
+              WebkitTouchCallout: 'none',
+              WebkitUserSelect: 'none',
+              userSelect: 'none',
+              touchAction: 'manipulation'
+            }}
             className={`w-full min-h-[220px] rounded-3xl border-3 transition-all flex flex-col items-center justify-center p-6 select-none cursor-pointer relative overflow-hidden ${
               isPeeking
                 ? assignedRoles[currentPeekIndex]?.role === 'civilian'
