@@ -55,9 +55,9 @@ export const IkilemdeKalGame: React.FC<IkilemdeKalGameProps> = ({
   };
 
   return (
-    <div className={`space-y-6 transition-all duration-200 ${isTransitioning ? 'opacity-30 scale-[0.99]' : 'opacity-100 scale-100'}`}>
+    <div className={`space-y-3.5 sm:space-y-4 transition-all duration-200 ${isTransitioning ? 'opacity-30 scale-[0.99]' : 'opacity-100 scale-100'}`}>
       {/* Question Header Card */}
-      <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-warm border border-caramel-200 text-center space-y-3">
+      <div className="bg-white rounded-3xl p-4 sm:p-5 shadow-warm border border-caramel-200 text-center space-y-2.5">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-caramel-100 text-caramel-800 text-xs font-bold">
           <Split className="w-3.5 h-3.5" />
           İkilem #{currentIndex + 1}
@@ -71,11 +71,11 @@ export const IkilemdeKalGame: React.FC<IkilemdeKalGameProps> = ({
       </div>
 
       {/* Two Big Choice Buttons */}
-      <div className="grid grid-cols-1 gap-3.5">
+      <div className="grid grid-cols-1 gap-3">
         {/* Option A */}
         <button
           onClick={() => setSelectedOption('A')}
-          className={`w-full text-left p-5 sm:p-6 rounded-3xl border-2 transition-all duration-200 relative ${
+          className={`w-full text-left p-4 sm:p-5 rounded-3xl border-2 transition-all duration-200 relative ${
             selectedOption === 'A'
               ? 'bg-gradient-to-br from-terracotta-50 to-orange-50 border-terracotta-600 shadow-warm scale-[1.01]'
               : 'bg-white hover:bg-cream-50 border-coffee-200 shadow-warm-sm'
@@ -108,7 +108,7 @@ export const IkilemdeKalGame: React.FC<IkilemdeKalGameProps> = ({
         {/* Option B */}
         <button
           onClick={() => setSelectedOption('B')}
-          className={`w-full text-left p-5 sm:p-6 rounded-3xl border-2 transition-all duration-200 relative ${
+          className={`w-full text-left p-4 sm:p-5 rounded-3xl border-2 transition-all duration-200 relative ${
             selectedOption === 'B'
               ? 'bg-gradient-to-br from-caramel-50 to-amber-50 border-caramel-600 shadow-warm scale-[1.01]'
               : 'bg-white hover:bg-cream-50 border-coffee-200 shadow-warm-sm'

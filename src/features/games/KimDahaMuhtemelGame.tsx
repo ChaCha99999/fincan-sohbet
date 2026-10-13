@@ -193,9 +193,9 @@ export const KimDahaMuhtemelGame: React.FC<KimDahaMuhtemelGameProps> = ({
 
   // STEP 2: ACTIVE GAME PLAY
   return (
-    <div className="space-y-6">
+    <div className="space-y-3.5 sm:space-y-5">
       {/* Current Question Card */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-warm border-2 border-coffee-200 text-center space-y-4">
+      <div className="bg-white rounded-3xl p-5 sm:p-7 shadow-warm border-2 border-coffee-200 text-center space-y-3">
         <div className="flex items-center justify-between">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-coffee-100 text-coffee-800 text-xs font-bold">
             <Users className="w-3.5 h-3.5" />
@@ -225,30 +225,30 @@ export const KimDahaMuhtemelGame: React.FC<KimDahaMuhtemelGameProps> = ({
         <span className="text-xs font-bold uppercase tracking-wider text-coffee-600 px-1">
           Kimi Seçiyorsunuz?
         </span>
-        <div className="grid grid-cols-2 gap-2.5">
+        <div className="grid grid-cols-2 gap-2">
           {players.map((player) => {
             const isSelected = selectedPlayerForRound === player;
             return (
               <button
                 key={player}
                 onClick={() => handleVotePlayer(player)}
-                className={`p-4 rounded-2xl border-2 text-left transition-all duration-200 flex items-center justify-between gap-2 ${
+                className={`p-3 sm:p-3.5 rounded-2xl border-2 text-left transition-all duration-200 flex items-center justify-between gap-2 ${
                   isSelected
                     ? 'bg-terracotta-50 border-terracotta-600 text-terracotta-900 shadow-warm scale-[1.02]'
                     : 'bg-white hover:bg-cream-100 border-coffee-200 text-coffee-900 shadow-warm-sm'
                 }`}
               >
                 <div>
-                  <h4 className="font-bold text-sm sm:text-base leading-tight">
+                  <h4 className="font-bold text-sm leading-tight">
                     {player}
                   </h4>
-                  <span className="text-[11px] text-coffee-500 font-medium">
+                  <span className="text-[10px] text-coffee-500 font-medium">
                     {scores[player] || 0} Oy Aldı
                   </span>
                 </div>
                 {isSelected && (
-                  <div className="w-6 h-6 rounded-full bg-terracotta-600 text-white flex items-center justify-center shrink-0">
-                    <Check className="w-3.5 h-3.5" />
+                  <div className="w-5 h-5 rounded-full bg-terracotta-600 text-white flex items-center justify-center shrink-0">
+                    <Check className="w-3 h-3" />
                   </div>
                 )}
               </button>
@@ -259,17 +259,17 @@ export const KimDahaMuhtemelGame: React.FC<KimDahaMuhtemelGameProps> = ({
 
       {/* Selected Feedback */}
       {selectedPlayerForRound && (
-        <div className="p-3.5 rounded-2xl bg-cream-100 border border-coffee-200 text-center text-xs text-coffee-800 animate-fadeIn flex items-center justify-center gap-1.5">
+        <div className="p-3 rounded-2xl bg-cream-100 border border-coffee-200 text-center text-xs text-coffee-800 animate-fadeIn flex items-center justify-center gap-1.5">
           <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0" />
           <span>Bu turda <strong>{selectedPlayerForRound}</strong> seçildi ve +1 oy kazandı!</span>
         </div>
       )}
 
       {/* Action Buttons */}
-      <div className="space-y-3">
+      <div className="space-y-2.5">
         <button
           onClick={handleNextRound}
-          className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-coffee-800 to-coffee-950 hover:from-coffee-900 hover:to-black text-white font-bold text-base shadow-warm flex items-center justify-center gap-2 transition-transform active:scale-98"
+          className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-coffee-800 to-coffee-950 hover:from-coffee-900 hover:to-black text-white font-bold text-base shadow-warm flex items-center justify-center gap-2 transition-transform active:scale-98"
         >
           Sonraki Tur Sorusu
           <ArrowRight className="w-4 h-4 ml-auto" />

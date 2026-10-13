@@ -140,6 +140,51 @@ export const GamePlayPage: React.FC = () => {
     }
   };
 
+  const getHeaderSubtitle = () => {
+    if (lang === 'en') {
+      switch (gameSlug) {
+        case 'sohbeti-baslat': return `${questions.length} Questions • Intimate & Fun`;
+        case 'ikilemde-kal': return `${questions.length} Dilemmas • Would You Rather`;
+        case 'kim-daha-muhtemel': return `${questions.length} Questions • Voting`;
+        case 'ne-kadar-taniyoruz': return 'Guess & Friendship Points';
+        case 'kafe-trivia': return '50+ Questions • 10 Categories';
+        case 'masa-duellosu': return '5 Questions • 1v1 Arena';
+        case 'kafe-nabzi': return 'Live Polls • All Tables';
+        case 'masadaki-casus': return 'Bluff & Roleplay • 3-10 Players';
+        case 'bes-saniye': return '5 Seconds • Quick Reflex';
+        case 'klasik-tabu': return '100+ Cards • Team Battle';
+        case 'parmak-ruleti': return 'Touch & Decide • Who Pays?';
+        default: return 'Mini Game';
+      }
+    }
+    switch (gameSlug) {
+      case 'sohbeti-baslat':
+        return `${questions.length} Soru • Samimi Sohbet`;
+      case 'ikilemde-kal':
+        return `${questions.length} İkilem • Masada Tartışma`;
+      case 'kim-daha-muhtemel':
+        return `${questions.length} Soru • Masada Oylama`;
+      case 'ne-kadar-taniyoruz':
+        return 'Tahmin Et & Puan Topla';
+      case 'kafe-trivia':
+        return '50+ Soru • 10 Kategori';
+      case 'masa-duellosu':
+        return '5 Soru • 1v1 Arena';
+      case 'kafe-nabzi':
+        return 'Canlı Oylamalar • Tüm Masalar';
+      case 'masadaki-casus':
+        return 'Blöf & Rol • 3-10 Kişi';
+      case 'bes-saniye':
+        return '5 Saniye • Hızlı Refleks';
+      case 'klasik-tabu':
+        return '100+ Kart • Takım Savaşı';
+      case 'parmak-ruleti':
+        return 'Dokun & Seç • Kim Öder?';
+      default:
+        return `${questions.length} Soru`;
+    }
+  };
+
   if (loading) {
     return (
       <main className="min-h-screen bg-cream-50 flex items-center justify-center p-4">
@@ -156,54 +201,41 @@ export const GamePlayPage: React.FC = () => {
   }
 
   return (
-    <main className="min-h-screen bg-cream-50 p-4 sm:p-6 max-w-lg mx-auto flex flex-col justify-between">
-      <div>
-        {/* Navigation & Table Context */}
-        <nav aria-label="Oyun gezinmesi" className="flex items-center justify-between pb-4 pt-1 border-b border-coffee-200/50 mb-5">
-          <Link
-            to="/games"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-coffee-700 hover:text-coffee-950 transition-colors p-1"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            {t.backToGames}
-          </Link>
+    <main className="min-h-[100dvh] bg-cream-50 p-3 sm:p-5 max-w-lg mx-auto flex flex-col justify-between">
+      {/* 1. Compact Navigation Bar */}
+      <nav aria-label="Oyun gezinmesi" className="flex items-center justify-between pb-2.5 pt-0.5 border-b border-coffee-200/60 shrink-0">
+        <Link
+          to="/games"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-coffee-700 hover:text-coffee-950 transition-colors py-1 px-1.5 -ml-1 rounded-lg hover:bg-cream-100"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span className="hidden xs:inline">{t.backToGames}</span>
+          <span className="xs:hidden">Oyunlar</span>
+        </Link>
 
-          <div className="flex items-center gap-2">
-            <LanguageSwitch />
-            {activeTable && (
-              <div className="flex items-center gap-1.5 text-[11px] font-bold text-coffee-700 bg-white border border-coffee-200 px-2.5 py-1 rounded-full shadow-warm-sm">
-                <Coffee className="w-3 h-3 text-terracotta-500" />
-                <span>{activeTable.label}</span>
-              </div>
-            )}
-          </div>
-        </nav>
-
-        {/* Game Title Header */}
-        <header className="mb-5 flex flex-wrap items-baseline justify-between gap-1.5">
-          <h1 className="font-serif font-black text-lg sm:text-2xl text-coffee-950">
+        {/* Center Title & Counter Pill */}
+        <div className="text-center px-1">
+          <h1 className="font-serif font-black text-sm sm:text-base text-coffee-950 leading-tight">
             {getGameTitle()}
           </h1>
-          <span className="text-[11px] sm:text-xs text-coffee-500 font-medium shrink-0">
-            {gameSlug === 'kafe-trivia' 
-              ? (lang === 'en' ? '50+ Questions • 10 Categories' : '50+ Soru • 10 Kategori')
-              : gameSlug === 'masa-duellosu'
-              ? (lang === 'en' ? '5 Quick Questions • 1v1 Arena' : '5 Hızlı Soru • 1v1 Arena')
-              : gameSlug === 'kafe-nabzi'
-              ? (lang === 'en' ? 'Live Polls • All Tables' : 'Canlı Oylamalar • Tüm Masalar')
-              : gameSlug === 'masadaki-casus'
-              ? (lang === 'en' ? 'Bluff & Roleplay • 3-10 Players' : 'Blöf & Rol • 3-10 Kişi')
-              : gameSlug === 'bes-saniye'
-              ? (lang === 'en' ? '5 Seconds • Quick Reflex' : '5 Saniye • Hızlı Refleks')
-              : gameSlug === 'klasik-tabu'
-              ? (lang === 'en' ? '100+ Cards • Team Battle' : '100+ Kart • Takım Savaşı')
-              : gameSlug === 'parmak-ruleti'
-              ? (lang === 'en' ? 'Touch & Decide • Who Pays?' : 'Dokun & Seç • Kim Öder?')
-              : `${questions.length} ${lang === 'en' ? 'Questions' : 'Soru'}`}
+          <span className="text-[10px] text-coffee-500 font-medium block leading-tight">
+            {getHeaderSubtitle()}
           </span>
-        </header>
+        </div>
 
-        {/* Dynamic Game Component (Lazy Loaded Chunk) */}
+        <div className="flex items-center gap-1.5">
+          <LanguageSwitch />
+          {activeTable && (
+            <div className="flex items-center gap-1 text-[11px] font-bold text-coffee-700 bg-white border border-coffee-200 px-2 py-0.5 rounded-full shadow-warm-sm">
+              <Coffee className="w-3 h-3 text-terracotta-500" />
+              <span>{activeTable.label}</span>
+            </div>
+          )}
+        </div>
+      </nav>
+
+      {/* 2. Vertically & Horizontally Centered Game Screen */}
+      <div className="flex-1 flex flex-col justify-center my-auto py-2.5 w-full">
         <Suspense fallback={
           <div className="py-16 flex flex-col items-center justify-center gap-2.5 text-coffee-700">
             <Loader2 className="w-7 h-7 animate-spin text-terracotta-600" />
@@ -246,7 +278,8 @@ export const GamePlayPage: React.FC = () => {
         </Suspense>
       </div>
 
-      <footer className="text-center pt-8 pb-3 text-[11px] text-coffee-400">
+      {/* 3. Minimal Footer */}
+      <footer className="text-center pt-1.5 pb-1 text-[10px] text-coffee-400 shrink-0">
         {lang === 'en' ? 'Fincan Sohbet • Friendship Experience at Your Table' : 'Fincan Sohbet • Masadaki Arkadaşlık Deneyimi'}
       </footer>
     </main>

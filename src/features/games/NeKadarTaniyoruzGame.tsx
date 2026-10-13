@@ -215,9 +215,9 @@ export const NeKadarTaniyoruzGame: React.FC<NeKadarTaniyoruzGameProps> = ({
   const guesserPlayers = players.filter(p => p !== targetPlayer);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3.5 sm:space-y-5">
       {/* Target Player Badge */}
-      <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-between shadow-warm-sm">
+      <div className="p-3.5 sm:p-4 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-between shadow-warm-sm">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-xl bg-rose-600 text-white font-bold text-xs flex items-center justify-center shrink-0">
             <Target className="w-4 h-4" />
@@ -237,7 +237,7 @@ export const NeKadarTaniyoruzGame: React.FC<NeKadarTaniyoruzGameProps> = ({
       </div>
 
       {/* Question Card */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-warm border-2 border-coffee-200 text-center space-y-4">
+      <div className="bg-white rounded-3xl p-5 sm:p-7 shadow-warm border-2 border-coffee-200 text-center space-y-3">
         <div className="flex items-center justify-between">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cream-100 text-coffee-800 text-xs font-bold">
             <Sparkles className="w-3.5 h-3.5 text-rose-500" />
