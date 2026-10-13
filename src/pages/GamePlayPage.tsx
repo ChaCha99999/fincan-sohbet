@@ -204,14 +204,21 @@ export const GamePlayPage: React.FC = () => {
     <main className="min-h-[100dvh] bg-cream-50 p-3 sm:p-5 max-w-lg mx-auto flex flex-col justify-between">
       {/* 1. Compact Navigation Bar */}
       <nav aria-label="Oyun gezinmesi" className="flex items-center justify-between pb-2.5 pt-0.5 border-b border-coffee-200/60 shrink-0">
-        <Link
-          to="/games"
+        <button
+          type="button"
+          onClick={() => {
+            if (window.history.length > 1) {
+              navigate(-1);
+            } else {
+              navigate('/games');
+            }
+          }}
           className="inline-flex items-center gap-1 text-xs font-semibold text-coffee-700 hover:text-coffee-950 transition-colors py-1 px-1.5 -ml-1 rounded-lg hover:bg-cream-100"
         >
           <ArrowLeft className="w-4 h-4" />
           <span className="hidden xs:inline">{t.backToGames}</span>
-          <span className="xs:hidden">Oyunlar</span>
-        </Link>
+          <span className="xs:hidden">Geri</span>
+        </button>
 
         {/* Center Title & Counter Pill */}
         <div className="text-center px-1">
@@ -226,10 +233,14 @@ export const GamePlayPage: React.FC = () => {
         <div className="flex items-center gap-1.5">
           <LanguageSwitch />
           {activeTable && (
-            <div className="flex items-center gap-1 text-[11px] font-bold text-coffee-700 bg-white border border-coffee-200 px-2 py-0.5 rounded-full shadow-warm-sm">
+            <Link
+              to={`/t/${activeTable.public_token}`}
+              title="Masa Ana Ekranına Dön"
+              className="flex items-center gap-1 text-[11px] font-bold text-coffee-700 hover:text-terracotta-700 bg-white hover:bg-cream-100 border border-coffee-200 px-2 py-0.5 rounded-full shadow-warm-sm transition-colors"
+            >
               <Coffee className="w-3 h-3 text-terracotta-500" />
               <span>{activeTable.label}</span>
-            </div>
+            </Link>
           )}
         </div>
       </nav>

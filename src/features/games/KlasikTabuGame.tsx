@@ -9,7 +9,8 @@ import {
   Timer, 
   ChevronRight,
   Flag,
-  ShieldAlert
+  ShieldAlert,
+  ArrowLeft
 } from 'lucide-react';
 import { CLASSIC_TABOO_CARDS, type ClassicTabooCard } from '../../data/classicTabooWords';
 
@@ -242,6 +243,17 @@ export const KlasikTabuGame: React.FC<KlasikTabuGameProps> = ({ onFinishGame }) 
             <span>Tabu Maçını Başlat</span>
             <ChevronRight className="w-4 h-4 ml-auto" />
           </button>
+
+          {onFinishGame && (
+            <button
+              type="button"
+              onClick={onFinishGame}
+              className="w-full py-2.5 rounded-xl border border-coffee-200 text-xs font-bold text-coffee-700 hover:text-coffee-950 hover:bg-cream-100 flex items-center justify-center gap-1.5 transition-colors"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Geri Dön (Oyun Seçimi)</span>
+            </button>
+          )}
         </div>
       )}
 

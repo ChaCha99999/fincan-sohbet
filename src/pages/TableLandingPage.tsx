@@ -583,6 +583,7 @@ export const TableLandingPage: React.FC = () => {
             cafe={table.cafe} 
             tableLabel={table.label} 
             onSwitchToGames={() => setActiveView('games')} 
+            onSwitchToPortal={() => setActiveView('portal')}
           />
         )}
 
@@ -700,11 +701,18 @@ export const TableLandingPage: React.FC = () => {
               ))}
             </div>
 
-            {/* Menüye Geri Dön Butonu */}
-            <div className="pt-2">
+            {/* Masa Karşılama Ekranına Dön / Menüye Geç Butonları */}
+            <div className="pt-2 flex flex-col sm:flex-row gap-2">
+              <button
+                onClick={() => setActiveView('portal')}
+                className="flex-1 py-3 px-3 rounded-2xl bg-cream-100 hover:bg-cream-200 border-2 border-coffee-950/20 text-coffee-900 font-bold text-xs flex items-center justify-center gap-2 transition-colors"
+              >
+                <Sparkles className="w-4 h-4 text-caramel-600" />
+                <span>Masa Karşılama Ekranına Dön</span>
+              </button>
               <button
                 onClick={() => setActiveView('menu')}
-                className="w-full btn-secondary !py-3 !text-xs text-center justify-center"
+                className="flex-1 py-3 px-3 rounded-2xl bg-cream-100 hover:bg-cream-200 border-2 border-coffee-950/20 text-coffee-900 font-bold text-xs flex items-center justify-center gap-2 transition-colors"
               >
                 <BookOpen className="w-4 h-4 text-caramel-700" />
                 <span>Kafe Menüsüne Göz At</span>

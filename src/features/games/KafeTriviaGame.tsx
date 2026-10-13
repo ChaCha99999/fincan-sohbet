@@ -22,7 +22,8 @@ import {
   ChevronRight,
   Zap,
   Medal,
-  Lightbulb
+  Lightbulb,
+  ArrowLeft
 } from 'lucide-react';
 import type { TriviaCategoryInfo, TriviaQuestion, TriviaLeaderboardEntry } from '../../types';
 import { TRIVIA_CATEGORIES, TRIVIA_QUESTIONS } from '../../data/triviaQuestions';
@@ -280,6 +281,18 @@ export const KafeTriviaGame: React.FC<KafeTriviaGameProps> = ({ onFinishGame }) 
               );
             })}
           </div>
+        </div>
+
+        {/* Geri Dön Butonu */}
+        <div className="pt-1">
+          <button
+            onClick={onFinishGame}
+            type="button"
+            className="w-full py-3 rounded-2xl bg-cream-100 hover:bg-cream-200 text-coffee-800 font-bold text-xs border border-coffee-200 flex items-center justify-center gap-1.5 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Geri Dön (Oyun Seçimi)
+          </button>
         </div>
       </div>
     );

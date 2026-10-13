@@ -10,7 +10,8 @@ import {
   Sparkles,
   Shuffle,
   Target,
-  CheckCircle2
+  CheckCircle2,
+  ArrowLeft
 } from 'lucide-react';
 import type { Question } from '../../types';
 
@@ -202,6 +203,15 @@ export const NeKadarTaniyoruzGame: React.FC<NeKadarTaniyoruzGameProps> = ({
           className="w-full py-3.5 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm shadow-warm transition-transform active:scale-98 disabled:opacity-50"
         >
           Oyuna Başla ({players.length} Oyuncu)
+        </button>
+
+        <button
+          onClick={onFinishGame}
+          type="button"
+          className="w-full py-3 rounded-2xl bg-cream-100 hover:bg-cream-200 text-coffee-800 font-bold text-xs border border-coffee-200 flex items-center justify-center gap-1.5 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Geri Dön (Oyun Seçimi)
         </button>
       </div>
     );

@@ -20,12 +20,14 @@ interface CafeMenuViewProps {
   cafe?: Table['cafe'] | Cafe | null;
   tableLabel?: string;
   onSwitchToGames: () => void;
+  onSwitchToPortal?: () => void;
 }
 
 export const CafeMenuView: React.FC<CafeMenuViewProps> = ({
   cafe,
   tableLabel,
   onSwitchToGames,
+  onSwitchToPortal,
 }) => {
   const { t, lang } = useTranslation();
   const [menuItems, setMenuItems] = useState<MenuItem[]>(DEFAULT_MENU_ITEMS);
@@ -241,14 +243,25 @@ export const CafeMenuView: React.FC<CafeMenuViewProps> = ({
             ? `While your order is being prepared, start icebreaker games and conversations right at ${tableLabel || 'your table'}!`
             : `${tableLabel ? `${tableLabel} için ` : ''}siparişiniz hazırlanırken masada sıkılmayın! Tek dokunuşla buz kırıcı sohbet sorularını ve mini oyunları başlatın.`}
         </p>
-        <button
-          onClick={onSwitchToGames}
-          className="w-full btn-primary !py-3 !text-xs flex items-center justify-center gap-2"
-        >
-          <Coffee className="w-4 h-4" />
-          <span>{lang === 'en' ? 'While Waiting: Switch to Social Games' : 'Kahveyi Beklerken: Sohbet Oyunlarına Geç'}</span>
-          <ArrowRight className="w-4 h-4" />
-        </button>
+        <div className="flex flex-col sm:flex-row gap-2 pt-1">
+          {onSwitchToPortal && (
+            <button
+              onClick={onSwitchToPortal}
+              className="flex-1 py-3 px-3 rounded-2xl bg-cream-100 hover:bg-cream-200 border-2 border-coffee-950/20 text-coffee-900 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors"
+            >
+              <Sparkles className="w-4 h-4 text-caramel-600" />
+              <span>Masa Karşılama Ekranı</span>
+            </button>
+          )}
+          <button
+            onClick={onSwitchToGames}
+            className="flex-1 btn-primary !py-3 !text-xs flex items-center justify-center gap-2"
+          >
+            <Coffee className="w-4 h-4" />
+            <span>{lang === 'en' ? 'Switch to Social Games' : 'Sohbet Oyunlarına Geç'}</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
       </div>
     </div>
   );

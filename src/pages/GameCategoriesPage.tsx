@@ -125,13 +125,14 @@ export const GameCategoriesPage: React.FC = () => {
               {t.backToTable}
             </Link>
           ) : (
-            <Link
-              to="/"
+            <button
+              type="button"
+              onClick={() => window.history.length > 1 ? navigate(-1) : navigate('/')}
               className="inline-flex items-center gap-1.5 text-xs font-semibold text-coffee-700 hover:text-coffee-950 transition-colors p-1"
             >
               <ArrowLeft className="w-4 h-4" />
-              {t.backToHome}
-            </Link>
+              {window.history.length > 1 ? 'Geri Dön' : t.backToHome}
+            </button>
           )}
 
           <div className="flex items-center gap-2">
@@ -468,6 +469,28 @@ export const GameCategoriesPage: React.FC = () => {
             })}
           </div>
         )}
+
+        {/* Alt Geri Dönüş / Masa Ekranı Butonu */}
+        <div className="pt-2">
+          {activeTable ? (
+            <Link
+              to={`/t/${activeTable.public_token}`}
+              className="w-full py-3.5 rounded-2xl bg-cream-100 hover:bg-cream-200 text-coffee-900 font-bold text-xs border border-coffee-200 flex items-center justify-center gap-2 transition-colors shadow-warm-sm"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>{t.backToTable} ({activeTable.label})</span>
+            </Link>
+          ) : (
+            <button
+              type="button"
+              onClick={() => window.history.length > 1 ? navigate(-1) : navigate('/')}
+              className="w-full py-3.5 rounded-2xl bg-cream-100 hover:bg-cream-200 text-coffee-900 font-bold text-xs border border-coffee-200 flex items-center justify-center gap-2 transition-colors shadow-warm-sm"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>{window.history.length > 1 ? 'Önceki Sayfaya Geri Dön' : t.backToHome}</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Footer Info */}

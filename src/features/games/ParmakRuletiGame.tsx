@@ -5,7 +5,8 @@ import {
   CreditCard, 
   Coffee, 
   Sparkles,
-  Flame
+  Flame,
+  ArrowLeft
 } from 'lucide-react';
 
 interface TouchPoint {
@@ -369,9 +370,11 @@ export const ParmakRuletiGame: React.FC<ParmakRuletiGameProps> = ({ onFinishGame
       {onFinishGame && (
         <button
           onClick={onFinishGame}
-          className="w-full py-2.5 text-xs font-bold text-coffee-600 hover:text-coffee-950 text-center"
+          type="button"
+          className="w-full py-3 rounded-2xl bg-cream-100 hover:bg-cream-200 text-coffee-800 font-bold text-xs border border-coffee-200 flex items-center justify-center gap-1.5 transition-colors"
         >
-          Masaya Dön
+          <ArrowLeft className="w-4 h-4" />
+          Geri Dön (Oyun Seçimi)
         </button>
       )}
     </div>
