@@ -750,7 +750,10 @@ export const AdminMenuPage: React.FC = () => {
                     onChange={e => setFormIsPopular(e.target.checked)}
                     className="rounded text-terracotta-600 focus:ring-terracotta-500"
                   />
-                  <span className="text-xs font-semibold text-coffee-800">⭐ Popüler</span>
+                  <span className="text-xs font-semibold text-coffee-800 flex items-center gap-1">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                    Popüler
+                  </span>
                 </label>
 
                 <label className="flex items-center gap-2 p-2.5 rounded-xl border border-coffee-200 bg-cream-50/50 cursor-pointer">
@@ -760,7 +763,10 @@ export const AdminMenuPage: React.FC = () => {
                     onChange={e => setFormIsAvailable(e.target.checked)}
                     className="rounded text-emerald-600 focus:ring-emerald-500"
                   />
-                  <span className="text-xs font-semibold text-coffee-800">✓ Satışta</span>
+                  <span className="text-xs font-semibold text-coffee-800 flex items-center gap-1">
+                    <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    Satışta
+                  </span>
                 </label>
               </div>
 

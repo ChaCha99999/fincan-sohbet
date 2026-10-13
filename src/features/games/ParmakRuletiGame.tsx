@@ -44,23 +44,23 @@ export const ParmakRuletiGame: React.FC<ParmakRuletiGameProps> = ({ onFinishGame
   const modeLabels = {
     hesap: {
       title: 'Masa Hesabı',
-      badge: '💳 Hesap Kurbanı',
+      badge: 'Hesap Kurbanı',
       desc: 'Hesabı ödeyecek kişi seçiliyor!',
-      result: 'Kredi kartını hazırla, hesap sende! 💳',
+      result: 'Kredi kartını hazırla, hesap sende!',
       icon: <CreditCard className="w-5 h-5 text-terracotta-400" />
     },
     kahve: {
       title: 'Kahve Turu',
-      badge: '☕ Kahve Ismarlama',
+      badge: 'Kahve Ismarlama',
       desc: 'Sıradaki kahveleri kim ısmarlayacak?',
-      result: 'Bu turun kahveleri senden! ☕',
+      result: 'Bu turun kahveleri senden!',
       icon: <Coffee className="w-5 h-5 text-amber-400" />
     },
     oyun_basi: {
       title: 'İlk Başlayan',
-      badge: '🎯 Oyun Sırası',
+      badge: 'Oyun Sırası',
       desc: 'Sıradaki oyuna ilk kim başlayacak?',
-      result: 'İlk soru sana geliyor, başla! 🎯',
+      result: 'İlk soru sana geliyor, başla!',
       icon: <Sparkles className="w-5 h-5 text-emerald-400" />
     }
   };
@@ -298,8 +298,9 @@ export const ParmakRuletiGame: React.FC<ParmakRuletiGameProps> = ({ onFinishGame
                 <span className="font-mono font-black text-6xl sm:text-7xl text-amber-400 drop-shadow-md animate-pulse block">
                   {countdown}
                 </span>
-                <span className="text-xs font-black uppercase tracking-widest text-cream-200 bg-coffee-900/80 px-4 py-1.5 rounded-full border border-caramel-400/40 inline-block">
-                  ⚡ Parmağınızı Çekmeyin! ⚡
+                <span className="text-xs font-black uppercase tracking-widest text-cream-200 bg-coffee-900/80 px-4 py-1.5 rounded-full border border-caramel-400/40 inline-flex items-center gap-1.5">
+                  <Zap className="w-3.5 h-3.5 text-amber-400" />
+                  Parmağınızı Çekmeyin!
                 </span>
               </div>
             ) : (
@@ -332,7 +333,7 @@ export const ParmakRuletiGame: React.FC<ParmakRuletiGameProps> = ({ onFinishGame
 
             <div className="space-y-1">
               <span className="text-[10px] font-black uppercase tracking-widest text-amber-400">
-                KURBAN SEÇİLDİ! 🎯
+                KURBAN SEÇİLDİ
               </span>
               <h2 className="font-serif font-black text-2xl text-cream-50 leading-tight">
                 {modeLabels[mode].result}

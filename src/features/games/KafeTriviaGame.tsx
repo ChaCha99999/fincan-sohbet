@@ -21,7 +21,8 @@ import {
   Award,
   ChevronRight,
   Zap,
-  Medal
+  Medal,
+  Lightbulb
 } from 'lucide-react';
 import type { TriviaCategoryInfo, TriviaQuestion, TriviaLeaderboardEntry } from '../../types';
 import { TRIVIA_CATEGORIES, TRIVIA_QUESTIONS } from '../../data/triviaQuestions';
@@ -461,8 +462,11 @@ export const KafeTriviaGame: React.FC<KafeTriviaGameProps> = ({ onFinishGame }) 
             </div>
 
             {currentQuestion.explanation && (
-              <p className="text-xs text-coffee-700 leading-relaxed border-t border-coffee-200/50 pt-2">
-                💡 <span className="font-semibold">Biliyor muydunuz?</span> {currentQuestion.explanation}
+              <p className="text-xs text-coffee-700 leading-relaxed border-t border-coffee-200/50 pt-2 flex items-start gap-1.5">
+                <Lightbulb className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                <span>
+                  <span className="font-semibold">Biliyor muydunuz?</span> {currentQuestion.explanation}
+                </span>
               </p>
             )}
 
@@ -507,7 +511,7 @@ export const KafeTriviaGame: React.FC<KafeTriviaGameProps> = ({ onFinishGame }) 
             Tur Tamamlandı
           </span>
           <h2 className="font-serif font-black text-2xl sm:text-3xl">
-            {isChampion ? '🏆 Kafe Şampiyonu!' : 'Harika Mücadele!'}
+            {isChampion ? 'Kafe Şampiyonu!' : 'Harika Mücadele!'}
           </h2>
           <p className={`text-xs ${isChampion ? 'text-amber-100' : 'text-coffee-600'}`}>
             {currentTableLabel} yarışmayı {correctCount}/{activeQuestions.length} doğruyla bitirdi.

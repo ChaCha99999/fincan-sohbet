@@ -7,7 +7,8 @@ import {
   ArrowRight, 
   Trash2,
   Check,
-  Shuffle
+  Shuffle,
+  Sparkles
 } from 'lucide-react';
 import type { Question } from '../../types';
 
@@ -258,8 +259,9 @@ export const KimDahaMuhtemelGame: React.FC<KimDahaMuhtemelGameProps> = ({
 
       {/* Selected Feedback */}
       {selectedPlayerForRound && (
-        <div className="p-3.5 rounded-2xl bg-cream-100 border border-coffee-200 text-center text-xs text-coffee-800 animate-fadeIn">
-          Bu turda <strong>{selectedPlayerForRound}</strong> seçildi ve +1 oy kazandı! 🎉
+        <div className="p-3.5 rounded-2xl bg-cream-100 border border-coffee-200 text-center text-xs text-coffee-800 animate-fadeIn flex items-center justify-center gap-1.5">
+          <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+          <span>Bu turda <strong>{selectedPlayerForRound}</strong> seçildi ve +1 oy kazandı!</span>
         </div>
       )}
 

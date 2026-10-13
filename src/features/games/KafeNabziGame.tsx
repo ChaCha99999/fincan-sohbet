@@ -332,7 +332,10 @@ export const KafeNabziGame: React.FC<KafeNabziGameProps> = ({ onFinishGame }) =>
         {suggestionSent ? (
           <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center gap-2 animate-in fade-in">
             <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>Harika bir fikir! Sorunuz kafe yönetimine iletildi ☕</span>
+            <span className="flex items-center gap-1.5">
+              Harika bir fikir! Sorunuz kafe yönetimine iletildi
+              <Coffee className="w-3.5 h-3.5 text-emerald-700 inline shrink-0" />
+            </span>
           </div>
         ) : (
           <form onSubmit={handleSendSuggestion} className="flex gap-2">

@@ -264,7 +264,7 @@ export const BesSaniyeGame: React.FC<BesSaniyeGameProps> = ({ onFinishGame }) =>
             className="w-full btn-primary !py-4 text-sm font-black flex items-center justify-center gap-2"
           >
             <Play className="w-4 h-4 fill-cream-50" />
-            <span>Oyunu Başlat ⏱️</span>
+            <span>Oyunu Başlat</span>
             <ChevronRight className="w-4 h-4 ml-auto" />
           </button>
         </div>
@@ -343,7 +343,7 @@ export const BesSaniyeGame: React.FC<BesSaniyeGameProps> = ({ onFinishGame }) =>
                 className="w-full btn-primary !py-4 text-sm font-black flex items-center justify-center gap-2"
               >
                 <Timer className="w-5 h-5" />
-                <span>Süreyi Başlat (5 Saniye) 🚀</span>
+                <span>Süreyi Başlat (5 Saniye)</span>
               </button>
             )}
 
@@ -365,7 +365,7 @@ export const BesSaniyeGame: React.FC<BesSaniyeGameProps> = ({ onFinishGame }) =>
                     className="p-4 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-black text-xs flex items-center justify-center gap-1.5 shadow-warm"
                   >
                     <X className="w-5 h-5" />
-                    <span>Yandı / Olmadı ❌</span>
+                    <span>Yandı / Olmadı</span>
                   </button>
                 </div>
               </div>
@@ -406,7 +406,7 @@ export const BesSaniyeGame: React.FC<BesSaniyeGameProps> = ({ onFinishGame }) =>
               <Trophy className="w-8 h-8" />
             </div>
             <h2 className="font-serif font-black text-3xl text-coffee-950">
-              Şampiyon: {winner}! 🏆
+              Şampiyon: {winner}!
             </h2>
             <p className="text-xs text-coffee-700">
               {winner} nefes kesen refleksleriyle {targetScore} puana ilk ulaşan isim oldu!

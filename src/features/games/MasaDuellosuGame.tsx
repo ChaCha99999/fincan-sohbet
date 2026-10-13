@@ -10,7 +10,9 @@ import {
   ChevronRight, 
   Radio, 
   Crown,
-  Shuffle
+  Shuffle,
+  Trophy,
+  Handshake
 } from 'lucide-react';
 import type { TriviaCategoryInfo, TriviaQuestion, DuelOpponent } from '../../types';
 import { TRIVIA_CATEGORIES, TRIVIA_QUESTIONS } from '../../data/triviaQuestions';
@@ -240,13 +242,14 @@ export const MasaDuellosuGame: React.FC<MasaDuellosuGameProps> = ({ onFinishGame
           <div className="flex flex-wrap gap-1.5">
             <button
               onClick={() => setSelectedCategory(null)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
                 selectedCategory === null
                   ? 'bg-red-600 text-white shadow-xs'
                   : 'bg-cream-100 text-coffee-700 hover:bg-cream-200'
               }`}
             >
-              🎲 Karışık (Tüm Konular)
+              <Shuffle className="w-3.5 h-3.5" />
+              <span>Karışık (Tüm Konular)</span>
             </button>
             {TRIVIA_CATEGORIES.slice(0, 5).map((cat) => (
               <button
@@ -314,8 +317,9 @@ export const MasaDuellosuGame: React.FC<MasaDuellosuGameProps> = ({ onFinishGame
                         Masada
                       </span>
                     </div>
-                    <span className="text-[11px] text-coffee-500">
-                      🏆 {opp.winCount} Düello Galibiyeti
+                    <span className="text-[11px] text-coffee-500 flex items-center gap-1">
+                      <Trophy className="w-3 h-3 text-amber-500" />
+                      <span>{opp.winCount} Düello Galibiyeti</span>
                     </span>
                   </div>
                 </div>
@@ -441,8 +445,18 @@ export const MasaDuellosuGame: React.FC<MasaDuellosuGameProps> = ({ onFinishGame
 
           {/* Rakibin Yanıt Durumu Bildirimi */}
           <div className="flex items-center justify-between text-[11px] pt-1 border-t border-coffee-100">
-            <span className="text-coffee-600 font-medium">
-              {isAnswered ? '✅ Siz yanıtladınız' : '⏳ Sıra sizde'}
+            <span className="text-coffee-600 font-medium flex items-center gap-1.5">
+              {isAnswered ? (
+                <>
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Siz yanıtladınız</span>
+                </>
+              ) : (
+                <>
+                  <Clock className="w-3.5 h-3.5 text-amber-600" />
+                  <span>Sıra sizde</span>
+                </>
+              )}
             </span>
             <span className="font-medium">
               {opponentAnswered ? (
@@ -579,8 +593,20 @@ export const MasaDuellosuGame: React.FC<MasaDuellosuGameProps> = ({ onFinishGame
           }`}>
             Düello Bitti
           </span>
-          <h2 className="font-serif font-black text-2xl sm:text-3xl">
-            {isMeWinner ? '⚔️ DÜELLO ZAFERİ!' : isDraw ? '🤝 BERABERLİK!' : 'DOSTANE MÜCADELE!'}
+          <h2 className="font-serif font-black text-2xl sm:text-3xl flex items-center justify-center gap-2">
+            {isMeWinner ? (
+              <>
+                <Swords className="w-6 h-6 inline" />
+                <span>DÜELLO ZAFERİ!</span>
+              </>
+            ) : isDraw ? (
+              <>
+                <Handshake className="w-6 h-6 inline" />
+                <span>BERABERLİK!</span>
+              </>
+            ) : (
+              <span>DOSTANE MÜCADELE!</span>
+            )}
           </h2>
           <p className={`text-xs ${isMeWinner || isDraw ? 'text-cream-100' : 'text-coffee-600'}`}>
             {isMeWinner 

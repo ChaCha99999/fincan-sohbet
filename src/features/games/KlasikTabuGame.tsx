@@ -8,7 +8,8 @@ import {
   Play, 
   Timer, 
   ChevronRight,
-  Flag
+  Flag,
+  ShieldAlert
 } from 'lucide-react';
 import { CLASSIC_TABOO_CARDS, type ClassicTabooCard } from '../../data/classicTabooWords';
 
@@ -238,7 +239,7 @@ export const KlasikTabuGame: React.FC<KlasikTabuGameProps> = ({ onFinishGame }) 
             className="w-full btn-primary !py-4 text-sm font-black flex items-center justify-center gap-2"
           >
             <Play className="w-4 h-4 fill-cream-50" />
-            <span>Tabu Maçını Başlat 🏁</span>
+            <span>Tabu Maçını Başlat</span>
             <ChevronRight className="w-4 h-4 ml-auto" />
           </button>
         </div>
@@ -282,7 +283,7 @@ export const KlasikTabuGame: React.FC<KlasikTabuGameProps> = ({ onFinishGame }) 
             className="w-full btn-primary !py-4 text-sm font-black flex items-center justify-center gap-2"
           >
             <Timer className="w-5 h-5" />
-            <span>Turu Başlat ({turnDuration} Saniye) 🚀</span>
+            <span>Turu Başlat ({turnDuration} Saniye)</span>
           </button>
         </div>
       )}
@@ -330,8 +331,9 @@ export const KlasikTabuGame: React.FC<KlasikTabuGameProps> = ({ onFinishGame }) 
 
             {/* TABOO FORBIDDEN WORDS */}
             <div className="p-3 sm:p-4 rounded-2xl sm:rounded-3xl bg-rose-50 border-2 border-rose-200 space-y-1.5 sm:space-y-2.5">
-              <span className="text-[10px] font-black uppercase text-rose-700 tracking-widest block">
-                ⛔ YASAKLI KELİMELER ⛔
+              <span className="text-[10px] font-black uppercase text-rose-700 tracking-widest flex items-center justify-center gap-1.5">
+                <ShieldAlert className="w-3.5 h-3.5 text-rose-600" />
+                Yasaklı Kelimeler
               </span>
               <div className="space-y-1 sm:space-y-1.5">
                 {currentCard.tabooWords.map((taboo) => (
@@ -387,7 +389,7 @@ export const KlasikTabuGame: React.FC<KlasikTabuGameProps> = ({ onFinishGame }) 
         <div className="bg-white rounded-3xl p-6 border-2 border-coffee-950 shadow-print space-y-6 text-center">
           <div className="space-y-1">
             <span className="text-[11px] font-bold text-terracotta-600 uppercase tracking-wider block">
-              Süre Bitti! ⏰
+              Süre Bitti
             </span>
             <h2 className="font-serif font-black text-2xl text-coffee-950">
               {activeTeamName} Tur Özeti
@@ -432,8 +434,8 @@ export const KlasikTabuGame: React.FC<KlasikTabuGameProps> = ({ onFinishGame }) 
           >
             <span>
               {teamAScore >= targetScore || teamBScore >= targetScore
-                ? 'Şampiyonu Gör 🏆'
-                : 'Sıradaki Takıma Geç ⏩'}
+                ? 'Şampiyonu Gör'
+                : 'Sıradaki Takıma Geç'}
             </span>
             <ChevronRight className="w-4 h-4 ml-auto" />
           </button>
@@ -450,7 +452,7 @@ export const KlasikTabuGame: React.FC<KlasikTabuGameProps> = ({ onFinishGame }) 
               <Trophy className="w-8 h-8" />
             </div>
             <h2 className="font-serif font-black text-3xl text-coffee-950">
-              Şampiyon: {winnerName}! 🏆
+              Şampiyon: {winnerName}!
             </h2>
             <p className="text-xs text-coffee-700">
               Harika takım oyunu ve kelime ustalığıyla {targetScore} puan barajını ilk aşan taraf oldu!

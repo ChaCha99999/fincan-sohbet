@@ -8,7 +8,7 @@ export const INITIAL_CAFE_POLLS: CafePoll[] = [
     "question": "Bugün kafede arka planda ne çalmalı?",
     "description": "Kafe çalma listesini belirlemek için masanızın tercihini oylayın!",
     "totalVotes": 124,
-    "trendingBadge": "🔥 En Çok Oylanan",
+    "trendingBadge": "En Çok Oylanan",
     "options": [
       {
         "id": "opt-1-1",
@@ -39,7 +39,7 @@ export const INITIAL_CAFE_POLLS: CafePoll[] = [
     "question": "Menemen soğanlı mı olur soğansız mı?",
     "description": "Yüzyılın gastronomi tartışmasında tarafınızı seçin!",
     "totalVotes": 122,
-    "trendingBadge": "⚡ Kıran Kırana",
+    "trendingBadge": "Kıran Kırana",
     "options": [
       {
         "id": "opt-2-1",
@@ -60,26 +60,26 @@ export const INITIAL_CAFE_POLLS: CafePoll[] = [
     "question": "Şu an masanızın genel modu nedir?",
     "description": "Kafede şu an kimler ne amaçla oturuyor? Nabzı ölçüyoruz.",
     "totalVotes": 120,
-    "trendingBadge": "💬 Sosyal Nabız",
+    "trendingBadge": "Sosyal Nabız",
     "options": [
       {
         "id": "opt-3-1",
-        "text": "🤫 Dostlarla derin dedikodu & dertleşme",
+        "text": "Dostlarla derin dedikodu & dertleşme",
         "votes": 49
       },
       {
         "id": "opt-3-2",
-        "text": "💻 Laptop başında ders veya iş koşturmacası",
+        "text": "Laptop başında ders veya iş koşturmacası",
         "votes": 31
       },
       {
         "id": "opt-3-3",
-        "text": "☕ Romantik kahve & sohbet buluşması",
+        "text": "Romantik kahve & sohbet buluşması",
         "votes": 22
       },
       {
         "id": "opt-3-4",
-        "text": "🎧 Tek başıma kafa dinleme & kitap saati",
+        "text": "Tek başıma kafa dinleme & kitap saati",
         "votes": 18
       }
     ]
@@ -91,7 +91,7 @@ export const INITIAL_CAFE_POLLS: CafePoll[] = [
     "question": "Kahvenin yanına en çok yakışan tatlı hangisi?",
     "description": "Kahve ritüelinin vazgeçilmez eşlikçisini seçiyoruz.",
     "totalVotes": 144,
-    "trendingBadge": "🍰 Tatlı Krizi",
+    "trendingBadge": "Tatlı Krizi",
     "options": [
       {
         "id": "opt-4-1",
@@ -122,7 +122,7 @@ export const INITIAL_CAFE_POLLS: CafePoll[] = [
     "question": "İdeal bir hafta sonu sabahı sizin için nedir?",
     "description": "Dinlenme tanımınız hangisine daha yakın?",
     "totalVotes": 114,
-    "trendingBadge": "☀️ Hafta Sonu",
+    "trendingBadge": "Hafta Sonu",
     "options": [
       {
         "id": "opt-5-1",
@@ -143,21 +143,21 @@ export const INITIAL_CAFE_POLLS: CafePoll[] = [
     "question": "Yaz-kış fark etmeksizin kahvenizi nasıl içersiniz?",
     "description": "Sıcakçılar mı soğukçular mı çoğunlukta?",
     "totalVotes": 138,
-    "trendingBadge": "🧊 vs ☕",
+    "trendingBadge": "Soğuk vs Sıcak",
     "options": [
       {
         "id": "opt-6-1",
-        "text": "Buz gibi Iced Latte / Cold Brew 🧊",
+        "text": "Buz gibi Iced Latte / Cold Brew",
         "votes": 58
       },
       {
         "id": "opt-6-2",
-        "text": "Dumanı üstünde Sıcak Filtre / Americano ☕",
+        "text": "Dumanı üstünde Sıcak Filtre / Americano",
         "votes": 47
       },
       {
         "id": "opt-6-3",
-        "text": "Geleneksel Orta Şekerli Türk Kahvesi 🇹🇷",
+        "text": "Geleneksel Orta Şekerli Türk Kahvesi",
         "votes": 33
       }
     ]
@@ -169,7 +169,7 @@ export const INITIAL_CAFE_POLLS: CafePoll[] = [
     "question": "Bu masadan kalkarken hesabı kim ödemeli?",
     "description": "Hesap krizine demokratik bir çözüm bulalım!",
     "totalVotes": 98,
-    "trendingBadge": "💳 Hesap Zamanı",
+    "trendingBadge": "Hesap Zamanı",
     "options": [
       {
         "id": "opt-7-1",
@@ -195,7 +195,7 @@ export const INITIAL_CAFE_POLLS: CafePoll[] = [
     "question": "Kafede otururken telefona bakma sınırınız nedir?",
     "description": "Ekranlar mı konuşmalar mı kazanıyor?",
     "totalVotes": 105,
-    "trendingBadge": "📱 Ekran Süresi",
+    "trendingBadge": "Ekran Süresi",
     "options": [
       {
         "id": "opt-8-1",
@@ -221,7 +221,7 @@ export const INITIAL_CAFE_POLLS: CafePoll[] = [
     "question": "Türk kahvesi fincanı kapandıktan sonra fal bakılmalı mı?",
     "description": "Geleneksel fal merakı masada ne durumda?",
     "totalVotes": 112,
-    "trendingBadge": "🔮 Fal Vakti",
+    "trendingBadge": "Fal Vakti",
     "options": [
       {
         "id": "opt-9-1",
@@ -247,7 +247,7 @@ export const INITIAL_CAFE_POLLS: CafePoll[] = [
     "question": "Gece dışarıda yemek krizinde nihai tercih:",
     "description": "Gece acıkanların vazgeçilmezi hangisi?",
     "totalVotes": 130,
-    "trendingBadge": "🌙 Gece Kaçamağı",
+    "trendingBadge": "Gece Kaçamağı",
     "options": [
       {
         "id": "opt-10-1",
@@ -273,7 +273,7 @@ export const INITIAL_CAFE_POLLS: CafePoll[] = [
     "question": "Laptopla kafede çalışmak gerçekten verimli mi?",
     "description": "Kafe ofisçilerini dinliyoruz!",
     "totalVotes": 89,
-    "trendingBadge": "💻 Remote Çalışma",
+    "trendingBadge": "Remote Çalışma",
     "options": [
       {
         "id": "opt-11-1",
@@ -294,7 +294,7 @@ export const INITIAL_CAFE_POLLS: CafePoll[] = [
     "question": "Hangisi daha dinlendirici bir tatil?",
     "description": "Bavulunuzu hazırlayın, nereye gidiyoruz?",
     "totalVotes": 102,
-    "trendingBadge": "✈️ Tatil Hayali",
+    "trendingBadge": "Tatil Hayali",
     "options": [
       {
         "id": "opt-12-1",
@@ -315,7 +315,7 @@ export const INITIAL_CAFE_POLLS: CafePoll[] = [
     "question": "Kafede en keyifli sohbet konusu hangisidir?",
     "description": "Masayı en çok ne alevlendirir?",
     "totalVotes": 119,
-    "trendingBadge": "🔥 Derin Sohbet",
+    "trendingBadge": "Derin Sohbet",
     "options": [
       {
         "id": "opt-13-1",
@@ -341,7 +341,7 @@ export const INITIAL_CAFE_POLLS: CafePoll[] = [
     "question": "Lahmacun nasıl yenmeli?",
     "description": "Milli lezzette tarafınızı seçin!",
     "totalVotes": 141,
-    "trendingBadge": "🍋 Lahmacun Kavgası",
+    "trendingBadge": "Lahmacun Kavgası",
     "options": [
       {
         "id": "opt-14-1",
@@ -362,7 +362,7 @@ export const INITIAL_CAFE_POLLS: CafePoll[] = [
     "question": "Kafede hangi oturma alanını tercih edersiniz?",
     "description": "İlk nereye göz dikersiniz?",
     "totalVotes": 115,
-    "trendingBadge": "🪑 Yer Kapma",
+    "trendingBadge": "Yer Kapma",
     "options": [
       {
         "id": "opt-15-1",
@@ -383,7 +383,7 @@ export const INITIAL_CAFE_POLLS: CafePoll[] = [
     "question": "Çay içerken şeker tercihiniz:",
     "description": "Çayda şeker meselesi masayı ikiye bölüyor!",
     "totalVotes": 125,
-    "trendingBadge": "🫖 Çay Tiryakileri",
+    "trendingBadge": "Çay Tiryakileri",
     "options": [
       {
         "id": "opt-16-1",
@@ -404,7 +404,7 @@ export const INITIAL_CAFE_POLLS: CafePoll[] = [
     "question": "WhatsApp gizlilik ayarlarınızda son görülme ve mavi tik:",
     "description": "Gizemli misiniz yoksa şeffaf mı?",
     "totalVotes": 133,
-    "trendingBadge": "👀 Mavi Tik",
+    "trendingBadge": "Mavi Tik",
     "options": [
       {
         "id": "opt-17-1",
@@ -425,7 +425,7 @@ export const INITIAL_CAFE_POLLS: CafePoll[] = [
     "question": "Bugün kafeden sonra planınız nedir?",
     "description": "Günün devamı nasıl akacak?",
     "totalVotes": 96,
-    "trendingBadge": "🚶‍♂️ Sonraki Durak",
+    "trendingBadge": "Sonraki Durak",
     "options": [
       {
         "id": "opt-18-1",
@@ -451,7 +451,7 @@ export const INITIAL_CAFE_POLLS: CafePoll[] = [
     "question": "Evde dizi/film izlerken dublaj mı altyazı mı?",
     "description": "Nasıl izlemeyi seviyorsunuz?",
     "totalVotes": 128,
-    "trendingBadge": "🎬 Dizi Saati",
+    "trendingBadge": "Dizi Saati",
     "options": [
       {
         "id": "opt-19-1",
@@ -472,26 +472,26 @@ export const INITIAL_CAFE_POLLS: CafePoll[] = [
     "question": "Fincan Sohbet oyunlarından en çok hangisini sevdiniz?",
     "description": "Masanızın favori oyununu seçin!",
     "totalVotes": 156,
-    "trendingBadge": "🏆 Masanın Favorisi",
+    "trendingBadge": "Masanın Favorisi",
     "options": [
       {
         "id": "opt-20-1",
-        "text": "💬 Sohbeti Başlat (Derin & komik sohbetler)",
+        "text": "Sohbeti Başlat (Derin & komik sohbetler)",
         "votes": 56
       },
       {
         "id": "opt-20-2",
-        "text": "⚡ İkilemde Kal (Çılgın seçimler & tartışma)",
+        "text": "İkilemde Kal (Çılgın seçimler & tartışma)",
         "votes": 47
       },
       {
         "id": "opt-20-3",
-        "text": "👉 Kim Daha Muhtemel? (Arkadaşları ifşalama)",
+        "text": "Kim Daha Muhtemel? (Arkadaşları ifşalama)",
         "votes": 34
       },
       {
         "id": "opt-20-4",
-        "text": "🧠 Bilgi Yarışması & Masalar Arası Düello",
+        "text": "Bilgi Yarışması & Masalar Arası Düello",
         "votes": 19
       }
     ]

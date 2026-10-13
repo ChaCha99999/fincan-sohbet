@@ -10,7 +10,10 @@ import {
   Sparkles, 
   Trophy,
   Skull,
-  UserCheck
+  UserCheck,
+  Lock,
+  Search,
+  Zap
 } from 'lucide-react';
 import { UNDERCOVER_WORD_PAIRS, type UndercoverWordPair } from '../../data/undercoverWords';
 
@@ -378,10 +381,16 @@ export const MasadakiCasusGame: React.FC<{ onFinishGame?: () => void }> = ({ onF
           >
             {isPeeking ? (
               <div className="space-y-3 animate-fade-in text-center">
-                <span className="text-[11px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-white/20">
-                  {assignedRoles[currentPeekIndex]?.role === 'civilian' && '🟢 Sen Sivilsin'}
-                  {assignedRoles[currentPeekIndex]?.role === 'undercover' && '🔴 Sen Casussun'}
-                  {assignedRoles[currentPeekIndex]?.role === 'mr_white' && '⚪ Sen Kör Casussun'}
+                <span className="text-[11px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-white/20 inline-flex items-center gap-1.5">
+                  {assignedRoles[currentPeekIndex]?.role === 'civilian' && (
+                    <><span className="w-2 h-2 rounded-full bg-emerald-300" /> Sen Sivilsin</>
+                  )}
+                  {assignedRoles[currentPeekIndex]?.role === 'undercover' && (
+                    <><span className="w-2 h-2 rounded-full bg-rose-300" /> Sen Casussun</>
+                  )}
+                  {assignedRoles[currentPeekIndex]?.role === 'mr_white' && (
+                    <><span className="w-2 h-2 rounded-full bg-white" /> Sen Kör Casussun</>
+                  )}
                 </span>
                 <div className="font-serif font-black text-3xl tracking-wide">
                   {assignedRoles[currentPeekIndex]?.word}
@@ -397,8 +406,9 @@ export const MasadakiCasusGame: React.FC<{ onFinishGame?: () => void }> = ({ onF
                 <div className="w-14 h-14 rounded-2xl bg-white border border-coffee-300 flex items-center justify-center mx-auto text-coffee-700 shadow-warm-sm">
                   <EyeOff className="w-7 h-7" />
                 </div>
-                <span className="font-bold text-sm text-coffee-900 block">
-                  Kelimene Bakmak İçin Basılı Tut 🔒
+                <span className="font-bold text-sm text-coffee-900 flex items-center justify-center gap-1.5">
+                  <Lock className="w-4 h-4 text-coffee-600" />
+                  <span>Kelimene Bakmak İçin Basılı Tut</span>
                 </span>
                 <span className="text-[11px] text-coffee-500 block">
                   Parmağını çektiğinde ekran anında gizlenir
@@ -418,8 +428,8 @@ export const MasadakiCasusGame: React.FC<{ onFinishGame?: () => void }> = ({ onF
           >
             <span>
               {currentPeekIndex + 1 < assignedRoles.length
-                ? 'Sıradaki Oyuncuya Uzat 📱'
-                : 'Herkes Baktı, Masaya Geç 🚀'}
+                ? 'Sıradaki Oyuncuya Uzat'
+                : 'Herkes Baktı, Masaya Geç'}
             </span>
             <ChevronRight className="w-4 h-4 ml-auto" />
           </button>
@@ -436,8 +446,9 @@ export const MasadakiCasusGame: React.FC<{ onFinishGame?: () => void }> = ({ onF
               <span className="text-[10px] font-bold text-terracotta-600 uppercase tracking-wider block">
                 {roundNumber}. Tur
               </span>
-              <h2 className="font-serif font-black text-xl text-coffee-950">
-                İpucu & Dedektiflik Saati 🕵️‍♂️
+              <h2 className="font-serif font-black text-xl text-coffee-950 flex items-center gap-2">
+                <Search className="w-5 h-5 text-terracotta-600" />
+                İpucu & Dedektiflik Saati
               </h2>
             </div>
             <span className="text-xs font-bold bg-cream-100 text-coffee-800 px-3 py-1 rounded-full border border-coffee-200">
@@ -457,10 +468,25 @@ export const MasadakiCasusGame: React.FC<{ onFinishGame?: () => void }> = ({ onF
               </div>
               <div className="text-xs">
                 <span className="font-black text-coffee-950">{eliminatedAnnouncement.name}</span> elendi! Rolü:{' '}
-                <span className="font-bold">
-                  {eliminatedAnnouncement.role === 'civilian' && '🟢 Masum Sivil'}
-                  {eliminatedAnnouncement.role === 'undercover' && '🔴 Gizli Casus'}
-                  {eliminatedAnnouncement.role === 'mr_white' && '⚪ Kör Casus'}
+                <span className="font-bold inline-flex items-center gap-1.5 ml-1">
+                  {eliminatedAnnouncement.role === 'civilian' && (
+                    <>
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
+                      Masum Sivil
+                    </>
+                  )}
+                  {eliminatedAnnouncement.role === 'undercover' && (
+                    <>
+                      <span className="w-2 h-2 rounded-full bg-rose-500 inline-block" />
+                      Gizli Casus
+                    </>
+                  )}
+                  {eliminatedAnnouncement.role === 'mr_white' && (
+                    <>
+                      <span className="w-2 h-2 rounded-full bg-slate-400 inline-block" />
+                      Kör Casus
+                    </>
+                  )}
                 </span>
               </div>
             </div>
@@ -503,7 +529,8 @@ export const MasadakiCasusGame: React.FC<{ onFinishGame?: () => void }> = ({ onF
             onClick={() => setPhase('vote')}
             className="w-full btn-primary !py-4 text-xs font-black flex items-center justify-center gap-2"
           >
-            <span>İpuçları Bitti, Oylamaya Geç 🗳️</span>
+            <Users className="w-4 h-4" />
+            <span>İpuçları Bitti, Oylamaya Geç</span>
             <ChevronRight className="w-4 h-4 ml-auto" />
           </button>
         </div>
@@ -544,7 +571,8 @@ export const MasadakiCasusGame: React.FC<{ onFinishGame?: () => void }> = ({ onF
                     </span>
                   </div>
                   <span className="text-[11px] font-bold text-coffee-500 group-hover:text-rose-600 flex items-center gap-1">
-                    Bu Kişiyi Ele ⚡
+                    <Zap className="w-3.5 h-3.5" />
+                    Bu Kişiyi Ele
                   </span>
                 </button>
               ))}
@@ -574,8 +602,7 @@ export const MasadakiCasusGame: React.FC<{ onFinishGame?: () => void }> = ({ onF
             </div>
 
             <h2 className="font-serif font-black text-3xl text-coffee-950">
-              {winner === 'civilians' && 'Siviller Kazandı! 🎉'}
-              {winner === 'undercovers' && 'Casuslar Kazandı! 😈'}
+              {winner === 'civilians' ? 'Siviller Kazandı!' : 'Casuslar Kazandı!'}
             </h2>
             <p className="text-xs text-coffee-700">
               {winner === 'civilians'

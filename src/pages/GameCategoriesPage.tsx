@@ -344,7 +344,7 @@ export const GameCategoriesPage: React.FC = () => {
                 className="w-full btn-dark !py-3.5 !text-sm flex items-center justify-center gap-2"
               >
                 <Play className="w-4 h-4 fill-cream-50" />
-                <span>5 Saniye Başlat ⚡</span>
+                <span>5 Saniye Başlat</span>
                 <ChevronRight className="w-4 h-4 ml-auto" />
               </button>
             </div>
@@ -381,7 +381,7 @@ export const GameCategoriesPage: React.FC = () => {
                 className="w-full btn-dark !py-3.5 !text-sm flex items-center justify-center gap-2"
               >
                 <Play className="w-4 h-4 fill-cream-50" />
-                <span>Tabu Oyna 🚫</span>
+                <span>Tabu Oyna</span>
                 <ChevronRight className="w-4 h-4 ml-auto" />
               </button>
             </div>
@@ -418,7 +418,7 @@ export const GameCategoriesPage: React.FC = () => {
                 className="w-full btn-primary !bg-emerald-500 hover:!bg-emerald-400 !text-coffee-950 !py-3.5 !text-sm font-black flex items-center justify-center gap-2 border-2 border-coffee-950"
               >
                 <Play className="w-4 h-4 fill-coffee-950" />
-                <span>Ruleti Başlat ⚡</span>
+                <span>Ruleti Başlat</span>
                 <ChevronRight className="w-4 h-4 ml-auto" />
               </button>
             </div>

@@ -15,7 +15,12 @@ import {
   Receipt,
   Wifi,
   Trophy,
-  HelpCircle
+  HelpCircle,
+  Sparkles,
+  Swords,
+  BarChart3,
+  CreditCard,
+  Bell
 } from 'lucide-react';
 import { APP_CONFIG } from '../lib/config';
 import { LeadModal } from '../components/LeadModal';
@@ -52,14 +57,14 @@ export const LandingPage: React.FC = () => {
   ];
 
   const marqueeItems = [
-    '☕ QR Dijital Menü',
-    '🔔 Tek Tıkla Garson Çağır',
-    '💳 Nakit / Kredi Kartı Hesap İste',
-    '🎯 7 Buz Kırıcı Mini Oyun',
-    '⚡ Şifresiz Wi-Fi Bağlantısı',
-    '🏆 Masalar Arası Düello',
-    '📊 Kafe Nabzı Canlı Anket',
-    '📱 Uygulama Yok • Anında Tarayıcıda',
+    { label: 'QR Dijital Menü', icon: Coffee, color: 'text-amber-400' },
+    { label: 'Tek Tıkla Garson Çağır', icon: Bell, color: 'text-terracotta-400' },
+    { label: 'Nakit / Kredi Kartı Hesap İste', icon: CreditCard, color: 'text-emerald-400' },
+    { label: 'Buz Kırıcı Mini Oyunlar', icon: Sparkles, color: 'text-purple-400' },
+    { label: 'Şifresiz Wi-Fi Bağlantısı', icon: Wifi, color: 'text-cyan-400' },
+    { label: 'Masalar Arası Düello', icon: Swords, color: 'text-amber-400' },
+    { label: 'Kafe Nabzı Canlı Anket', icon: BarChart3, color: 'text-emerald-400' },
+    { label: 'Uygulama Yok • Anında Tarayıcıda', icon: Smartphone, color: 'text-caramel-400' },
   ];
 
   return (
@@ -166,7 +171,10 @@ export const LandingPage: React.FC = () => {
                     </span>
                     <div className="text-left">
                       <p className="text-[10px] font-bold uppercase tracking-wider text-coffee-600">Masa 04</p>
-                      <p className="text-xs font-bold text-coffee-950">Garson Çağrıldı 🔔</p>
+                      <p className="text-xs font-bold text-coffee-950 flex items-center gap-1.5">
+                        <span>Garson Çağrıldı</span>
+                        <Bell className="w-3 h-3 text-amber-600 fill-amber-500" />
+                      </p>
                     </div>
                   </div>
 
@@ -191,15 +199,21 @@ export const LandingPage: React.FC = () => {
       {/* 2. MARQUEE STRIP (Infinite Ticker) */}
       <div className="relative -mx-4 sm:-mx-6 bg-coffee-950 text-cream-100 py-3.5 border-y-2 border-coffee-900 overflow-hidden shadow-inner">
         <div className="flex w-max marquee-track">
-          {[...marqueeItems, ...marqueeItems].map((item, index) => (
-            <span 
-              key={index} 
-              className="mx-6 text-xs sm:text-sm font-semibold tracking-wide uppercase flex items-center gap-2 text-cream-100"
-            >
-              {item}
-              <span className="text-caramel-400 opacity-60">•</span>
-            </span>
-          ))}
+          {[...marqueeItems, ...marqueeItems].map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <span 
+                key={index} 
+                className="mx-6 text-xs sm:text-sm font-bold tracking-wide uppercase flex items-center gap-2.5 text-cream-100"
+              >
+                <span className="w-6 h-6 rounded-lg bg-white/10 flex items-center justify-center shrink-0 border border-white/10 shadow-xs">
+                  <Icon className={`w-3.5 h-3.5 ${item.color}`} />
+                </span>
+                <span>{item.label}</span>
+                <span className="text-caramel-400 opacity-40 ml-3">•</span>
+              </span>
+            );
+          })}
         </div>
       </div>
 
