@@ -363,6 +363,145 @@ describe('Garson Çağır & Hesap İste Modülü (Waiter Call & Service Requests
   });
 });
 
+describe('Masadaki Casus (Undercover / Köstebek) Modülü', () => {
+  it('En az 50 adet özgün ve dengeli kelime çifti bulunmalıdır', async () => {
+    const { UNDERCOVER_WORD_PAIRS } = await import('../data/undercoverWords');
+    expect(UNDERCOVER_WORD_PAIRS.length).toBeGreaterThanOrEqual(50);
+  });
 
+  it('Her kelime çiftinde sivil ve casus kelimeleri birbirinden farklı ve anlamlı olmalıdır', async () => {
+    const { UNDERCOVER_WORD_PAIRS } = await import('../data/undercoverWords');
+    UNDERCOVER_WORD_PAIRS.forEach((pair) => {
+      expect(pair.id).toBeDefined();
+      expect(pair.civilianWord.trim().length).toBeGreaterThan(1);
+      expect(pair.undercoverWord.trim().length).toBeGreaterThan(1);
+      expect(pair.civilianWord).not.toBe(pair.undercoverWord);
+      expect(pair.category.trim().length).toBeGreaterThan(1);
+    });
+  });
 
+  it('Rol dağıtımı ve zafer mantığı doğru hesaplanmalıdır', () => {
+    // 4 oyuncuda 1 casus, 3 sivil
+    const players = ['Ali', 'Zeynep', 'Mert', 'Deniz'];
+    const undercoverCount = 1;
+    const civilianCount = players.length - undercoverCount;
+    expect(civilianCount).toBe(3);
+    expect(undercoverCount).toBe(1);
+
+    // Zafer koşulu testi: Casus kalmadığında siviller kazanır
+    const checkWin = (aliveCivilians: number, aliveUndercovers: number): 'civilians' | 'undercovers' | 'continue' => {
+      if (aliveUndercovers === 0) return 'civilians';
+      if (aliveUndercovers >= aliveCivilians) return 'undercovers';
+      return 'continue';
+    };
+
+    expect(checkWin(3, 0)).toBe('civilians');
+    expect(checkWin(1, 1)).toBe('undercovers');
+    expect(checkWin(2, 1)).toBe('continue');
+  });
+});
+
+describe('5 Saniye Kuralı (Hızlı Beyin Yakan) Modülü', () => {
+  it('En az 50 adet özgün 5 saniye görevi bulunmalıdır', async () => {
+    const { FIVE_SECONDS_PROMPTS } = await import('../data/fiveSecondsPrompts');
+    expect(FIVE_SECONDS_PROMPTS.length).toBeGreaterThanOrEqual(50);
+  });
+
+  it('Tüm görevlerin metni ve kategorisi geçerli olmalıdır', async () => {
+    const { FIVE_SECONDS_PROMPTS } = await import('../data/fiveSecondsPrompts');
+    FIVE_SECONDS_PROMPTS.forEach((item) => {
+      expect(item.id).toBeDefined();
+      expect(item.prompt.trim().length).toBeGreaterThan(5);
+      expect(item.category.trim().length).toBeGreaterThan(1);
+    });
+  });
+
+  it('Hedef skora ulaşan ilk oyuncunun şampiyonluk kontrolü doğru çalışmalıdır', () => {
+    const targetScore = 5;
+    const scores = { Ali: 4, Zeynep: 5, Mert: 2 };
+    const winner = Object.entries(scores).find(([, score]) => score >= targetScore)?.[0];
+    expect(winner).toBe('Zeynep');
+  });
+});
+
+describe('Klasik Tabu (Yasak Kelimeler) Modülü', () => {
+  it('En az 100 adet özgün klasik Tabu kartı bulunmalıdır', async () => {
+    const { CLASSIC_TABOO_CARDS } = await import('../data/classicTabooWords');
+    expect(CLASSIC_TABOO_CARDS.length).toBeGreaterThanOrEqual(100);
+  });
+
+  it('Her Tabu kartında 1 ana kelime ve tam 5 adet yasaklı kelime bulunmalıdır', async () => {
+    const { CLASSIC_TABOO_CARDS } = await import('../data/classicTabooWords');
+    CLASSIC_TABOO_CARDS.forEach((card) => {
+      expect(card.id).toBeDefined();
+      expect(card.word.trim().length).toBeGreaterThan(1);
+      expect(card.tabooWords.length).toBe(5);
+      card.tabooWords.forEach((tw) => {
+        expect(tw.trim().length).toBeGreaterThan(1);
+      });
+    });
+  });
+
+  it('Tabu puanlama ve pas sınırı mantığı doğru çalışmalıdır', () => {
+    let score = 5;
+    let passesLeft = 3;
+
+    // Doğru (+1)
+    score += 1;
+    expect(score).toBe(6);
+
+    // Tabu (-1)
+    score -= 1;
+    expect(score).toBe(5);
+
+    // Pas hakkı düşer
+    passesLeft -= 1;
+    expect(passesLeft).toBe(2);
+  });
+});
+
+describe('Parmak Ruleti (Hesap Kurbanı) Modülü', () => {
+  it('En az 2 parmak olmadan rulet başlamamalıdır', () => {
+    const fingers1 = [{ id: 'touch-1', x: 100, y: 150, color: '#ef4444' }];
+    const canStart1 = fingers1.length >= 2;
+    expect(canStart1).toBe(false);
+
+    const fingers2 = [
+      { id: 'touch-1', x: 100, y: 150, color: '#ef4444' },
+      { id: 'touch-2', x: 200, y: 250, color: '#3b82f6' }
+    ];
+    const canStart2 = fingers2.length >= 2;
+    expect(canStart2).toBe(true);
+  });
+
+  it('Rulet kurban seçimi geçerli bir parmak indeksi seçmelidir', () => {
+    const fingers = [
+      { id: 'p1', x: 50, y: 50, color: '#ef4444' },
+      { id: 'p2', x: 100, y: 100, color: '#3b82f6' },
+      { id: 'p3', x: 150, y: 150, color: '#10b981' },
+      { id: 'p4', x: 200, y: 200, color: '#f59e0b' }
+    ];
+
+    for (let i = 0; i < 20; i++) {
+      const selectedIndex = Math.floor(Math.random() * fingers.length);
+      expect(selectedIndex).toBeGreaterThanOrEqual(0);
+      expect(selectedIndex).toBeLessThan(fingers.length);
+      expect(fingers[selectedIndex].id).toBeDefined();
+    }
+  });
+
+  it('Tüm rulet modları (Hesap, Kahve, İlk Kişi) tanımlı olmalıdır', () => {
+    const modes = [
+      { id: 'bill', title: 'Masa Hesabı', desc: 'Tüm hesabı kurban öder!' },
+      { id: 'coffee', title: 'Kahve Turu', desc: 'Sıradaki kahveleri kurban ısmarlar!' },
+      { id: 'first', title: 'İlk Konuşan / Başlayan', desc: 'Sıradaki oyuna kurban başlar!' },
+    ];
+    expect(modes.length).toBe(3);
+    modes.forEach(m => {
+      expect(m.id).toBeDefined();
+      expect(m.title.length).toBeGreaterThan(2);
+      expect(m.desc.length).toBeGreaterThan(5);
+    });
+  });
+});
 

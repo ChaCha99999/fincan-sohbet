@@ -16,6 +16,10 @@ const NeKadarTaniyoruzGame = lazy(() => import('../features/games/NeKadarTaniyor
 const KafeTriviaGame = lazy(() => import('../features/games/KafeTriviaGame').then(m => ({ default: m.KafeTriviaGame })));
 const MasaDuellosuGame = lazy(() => import('../features/games/MasaDuellosuGame').then(m => ({ default: m.MasaDuellosuGame })));
 const KafeNabziGame = lazy(() => import('../features/games/KafeNabziGame').then(m => ({ default: m.KafeNabziGame })));
+const MasadakiCasusGame = lazy(() => import('../features/games/MasadakiCasusGame').then(m => ({ default: m.MasadakiCasusGame })));
+const BesSaniyeGame = lazy(() => import('../features/games/BesSaniyeGame').then(m => ({ default: m.BesSaniyeGame })));
+const KlasikTabuGame = lazy(() => import('../features/games/KlasikTabuGame').then(m => ({ default: m.KlasikTabuGame })));
+const ParmakRuletiGame = lazy(() => import('../features/games/ParmakRuletiGame').then(m => ({ default: m.ParmakRuletiGame })));
 
 export const GamePlayPage: React.FC = () => {
   const { gameSlug } = useParams<{ gameSlug: string }>();
@@ -34,6 +38,10 @@ export const GamePlayPage: React.FC = () => {
     'kafe-trivia',
     'masa-duellosu',
     'kafe-nabzi',
+    'masadaki-casus',
+    'bes-saniye',
+    'klasik-tabu',
+    'parmak-ruleti',
   ].includes(gameSlug || '');
 
   useEffect(() => {
@@ -42,7 +50,15 @@ export const GamePlayPage: React.FC = () => {
       return;
     }
 
-    if (gameSlug === 'kafe-trivia' || gameSlug === 'masa-duellosu' || gameSlug === 'kafe-nabzi') {
+    if (
+      gameSlug === 'kafe-trivia' || 
+      gameSlug === 'masa-duellosu' || 
+      gameSlug === 'kafe-nabzi' ||
+      gameSlug === 'masadaki-casus' ||
+      gameSlug === 'bes-saniye' ||
+      gameSlug === 'klasik-tabu' ||
+      gameSlug === 'parmak-ruleti'
+    ) {
       setLoading(false);
       if (activeTable) {
         logUsageEvent(activeTable.cafe_id, activeTable.id, 'game_start', gameSlug as GameType);
@@ -83,6 +99,10 @@ export const GamePlayPage: React.FC = () => {
         case 'kafe-trivia': return 'Cafe Trivia & Pub Quiz';
         case 'masa-duellosu': return 'Table Duel (1v1)';
         case 'kafe-nabzi': return 'Cafe Pulse & Live Polls';
+        case 'masadaki-casus': return 'Undercover (Spy at the Table)';
+        case 'bes-saniye': return '5 Seconds Rule (Fast Banter)';
+        case 'klasik-tabu': return 'Classic Taboo (Word Guessing)';
+        case 'parmak-ruleti': return 'Finger Roulette (Who Pays the Bill)';
         default: return 'Mini Game';
       }
     }
@@ -101,6 +121,14 @@ export const GamePlayPage: React.FC = () => {
         return 'Masalar Arası Düello (1v1)';
       case 'kafe-nabzi':
         return 'Ortak Kafe Nabzı (Canlı Oylamalar)';
+      case 'masadaki-casus':
+        return 'Masadaki Casus (Undercover)';
+      case 'bes-saniye':
+        return '5 Saniye Kuralı (Hızlı Refleks)';
+      case 'klasik-tabu':
+        return 'Klasik Tabu (Yasak Kelimeler)';
+      case 'parmak-ruleti':
+        return 'Parmak Ruleti (Hesap Kurbanı)';
       default:
         return 'Mini Oyun';
     }
@@ -157,6 +185,14 @@ export const GamePlayPage: React.FC = () => {
               ? (lang === 'en' ? '5 Quick Questions • 1v1 Arena' : '5 Hızlı Soru • 1v1 Arena')
               : gameSlug === 'kafe-nabzi'
               ? (lang === 'en' ? 'Live Polls • All Tables' : 'Canlı Oylamalar • Tüm Masalar')
+              : gameSlug === 'masadaki-casus'
+              ? (lang === 'en' ? 'Bluff & Roleplay • 3-10 Players' : 'Blöf & Rol • 3-10 Kişi')
+              : gameSlug === 'bes-saniye'
+              ? (lang === 'en' ? '5 Seconds • Quick Reflex' : '5 Saniye • Hızlı Refleks')
+              : gameSlug === 'klasik-tabu'
+              ? (lang === 'en' ? '100+ Cards • Team Battle' : '100+ Kart • Takım Savaşı')
+              : gameSlug === 'parmak-ruleti'
+              ? (lang === 'en' ? 'Touch & Decide • Who Pays?' : 'Dokun & Seç • Kim Öder?')
               : `${questions.length} ${lang === 'en' ? 'Questions' : 'Soru'}`}
           </span>
         </header>
@@ -188,6 +224,18 @@ export const GamePlayPage: React.FC = () => {
           )}
           {gameSlug === 'kafe-nabzi' && (
             <KafeNabziGame onFinishGame={handleFinishGame} />
+          )}
+          {gameSlug === 'masadaki-casus' && (
+            <MasadakiCasusGame onFinishGame={handleFinishGame} />
+          )}
+          {gameSlug === 'bes-saniye' && (
+            <BesSaniyeGame onFinishGame={handleFinishGame} />
+          )}
+          {gameSlug === 'klasik-tabu' && (
+            <KlasikTabuGame onFinishGame={handleFinishGame} />
+          )}
+          {gameSlug === 'parmak-ruleti' && (
+            <ParmakRuletiGame onFinishGame={handleFinishGame} />
           )}
         </Suspense>
       </div>

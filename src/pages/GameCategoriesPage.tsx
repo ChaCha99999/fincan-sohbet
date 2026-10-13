@@ -13,7 +13,11 @@ import {
   ChevronRight,
   Trophy,
   Swords,
-  BarChart3
+  BarChart3,
+  ShieldAlert,
+  Zap,
+  Flag,
+  CreditCard
 } from 'lucide-react';
 import { getCategories } from '../lib/api';
 import type { Category, GameType } from '../types';
@@ -267,6 +271,154 @@ export const GameCategoriesPage: React.FC = () => {
               >
                 <Play className="w-4 h-4 fill-coffee-950 text-coffee-950" />
                 <span>Anketlere Katıl (Oyla)</span>
+                <ChevronRight className="w-4 h-4 ml-auto" />
+              </button>
+            </div>
+
+            {/* YENİ PARTİ OYUNU: MASADAKİ CASUS (UNDERCOVER) */}
+            <div className="p-6 rounded-4xl bg-coffee-950 text-cream-50 border-2 border-coffee-950 shadow-print-sm hover:shadow-print transition-all flex flex-col justify-between gap-4 relative overflow-hidden">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3.5">
+                  <div className="w-14 h-14 rounded-2xl bg-terracotta-600 border-2 border-coffee-950 flex items-center justify-center shrink-0 text-cream-50">
+                    <ShieldAlert className="w-7 h-7" />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-caramel-400 text-coffee-950 border border-coffee-950 uppercase tracking-wider">
+                        Yeni • Blöf & Rol Oyunu
+                      </span>
+                      <span className="text-[11px] text-cream-200 font-bold flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        3-10 Kişi • ~10 dk
+                      </span>
+                    </div>
+                    <h2 className="font-serif font-black text-xl text-cream-50 leading-snug">
+                      Masadaki Casus (Undercover)
+                    </h2>
+                    <p className="text-xs text-cream-200 leading-relaxed">
+                      Herkes tek tek gizli kelimesini alır! Masada tek kelimelik ipuçları verilir, blöfler yapılır ve gizli casus yakalanmaya çalışılır.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => navigate('/play/masadaki-casus')}
+                className="w-full btn-primary !py-3.5 !text-sm flex items-center justify-center gap-2"
+              >
+                <Play className="w-4 h-4 fill-cream-50" />
+                <span>Oyunu Başlat (Köstebek Avı)</span>
+                <ChevronRight className="w-4 h-4 ml-auto" />
+              </button>
+            </div>
+
+            {/* YENİ OYUN 2: 5 SANİYE KURALI */}
+            <div className="p-6 rounded-4xl bg-terracotta-600 text-cream-50 border-2 border-coffee-950 shadow-print-sm hover:shadow-print transition-all flex flex-col justify-between gap-4 relative overflow-hidden">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3.5">
+                  <div className="w-14 h-14 rounded-2xl bg-cream-50 border-2 border-coffee-950 flex items-center justify-center shrink-0 text-terracotta-700">
+                    <Zap className="w-7 h-7 fill-terracotta-600" />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-cream-50 text-terracotta-800 border border-coffee-950 uppercase tracking-wider">
+                        Yeni • Hızlı Refleks
+                      </span>
+                      <span className="text-[11px] text-cream-100 font-bold flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        2-10 Kişi • ~5 dk
+                      </span>
+                    </div>
+                    <h2 className="font-serif font-black text-xl text-cream-50 leading-snug">
+                      5 Saniye Kuralı (Hızlı Beyin Yakan)
+                    </h2>
+                    <p className="text-xs text-cream-100 leading-relaxed">
+                      5 saniyede 3 şey sayabilir misin? Süre hızla akarken beynin donacak, masada en absürt cevaplar havada uçuşacak!
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => navigate('/play/bes-saniye')}
+                className="w-full btn-dark !py-3.5 !text-sm flex items-center justify-center gap-2"
+              >
+                <Play className="w-4 h-4 fill-cream-50" />
+                <span>5 Saniye Başlat ⚡</span>
+                <ChevronRight className="w-4 h-4 ml-auto" />
+              </button>
+            </div>
+
+            {/* YENİ OYUN 3: KLASİK TABU */}
+            <div className="p-6 rounded-4xl bg-rose-700 text-cream-50 border-2 border-coffee-950 shadow-print-sm hover:shadow-print transition-all flex flex-col justify-between gap-4 relative overflow-hidden">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3.5">
+                  <div className="w-14 h-14 rounded-2xl bg-cream-50 border-2 border-coffee-950 flex items-center justify-center shrink-0 text-rose-700">
+                    <Flag className="w-7 h-7 fill-rose-600" />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-cream-50 text-rose-800 border border-coffee-950 uppercase tracking-wider">
+                        Yeni • Takım Oyunu
+                      </span>
+                      <span className="text-[11px] text-cream-100 font-bold flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        4-12 Kişi • 2 Takım
+                      </span>
+                    </div>
+                    <h2 className="font-serif font-black text-xl text-cream-50 leading-snug">
+                      Klasik Tabu (Yasak Kelimeler)
+                    </h2>
+                    <p className="text-xs text-cream-100 leading-relaxed">
+                      5 yasaklı kelimeyi kullanmadan takımına anlat! 100+ zengin klasik Tabu kartı, süre sayacı ve kıyasıya takım rekabeti.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => navigate('/play/klasik-tabu')}
+                className="w-full btn-dark !py-3.5 !text-sm flex items-center justify-center gap-2"
+              >
+                <Play className="w-4 h-4 fill-cream-50" />
+                <span>Tabu Oyna 🚫</span>
+                <ChevronRight className="w-4 h-4 ml-auto" />
+              </button>
+            </div>
+
+            {/* YENİ OYUN 4: PARMAK RULETİ (HESAP KURBANI) */}
+            <div className="p-6 rounded-4xl bg-emerald-950 text-cream-50 border-2 border-coffee-950 shadow-print-sm hover:shadow-print transition-all flex flex-col justify-between gap-4 relative overflow-hidden">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3.5">
+                  <div className="w-14 h-14 rounded-2xl bg-cream-50 border-2 border-coffee-950 flex items-center justify-center shrink-0 text-emerald-900">
+                    <CreditCard className="w-7 h-7 text-emerald-800" />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-emerald-400 text-coffee-950 border border-coffee-950 uppercase tracking-wider">
+                        Yeni • Hesap & Karar
+                      </span>
+                      <span className="text-[11px] text-cream-200 font-bold flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        2-10 Kişi • 3 Saniye
+                      </span>
+                    </div>
+                    <h2 className="font-serif font-black text-xl text-cream-50 leading-snug">
+                      Parmak Ruleti (Hesap Kurbanı)
+                    </h2>
+                    <p className="text-xs text-cream-200 leading-relaxed">
+                      Herkes parmağını ekrana koysun! 3 saniye sonra şimşek çakar ve hesabı kimin ödeyeceğini ya da kahve turunu kimin ısmarlayacağını kader belirler.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => navigate('/play/parmak-ruleti')}
+                className="w-full btn-primary !bg-emerald-500 hover:!bg-emerald-400 !text-coffee-950 !py-3.5 !text-sm font-black flex items-center justify-center gap-2 border-2 border-coffee-950"
+              >
+                <Play className="w-4 h-4 fill-coffee-950" />
+                <span>Ruleti Başlat ⚡</span>
                 <ChevronRight className="w-4 h-4 ml-auto" />
               </button>
             </div>

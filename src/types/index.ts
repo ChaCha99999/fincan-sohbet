@@ -5,7 +5,11 @@ export type GameType =
   | 'ne-kadar-taniyoruz'
   | 'kafe-trivia'
   | 'masa-duellosu'
-  | 'kafe-nabzi';
+  | 'kafe-nabzi'
+  | 'masadaki-casus'
+  | 'bes-saniye'
+  | 'klasik-tabu'
+  | 'parmak-ruleti';
 
 export type CafeStatus = 'active' | 'inactive';
 

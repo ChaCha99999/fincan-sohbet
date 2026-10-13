@@ -119,6 +119,10 @@ export const AdminQuestionsPage: React.FC = () => {
         'kafe-trivia': 'cat-trivia',
         'masa-duellosu': 'cat-duello',
         'kafe-nabzi': 'cat-nabiz',
+        'masadaki-casus': 'cat-casus',
+        'bes-saniye': 'cat-bessaniye',
+        'klasik-tabu': 'cat-tabu',
+        'parmak-ruleti': 'cat-rulet',
       };
 
       if (modalMode === 'create') {
