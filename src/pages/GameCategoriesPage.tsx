@@ -242,12 +242,12 @@ export const GameCategoriesPage: React.FC = () => {
             <div className="p-6 rounded-4xl bg-pistachio-600 text-cream-50 border-2 border-coffee-950 shadow-print-sm hover:shadow-print transition-all flex flex-col justify-between gap-4 relative overflow-hidden">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-3.5">
-                  <div className="w-14 h-14 rounded-2xl bg-cream-50 border-2 border-coffee-950 flex items-center justify-center shrink-0 text-pistachio-800">
-                    <BarChart3 className="w-7 h-7" />
+                  <div className="w-14 h-14 rounded-2xl bg-cream-50 border-2 border-coffee-950 flex items-center justify-center shrink-0">
+                    <BarChart3 className="w-7 h-7 text-pistachio-800" />
                   </div>
                   <div className="space-y-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-cream-50 text-pistachio-900 border border-coffee-950 uppercase tracking-wider">
+                      <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-cream-50 text-coffee-950 border border-coffee-950 uppercase tracking-wider">
                         Canlı Oylama
                       </span>
                       <span className="text-[11px] text-cream-100 font-bold flex items-center gap-1">
