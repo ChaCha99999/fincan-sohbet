@@ -13,7 +13,12 @@ import {
   updateServiceRequestStatus,
   toggleCafeWaiterCall,
   getActiveServiceRequestsCount,
-  getActiveTableServiceRequest
+  getActiveTableServiceRequest,
+  cancelServiceRequest,
+  getMenuItemsByToken,
+  submitLead,
+  getLeads,
+  updateLeadStatus
 } from '../lib/api';
 import { DEFAULT_MENU_ITEMS, MENU_CATEGORIES } from '../data/mockMenu';
 import { TRIVIA_CATEGORIES, TRIVIA_QUESTIONS } from '../data/triviaQuestions';
@@ -133,6 +138,14 @@ describe('Kafe Menü Modülü (Cafe Menu Module)', () => {
     await deleteMenuItem(testItem.id);
     const items = await getMenuItems();
     expect(items.find(i => i.id === testItem.id)).toBeUndefined();
+  });
+
+  it('Menü masa tokeni ile okunabilmeli, geçersiz token boş liste dönmelidir', async () => {
+    const items = await getMenuItemsByToken('demo-masa-1');
+    expect(items.length).toBeGreaterThan(0);
+
+    const invalid = await getMenuItemsByToken('gecersiz-token-xyz');
+    expect(invalid).toEqual([]);
   });
 });
 
@@ -296,9 +309,13 @@ describe('Garson Çağır & Hesap İste Modülü (Waiter Call & Service Requests
   });
 
   it('Yeni garson çağırma isteği oluşturulabilmelidir', async () => {
+    const existing = await getActiveTableServiceRequest('demo-masa-1');
+    if (existing) {
+      await cancelServiceRequest('demo-masa-1', existing.id);
+    }
+
     const req = await createServiceRequest({
-      cafe_id: 'cafe-moda-01',
-      table_id: 'tbl-moda-01',
+      tableToken: 'demo-masa-1',
       request_type: 'waiter',
       note: 'Su rica ediyoruz',
     });
@@ -310,9 +327,13 @@ describe('Garson Çağır & Hesap İste Modülü (Waiter Call & Service Requests
   });
 
   it('Ödeme türü ile hesap isteme çağrısı oluşturulabilmelidir', async () => {
+    const existing = await getActiveTableServiceRequest('demo-masa-2');
+    if (existing) {
+      await cancelServiceRequest('demo-masa-2', existing.id);
+    }
+
     const req = await createServiceRequest({
-      cafe_id: 'cafe-moda-01',
-      table_id: 'tbl-moda-02',
+      tableToken: 'demo-masa-2',
       request_type: 'bill',
       payment_method: 'card',
       note: 'POS cihazı rica ediyoruz',
@@ -326,8 +347,7 @@ describe('Garson Çağır & Hesap İste Modülü (Waiter Call & Service Requests
 
   it('Servis çağrısı durumu güncellenebilmelidir (pending -> in_progress -> completed)', async () => {
     const req = await createServiceRequest({
-      cafe_id: 'cafe-moda-01',
-      table_id: 'tbl-moda-01',
+      tableToken: 'demo-masa-1',
       request_type: 'waiter',
     });
 
@@ -348,8 +368,20 @@ describe('Garson Çağır & Hesap İste Modülü (Waiter Call & Service Requests
     const count = await getActiveServiceRequestsCount('cafe-moda-01');
     expect(count).toBeGreaterThanOrEqual(0);
 
-    const activeTableReq = await getActiveTableServiceRequest('tbl-moda-01');
+    const activeTableReq = await getActiveTableServiceRequest('demo-masa-1');
     expect(activeTableReq === null || typeof activeTableReq === 'object').toBe(true);
+  });
+
+  it('Müşteri yalnızca token vererek kendi aktif çağrısını iptal edebilmelidir', async () => {
+    const existing = await getActiveTableServiceRequest('demo-masa-2');
+    if (existing) {
+      const cancelled = await cancelServiceRequest('demo-masa-2', existing.id);
+      expect(cancelled).toBe(true);
+      expect(await getActiveTableServiceRequest('demo-masa-2')).toBeNull();
+    }
+
+    const fakeCancel = await cancelServiceRequest('demo-masa-1', 'olmayan-id');
+    expect(fakeCancel).toBe(false);
   });
 
   it('Admin panelden işletmenin masa çağrısı özelliği açılıp kapatılabilmelidir (toggle)', async () => {
@@ -502,6 +534,100 @@ describe('Parmak Ruleti (Hesap Kurbanı) Modülü', () => {
       expect(m.title.length).toBeGreaterThan(2);
       expect(m.desc.length).toBeGreaterThan(5);
     });
+  });
+});
+
+describe('Kafe Başvuruları (Leads)', () => {
+  it('Geçerli başvuru "new" durumunda oluşturulmalı ve alanlar trim edilmeli', async () => {
+    const lead = await submitLead({
+      full_name: '  Ayşe Demir ',
+      cafe_name: '  Kadıköy Kahve Durağı ',
+      city: ' İstanbul ',
+      contact_info: ' 0532 111 22 33 ',
+      table_count: 10,
+      note: '  Teras masaları için QR  ',
+    });
+
+    expect(lead.status).toBe('new');
+    expect(lead.full_name).toBe('Ayşe Demir');
+    expect(lead.cafe_name).toBe('Kadıköy Kahve Durağı');
+    expect(lead.city).toBe('İstanbul');
+    expect(lead.contact_info).toBe('0532 111 22 33');
+    expect(lead.source).toBe('landing');
+
+    const leads = await getLeads();
+    expect(leads[0].id).toBe(lead.id);
+    expect(leads.filter(l => l.id === lead.id)).toHaveLength(1);
+  });
+
+  it('Aynı iletişim bilgisiyle ikinci başvuru yeni kayıt oluşturmamalı (dedupe)', async () => {
+    const first = await submitLead({
+      full_name: 'Can Yıldız',
+      cafe_name: 'Beşiktaş Fincan',
+      city: 'İstanbul',
+      contact_info: 'can@besiktasfincan.com',
+    });
+    const second = await submitLead({
+      full_name: 'Can Yıldız',
+      cafe_name: 'Beşiktaş Fincan',
+      city: 'İstanbul',
+      contact_info: 'CAN@BESIKTASFINCAN.COM',
+    });
+
+    expect(second.id).toBe(first.id);
+
+    const leads = await getLeads();
+    const matches = leads.filter(l => l.contact_info.toLowerCase() === 'can@besiktasfincan.com');
+    expect(matches).toHaveLength(1);
+  });
+
+  it('Eksik veya geçersiz başvuru alanları hata fırlatmalı', async () => {
+    await expect(submitLead({
+      full_name: 'A',
+      cafe_name: 'Test Kafe',
+      city: 'İzmir',
+      contact_info: '0555 000 00 00',
+    })).rejects.toThrow(/adınızı/);
+
+    await expect(submitLead({
+      full_name: 'Ali Veli',
+      cafe_name: '',
+      city: 'İzmir',
+      contact_info: '0555 000 00 00',
+    })).rejects.toThrow(/kafe adı/i);
+
+    await expect(submitLead({
+      full_name: 'Ali Veli',
+      cafe_name: 'Test Kafe',
+      city: 'İzmir',
+      contact_info: '123',
+    })).rejects.toThrow(/telefon veya e-posta/i);
+
+    await expect(submitLead({
+      full_name: 'Ali Veli',
+      cafe_name: 'Test Kafe',
+      city: 'İzmir',
+      contact_info: '0555 000 00 00',
+      table_count: 501,
+    })).rejects.toThrow(/1 ile 500/);
+  });
+
+  it('Başvuru durumu güncellenebilmeli, olmayan başvuru hata vermeli', async () => {
+    const lead = await submitLead({
+      full_name: 'Zeynep Ak',
+      cafe_name: 'Alsancak Sohbet',
+      city: 'İzmir',
+      contact_info: '0555 999 88 77',
+      table_count: 4,
+    });
+
+    const updated = await updateLeadStatus(lead.id, 'contacted');
+    expect(updated.status).toBe('contacted');
+
+    const leads = await getLeads();
+    expect(leads.find(l => l.id === lead.id)?.status).toBe('contacted');
+
+    await expect(updateLeadStatus('lead-yok', 'archived')).rejects.toThrow(/bulunamadı/);
   });
 });
 

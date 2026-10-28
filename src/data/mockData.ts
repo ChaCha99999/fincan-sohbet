@@ -1,4 +1,4 @@
-import type { Cafe, Table, UsageEvent, ServiceRequest } from '../types';
+import type { Cafe, Table, UsageEvent, ServiceRequest, Lead } from '../types';
 
 export const MOCK_CAFES: Cafe[] = [
   {
@@ -218,5 +218,31 @@ export const MOCK_SERVICE_REQUESTS: ServiceRequest[] = [
     created_at: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
     cafe_name: 'Moda Fincan Kahve & Kitap',
     table_label: 'Masa 01 (Bahçe)',
+  },
+];
+
+export const MOCK_LEADS: Lead[] = [
+  {
+    id: 'lead-01',
+    full_name: 'Elif Kaya',
+    cafe_name: 'Bostanlı Sahil Kahvecisi',
+    city: 'İzmir',
+    contact_info: '0555 123 45 67',
+    table_count: 12,
+    note: 'Yaz sezonunda bahçe masaları için de QR istiyoruz.',
+    status: 'new',
+    source: 'landing',
+    created_at: new Date(Date.now() - 2 * 24 * 3600 * 1000).toISOString(),
+  },
+  {
+    id: 'lead-02',
+    full_name: 'Mert Aydın',
+    cafe_name: 'Çankaya Kitap & Kahve',
+    city: 'Ankara',
+    contact_info: 'mert@cankayakitap.com',
+    table_count: 6,
+    status: 'contacted',
+    source: 'landing',
+    created_at: new Date(Date.now() - 6 * 24 * 3600 * 1000).toISOString(),
   },
 ];

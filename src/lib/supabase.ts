@@ -18,3 +18,10 @@ export const supabase: SupabaseClient | null = isSupabaseConfigured
       },
     })
   : null;
+
+// Demo modu yalnızca açıkça istendiğinde veya backend hiç tanımlı değilken geçerlidir.
+// Canlı backend'de hata alındığında demo veriye düşmek yasaktır.
+export const isDemoMode =
+  !isSupabaseConfigured || import.meta.env.VITE_DEMO_MODE === 'true';
+
+export const isLiveBackend = Boolean(isSupabaseConfigured && supabase) && !isDemoMode;

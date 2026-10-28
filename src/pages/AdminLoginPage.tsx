@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Shield, Coffee, Lock, Mail, ArrowRight, Sparkles, AlertCircle } from 'lucide-react';
 import { useAdminAuth } from '../hooks/useAdminAuth';
-import { isSupabaseConfigured } from '../lib/supabase';
+import { isDemoMode, isLiveBackend } from '../lib/supabase';
 import { APP_CONFIG } from '../lib/config';
 
 export const AdminLoginPage: React.FC = () => {
@@ -112,27 +112,29 @@ export const AdminLoginPage: React.FC = () => {
           </button>
         </form>
 
-        {/* Demo Mode Instant Login */}
-        <div className="pt-4 border-t border-coffee-100 space-y-3">
-          <div className="flex items-center gap-2 text-xs font-bold text-coffee-700">
-            <Sparkles className="w-4 h-4 text-caramel-600" />
-            <span>Geliştirici / Ön İzleme Erişimi</span>
-          </div>
-          <p className="text-[11px] text-coffee-600 leading-relaxed">
-            {isSupabaseConfigured 
-              ? 'Canlı Supabase bağlantınız mevcuttur. Dilerseniz test amacıyla demo modunda da oturum açabilirsiniz.'
-              : 'Supabase henüz bağlanmadığı için bu butona tıklayarak yerel demo verileriyle tüm paneli inceleyebilirsiniz.'}
-          </p>
+        {/* Demo Mode Instant Login (yalnızca canlı olmayan ortamlarda) */}
+        {!isLiveBackend && (
+          <div className="pt-4 border-t border-coffee-100 space-y-3">
+            <div className="flex items-center gap-2 text-xs font-bold text-coffee-700">
+              <Sparkles className="w-4 h-4 text-caramel-600" />
+              <span>Geliştirici / Ön İzleme Erişimi</span>
+            </div>
+            <p className="text-[11px] text-coffee-600 leading-relaxed">
+              {isDemoMode
+                ? 'Demo modu açık. Bu butonla yerel demo verileriyle tüm paneli inceleyebilirsiniz.'
+                : 'Supabase henüz bağlanmadığı için bu butona tıklayarak yerel demo verileriyle tüm paneli inceleyebilirsiniz.'}
+            </p>
 
-          <button
-            type="button"
-            onClick={handleDemoLogin}
-            className="w-full py-2.5 rounded-xl bg-caramel-100 hover:bg-caramel-200 text-coffee-900 font-bold text-xs border border-caramel-300 transition-colors flex items-center justify-center gap-2"
-          >
-            <Coffee className="w-4 h-4 text-caramel-700" />
-            Demo Yönetici Olarak Panele Gir
-          </button>
-        </div>
+            <button
+              type="button"
+              onClick={handleDemoLogin}
+              className="w-full py-2.5 rounded-xl bg-caramel-100 hover:bg-caramel-200 text-coffee-900 font-bold text-xs border border-caramel-300 transition-colors flex items-center justify-center gap-2"
+            >
+              <Coffee className="w-4 h-4 text-caramel-700" />
+              Demo Yönetici Olarak Panele Gir
+            </button>
+          </div>
+        )}
 
         <div className="text-center pt-2">
           <Link

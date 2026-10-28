@@ -247,27 +247,43 @@ export const AdminMenuPage: React.FC = () => {
   };
 
   const handleTogglePopular = async (item: MenuItem) => {
-    await updateMenuItem(item.id, { is_popular: !item.is_popular });
-    setItems(prev => prev.map(m => m.id === item.id ? { ...m, is_popular: !m.is_popular } : m));
+    try {
+      await updateMenuItem(item.id, { is_popular: !item.is_popular });
+      setItems(prev => prev.map(m => m.id === item.id ? { ...m, is_popular: !m.is_popular } : m));
+    } catch (err: any) {
+      alert('Ürün güncellenemedi: ' + (err?.message || 'Bilinmeyen hata'));
+    }
   };
 
   const handleToggleAvailable = async (item: MenuItem) => {
     const next = item.is_available === false ? true : false;
-    await updateMenuItem(item.id, { is_available: next });
-    setItems(prev => prev.map(m => m.id === item.id ? { ...m, is_available: next } : m));
+    try {
+      await updateMenuItem(item.id, { is_available: next });
+      setItems(prev => prev.map(m => m.id === item.id ? { ...m, is_available: next } : m));
+    } catch (err: any) {
+      alert('Ürün güncellenemedi: ' + (err?.message || 'Bilinmeyen hata'));
+    }
   };
 
   const handleDelete = async (item: MenuItem) => {
     if (window.confirm(`"${item.name}" ürününü menüden silmek istediğinize emin misiniz?`)) {
-      await deleteMenuItem(item.id, id);
-      setItems(prev => prev.filter(m => m.id !== item.id));
+      try {
+        await deleteMenuItem(item.id, id);
+        setItems(prev => prev.filter(m => m.id !== item.id));
+      } catch (err: any) {
+        alert('Ürün silinemedi: ' + (err?.message || 'Bilinmeyen hata'));
+      }
     }
   };
 
   const handleSaveQuickPrice = async (item: MenuItem) => {
     if (quickPriceValue > 0) {
-      await updateMenuItem(item.id, { price: quickPriceValue });
-      setItems(prev => prev.map(m => m.id === item.id ? { ...m, price: quickPriceValue } : m));
+      try {
+        await updateMenuItem(item.id, { price: quickPriceValue });
+        setItems(prev => prev.map(m => m.id === item.id ? { ...m, price: quickPriceValue } : m));
+      } catch (err: any) {
+        alert('Fiyat güncellenemedi: ' + (err?.message || 'Bilinmeyen hata'));
+      }
     }
     setQuickPriceId(null);
   };

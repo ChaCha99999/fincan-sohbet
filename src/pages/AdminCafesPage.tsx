@@ -13,9 +13,11 @@ import {
 } from 'lucide-react';
 import { AdminLayout } from '../components/AdminLayout';
 import { getCafes, createCafe, updateCafe, toggleCafeStatus, toggleCafeWaiterCall } from '../lib/api';
+import { useAdminAuth } from '../hooks/useAdminAuth';
 import type { Cafe } from '../types';
 
 export const AdminCafesPage: React.FC = () => {
+  const { isPlatformAdmin } = useAdminAuth();
   const [cafes, setCafes] = useState<Cafe[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalMode, setModalMode] = useState<'create' | 'edit' | null>(null);
@@ -134,21 +136,33 @@ export const AdminCafesPage: React.FC = () => {
       : `"${cafe.name}" kafesini tekrar aktif yapmak istiyor musunuz?`;
 
     if (window.confirm(confirmMessage)) {
-      await toggleCafeStatus(cafe.id, nextStatus);
-      loadCafes();
+      try {
+        await toggleCafeStatus(cafe.id, nextStatus);
+        loadCafes();
+      } catch (err: any) {
+        alert('Kafe durumu güncellenemedi: ' + (err?.message || 'Bilinmeyen hata'));
+      }
     }
   };
 
   const handleToggleWaiterCall = async (cafe: Cafe) => {
     const nextState = cafe.waiter_call_enabled === false;
-    await toggleCafeWaiterCall(cafe.id, nextState);
-    loadCafes();
+    try {
+      await toggleCafeWaiterCall(cafe.id, nextState);
+      loadCafes();
+    } catch (err: any) {
+      alert('Masa çağrı özelliği güncellenemedi: ' + (err?.message || 'Bilinmeyen hata'));
+    }
   };
 
   return (
     <AdminLayout
-      title="Kafe Yönetimi"
-      subtitle="Kayıtlı işletmeleri görüntüleyin, durumlarını değiştirin veya masalarını yönetin"
+      title={isPlatformAdmin ? 'Kafe Yönetimi' : 'Kafem & Masalar'}
+      subtitle={
+        isPlatformAdmin
+          ? 'Kayıtlı işletmeleri görüntüleyin, durumlarını değiştirin veya masalarını yönetin'
+          : 'Kafenizin menüsünü, masalarını ve masa çağrılarını yönetin'
+      }
     >
       <div className="space-y-4">
         {/* Top Action Bar */}
@@ -156,13 +170,15 @@ export const AdminCafesPage: React.FC = () => {
           <span className="text-xs text-coffee-600 font-semibold">
             Toplam {cafes.length} Kafe
           </span>
-          <button
-            onClick={openCreateModal}
-            className="px-4 py-2.5 rounded-xl bg-terracotta-600 hover:bg-terracotta-700 text-white font-bold text-xs shadow-warm flex items-center gap-1.5 transition-transform active:scale-98"
-          >
-            <Plus className="w-4 h-4" />
-            Yeni Kafe Ekle
-          </button>
+          {isPlatformAdmin && (
+            <button
+              onClick={openCreateModal}
+              className="px-4 py-2.5 rounded-xl bg-terracotta-600 hover:bg-terracotta-700 text-white font-bold text-xs shadow-warm flex items-center gap-1.5 transition-transform active:scale-98"
+            >
+              <Plus className="w-4 h-4" />
+              Yeni Kafe Ekle
+            </button>
+          )}
         </div>
 
         {/* Cafe Cards / Table */}
@@ -175,13 +191,19 @@ export const AdminCafesPage: React.FC = () => {
         ) : cafes.length === 0 ? (
           <div className="bg-white rounded-3xl p-8 text-center space-y-3 border border-coffee-200">
             <Store className="w-8 h-8 text-coffee-400 mx-auto" />
-            <p className="text-sm text-coffee-700 font-semibold">Henüz kayıtlı kafe bulunmuyor.</p>
-            <button
-              onClick={openCreateModal}
-              className="px-4 py-2 rounded-xl bg-terracotta-600 text-white text-xs font-bold"
-            >
-              İlk Kafeyi Ekle
-            </button>
+            <p className="text-sm text-coffee-700 font-semibold">
+              {isPlatformAdmin
+                ? 'Henüz kayıtlı kafe bulunmuyor.'
+                : 'Hesabınıza bağlı bir kafe bulunamadı. Platform yöneticinizle iletişime geçin.'}
+            </p>
+            {isPlatformAdmin && (
+              <button
+                onClick={openCreateModal}
+                className="px-4 py-2 rounded-xl bg-terracotta-600 text-white text-xs font-bold"
+              >
+                İlk Kafeyi Ekle
+              </button>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

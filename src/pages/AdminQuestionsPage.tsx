@@ -9,7 +9,9 @@ import {
   AlertCircle 
 } from 'lucide-react';
 import { z } from 'zod';
+import { Link } from 'react-router-dom';
 import { AdminLayout } from '../components/AdminLayout';
+import { useAdminAuth } from '../hooks/useAdminAuth';
 import { getQuestions, createQuestion, updateQuestion, toggleQuestionStatus } from '../lib/api';
 import type { Question, GameType } from '../types';
 
@@ -23,6 +25,7 @@ const questionSchema = z.object({
 });
 
 export const AdminQuestionsPage: React.FC = () => {
+  const { isPlatformAdmin, isLoading: authLoading } = useAdminAuth();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -180,6 +183,20 @@ export const AdminQuestionsPage: React.FC = () => {
       case 'ne-kadar-taniyoruz': return 'Birbirimizi Ne Kadar Tanıyoruz?';
     }
   };
+
+  if (!authLoading && !isPlatformAdmin) {
+    return (
+      <AdminLayout title="Soru Havuzu" subtitle="Platforma ait soru bankası">
+        <div className="bg-white rounded-3xl p-8 text-center border border-coffee-200 space-y-2">
+          <AlertCircle className="w-8 h-8 text-coffee-400 mx-auto" />
+          <p className="text-sm font-semibold text-coffee-800">Bu bölüm platform yöneticilerine aittir.</p>
+          <Link to="/admin/dashboard" className="text-xs text-terracotta-700 underline">
+            Genel Bakışa Dön
+          </Link>
+        </div>
+      </AdminLayout>
+    );
+  }
 
   return (
     <AdminLayout

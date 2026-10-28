@@ -12,12 +12,13 @@ import {
   ArrowRight
 } from 'lucide-react';
 import type { Cafe, Table, MenuItem } from '../types';
-import { DEFAULT_MENU_ITEMS, MENU_CATEGORIES } from '../data/mockMenu';
-import { getMenuItems } from '../lib/api';
+import { MENU_CATEGORIES } from '../data/mockMenu';
+import { getMenuItems, getMenuItemsByToken } from '../lib/api';
 import { useTranslation } from '../lib/i18n';
 
 interface CafeMenuViewProps {
   cafe?: Table['cafe'] | Cafe | null;
+  tableToken?: string;
   tableLabel?: string;
   onSwitchToGames: () => void;
   onSwitchToPortal?: () => void;
@@ -25,25 +26,44 @@ interface CafeMenuViewProps {
 
 export const CafeMenuView: React.FC<CafeMenuViewProps> = ({
   cafe,
+  tableToken,
   tableLabel,
   onSwitchToGames,
   onSwitchToPortal,
 }) => {
   const { t, lang } = useTranslation();
-  const [menuItems, setMenuItems] = useState<MenuItem[]>(DEFAULT_MENU_ITEMS);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [menuLoading, setMenuLoading] = useState<boolean>(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('Tümü');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [copiedWifi, setCopiedWifi] = useState<boolean>(false);
 
   useEffect(() => {
-    if (cafe?.id) {
-      getMenuItems(cafe.id).then((items) => {
-        if (items && items.length > 0) {
-          setMenuItems(items);
-        }
+    let isMounted = true;
+    setMenuLoading(true);
+
+    const load = tableToken
+      ? getMenuItemsByToken(tableToken)
+      : cafe?.id
+        ? getMenuItems(cafe.id)
+        : Promise.resolve([] as MenuItem[]);
+
+    load
+      .then((items) => {
+        if (!isMounted) return;
+        setMenuItems(items);
+        setMenuLoading(false);
+      })
+      .catch(() => {
+        if (!isMounted) return;
+        setMenuItems([]);
+        setMenuLoading(false);
       });
-    }
-  }, [cafe?.id]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [tableToken, cafe?.id]);
 
   const categoryList = useMemo(() => {
     const defaultCats = MENU_CATEGORIES.filter(c => c !== 'Tümü');
@@ -131,37 +151,55 @@ export const CafeMenuView: React.FC<CafeMenuViewProps> = ({
       )}
 
       {/* Arama Çubuğu */}
-      <div className="relative">
-        <Search className="w-4 h-4 text-coffee-400 absolute left-4 top-1/2 -translate-y-1/2" />
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder={t.searchMenu}
-          className="w-full pl-11 pr-4 py-3 rounded-2xl bg-cream-100 border-2 border-coffee-950/20 text-xs sm:text-sm text-coffee-950 placeholder:text-coffee-500 focus:outline-none focus:border-coffee-950 shadow-xs transition-all"
-        />
-      </div>
+      {menuItems.length > 0 && (
+        <div className="relative">
+          <Search className="w-4 h-4 text-coffee-400 absolute left-4 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={t.searchMenu}
+            className="w-full pl-11 pr-4 py-3 rounded-2xl bg-cream-100 border-2 border-coffee-950/20 text-xs sm:text-sm text-coffee-950 placeholder:text-coffee-500 focus:outline-none focus:border-coffee-950 shadow-xs transition-all"
+          />
+        </div>
+      )}
 
       {/* Kategori Butonları (Yatay Kaydırılabilir) */}
-      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1">
-        {categoryList.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setSelectedCategory(cat)}
-            className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 border-2 ${
-              selectedCategory === cat
-                ? 'bg-coffee-950 text-cream-50 border-coffee-950 shadow-xs'
-                : 'bg-cream-100 text-coffee-800 hover:bg-cream-200 border-coffee-950/15'
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
+      {menuItems.length > 0 && (
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1">
+          {categoryList.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 border-2 ${
+                selectedCategory === cat
+                  ? 'bg-coffee-950 text-cream-50 border-coffee-950 shadow-xs'
+                  : 'bg-cream-100 text-coffee-800 hover:bg-cream-200 border-coffee-950/15'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Menü Öğeleri Listesi */}
       <div className="space-y-3">
-        {filteredItems.length === 0 ? (
+        {menuLoading ? (
+          <div className="space-y-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-20 rounded-3xl bg-cream-100 border-2 border-coffee-950/10 animate-pulse" />
+            ))}
+          </div>
+        ) : menuItems.length === 0 ? (
+          <div className="text-center py-10 px-4 bg-cream-100 rounded-3xl border-2 border-coffee-950/20 text-coffee-600 space-y-2">
+            <UtensilsCrossed className="w-8 h-8 mx-auto text-coffee-400" />
+            <p className="font-semibold text-sm">Menü henüz eklenmedi.</p>
+            <p className="text-xs text-coffee-500">
+              Bu işletme dijital menüsünü henüz yayınlamamış. Siparişiniz için garsonunuzdan yardım isteyebilirsiniz.
+            </p>
+          </div>
+        ) : filteredItems.length === 0 ? (
           <div className="text-center py-10 px-4 bg-cream-100 rounded-3xl border-2 border-coffee-950/20 text-coffee-600 space-y-2">
             <UtensilsCrossed className="w-8 h-8 mx-auto text-coffee-400" />
             <p className="font-semibold text-sm">Aradığınız kriterde ürün bulunamadı.</p>

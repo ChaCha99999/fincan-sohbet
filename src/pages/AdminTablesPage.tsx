@@ -79,8 +79,12 @@ export const AdminTablesPage: React.FC = () => {
 
   const handleToggleTable = async (table: Table) => {
     const nextState = !table.is_active;
-    await toggleTableStatus(table.id, nextState);
-    loadData();
+    try {
+      await toggleTableStatus(table.id, nextState);
+      loadData();
+    } catch (err: any) {
+      alert('Masa durumu güncellenemedi: ' + (err?.message || 'Bilinmeyen hata'));
+    }
   };
 
   const handleCopyLink = (token: string) => {

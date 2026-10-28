@@ -7,6 +7,9 @@ ALTER TABLE public.cafes
     ADD COLUMN IF NOT EXISTS waiter_call_enabled BOOLEAN NOT NULL DEFAULT true;
 
 -- 2. get_table_by_token fonksiyonunu yeni alanla güncelle
+--    (dönüş tipi değişiyor; CREATE OR REPLACE yetmez, önce DROP gerekir)
+DROP FUNCTION IF EXISTS public.get_table_by_token(TEXT);
+
 CREATE OR REPLACE FUNCTION public.get_table_by_token(p_token TEXT)
 RETURNS TABLE (
     table_id UUID,

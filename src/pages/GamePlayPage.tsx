@@ -61,7 +61,7 @@ export const GamePlayPage: React.FC = () => {
     ) {
       setLoading(false);
       if (activeTable) {
-        logUsageEvent(activeTable.cafe_id, activeTable.id, 'game_start', gameSlug as GameType);
+        logUsageEvent(activeTable.public_token, 'game_start', gameSlug as GameType);
       }
       return;
     }
@@ -79,14 +79,14 @@ export const GamePlayPage: React.FC = () => {
 
       // Log game start event if active table is present
       if (activeTable) {
-        logUsageEvent(activeTable.cafe_id, activeTable.id, 'game_start', gameSlug as GameType);
+        logUsageEvent(activeTable.public_token, 'game_start', gameSlug as GameType);
       }
     });
   }, [gameSlug, isValidGame, navigate, activeTable]);
 
   const handleFinishGame = () => {
     if (activeTable && gameSlug) {
-      logUsageEvent(activeTable.cafe_id, activeTable.id, 'game_complete', gameSlug as GameType);
+      logUsageEvent(activeTable.public_token, 'game_complete', gameSlug as GameType);
     }
     if (activeTable) {
       navigate(`/t/${activeTable.public_token}`);

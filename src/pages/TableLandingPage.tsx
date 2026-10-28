@@ -29,7 +29,7 @@ import {
   logUsageEvent, 
   getCategories,
   getActiveTableServiceRequest,
-  updateServiceRequestStatus
+  cancelServiceRequest
 } from '../lib/api';
 import type { Table, Category, GameType, ServiceRequest, ServiceRequestType } from '../types';
 import { useTableSession } from '../hooks/useTableSession';
@@ -98,12 +98,9 @@ export const TableLandingPage: React.FC = () => {
   };
 
   const handleCancelCall = async () => {
-    if (activeCall) {
+    if (activeCall && token) {
       try {
-        await updateServiceRequestStatus(activeCall.id, 'cancelled');
-        if (typeof window !== 'undefined' && table?.id) {
-          localStorage.removeItem(`fincan_active_call_${table.id}`);
-        }
+        await cancelServiceRequest(token, activeCall.id);
         setActiveCall(null);
         setCallFeedback('Çağrınız iptal edildi.');
         setTimeout(() => setCallFeedback(null), 3000);
@@ -147,11 +144,11 @@ export const TableLandingPage: React.FC = () => {
           setActiveTable(validation.table);
 
           // Masa açılış olayını logla
-          logUsageEvent(validation.table.cafe_id, validation.table.id, 'table_open', null);
+          logUsageEvent(token, 'table_open', null);
 
           // Masaya ait aktif garson veya hesap çağrısı var mı kontrol et
           if (validation.table.cafe?.waiter_call_enabled !== false) {
-            getActiveTableServiceRequest(validation.table.id).then((existingReq) => {
+            getActiveTableServiceRequest(token).then((existingReq) => {
               if (existingReq && isMounted) {
                 setActiveCall(existingReq);
               }
@@ -581,6 +578,7 @@ export const TableLandingPage: React.FC = () => {
         {activeView === 'menu' && (
           <CafeMenuView 
             cafe={table.cafe} 
+            tableToken={table.public_token}
             tableLabel={table.label} 
             onSwitchToGames={() => setActiveView('games')} 
             onSwitchToPortal={() => setActiveView('portal')}
@@ -739,8 +737,7 @@ export const TableLandingPage: React.FC = () => {
         <ServiceCallModal
           isOpen={callModalOpen}
           mode={callModalMode}
-          cafeId={table.cafe_id}
-          tableId={table.id}
+          tableToken={table.public_token}
           tableLabel={table.label}
           onClose={() => setCallModalOpen(false)}
           onSuccess={handleCallSuccess}

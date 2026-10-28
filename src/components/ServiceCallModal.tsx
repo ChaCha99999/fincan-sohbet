@@ -16,8 +16,7 @@ import { useTranslation } from '../lib/i18n';
 interface ServiceCallModalProps {
   isOpen: boolean;
   mode: ServiceRequestType;
-  cafeId: string;
-  tableId: string;
+  tableToken: string;
   tableLabel: string;
   onClose: () => void;
   onSuccess: (req: ServiceRequest) => void;
@@ -26,8 +25,7 @@ interface ServiceCallModalProps {
 export const ServiceCallModal: React.FC<ServiceCallModalProps> = ({
   isOpen,
   mode,
-  cafeId,
-  tableId,
+  tableToken,
   tableLabel,
   onClose,
   onSuccess,
@@ -65,8 +63,7 @@ export const ServiceCallModal: React.FC<ServiceCallModalProps> = ({
         .join(' - ');
 
       const req = await createServiceRequest({
-        cafe_id: cafeId,
-        table_id: tableId,
+        tableToken,
         request_type: mode,
         payment_method: mode === 'bill' ? paymentMethod : null,
         note: fullNote || null,

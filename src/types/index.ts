@@ -122,8 +122,25 @@ export interface UsageEvent {
 
 export interface AdminUser {
   user_id: string;
-  role: 'admin' | 'superadmin';
+  role: 'admin' | 'owner' | 'superadmin';
+  cafe_id?: string | null;
   created_at: string;
+}
+
+export type LeadStatus = 'new' | 'contacted' | 'converted' | 'archived';
+
+export interface Lead {
+  id: string;
+  full_name: string;
+  cafe_name: string;
+  city: string;
+  contact_info: string;
+  table_count?: number | null;
+  note?: string | null;
+  status: LeadStatus;
+  source?: string;
+  created_at: string;
+  updated_at?: string;
 }
 
 export interface AppConfig {

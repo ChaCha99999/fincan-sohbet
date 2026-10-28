@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { X, CheckCircle2, Coffee, Send } from 'lucide-react';
+import { X, CheckCircle2, Coffee, Send, AlertCircle } from 'lucide-react';
 import { z } from 'zod';
 import { APP_CONFIG } from '../lib/config';
+import { submitLead } from '../lib/api';
 
 interface LeadModalProps {
   isOpen: boolean;
@@ -32,12 +33,14 @@ export const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose }) => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
+    setSubmitError(null);
 
     const result = leadSchema.safeParse(formData);
     if (!result.success) {
@@ -52,15 +55,27 @@ export const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose }) => {
     }
 
     setIsSubmitting(true);
-    // Simulate lead dispatch / storage
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      await submitLead({
+        full_name: result.data.fullName,
+        cafe_name: result.data.cafeName,
+        city: result.data.city,
+        contact_info: result.data.contactInfo,
+        table_count: result.data.tableCount,
+        note: result.data.note || null,
+        source: 'landing',
+      });
       setIsSubmitted(true);
-    }, 600);
+    } catch (err: any) {
+      setSubmitError(err?.message || 'Başvurunuz iletilemedi. Lütfen tekrar deneyin.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const resetAndClose = () => {
     setIsSubmitted(false);
+    setSubmitError(null);
     setFormData({
       fullName: '',
       cafeName: '',
@@ -119,6 +134,12 @@ export const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose }) => {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
+              {submitError && (
+                <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs flex items-start gap-2">
+                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                  <span>{submitError}</span>
+                </div>
+              )}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-coffee-800 mb-1">

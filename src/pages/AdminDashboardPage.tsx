@@ -11,10 +11,12 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { AdminLayout } from '../components/AdminLayout';
+import { useAdminAuth } from '../hooks/useAdminAuth';
 import { getDashboardStats } from '../lib/api';
 import type { DashboardStats } from '../lib/api';
 
 export const AdminDashboardPage: React.FC = () => {
+  const { isPlatformAdmin } = useAdminAuth();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -60,8 +62,12 @@ export const AdminDashboardPage: React.FC = () => {
 
   return (
     <AdminLayout
-      title="Platform Özeti"
-      subtitle="Kayıtlı işletmeler, masalar ve masa başı etkileşim verileri"
+      title={isPlatformAdmin ? 'Platform Özeti' : 'Kafe Özeti'}
+      subtitle={
+        isPlatformAdmin
+          ? 'Kayıtlı işletmeler, masalar ve masa başı etkileşim verileri'
+          : 'Kafenizin masaları ve masa başı etkileşim verileri'
+      }
     >
       {/* Real vs Demo Data Notice Banner */}
       {stats && (

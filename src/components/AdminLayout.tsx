@@ -7,7 +7,8 @@ import {
   LogOut, 
   ExternalLink, 
   Coffee,
-  Bell
+  Bell,
+  Inbox
 } from 'lucide-react';
 import { useAdminAuth } from '../hooks/useAdminAuth';
 import { APP_CONFIG } from '../lib/config';
@@ -20,7 +21,7 @@ interface AdminLayoutProps {
 }
 
 export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, subtitle }) => {
-  const { isAuthenticated, isLoading, userEmail, logout } = useAdminAuth();
+  const { isAuthenticated, isLoading, userEmail, logout, isPlatformAdmin } = useAdminAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [pendingCallsCount, setPendingCallsCount] = useState<number>(0);
@@ -155,6 +156,20 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, subti
             )}
           </Link>
 
+          {isPlatformAdmin && (
+            <Link
+              to="/admin/leads"
+              className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-colors whitespace-nowrap ${
+                location.pathname.startsWith('/admin/leads')
+                  ? 'bg-coffee-900 text-white shadow-warm-sm'
+                  : 'bg-white text-coffee-700 hover:bg-cream-100 border border-coffee-200'
+              }`}
+            >
+              <Inbox className="w-4 h-4" />
+              Başvurular
+            </Link>
+          )}
+
           <Link
             to="/admin/cafes"
             className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-colors whitespace-nowrap ${
@@ -167,17 +182,19 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, subti
             Kafeler & Masalar
           </Link>
 
-          <Link
-            to="/admin/questions"
-            className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-colors whitespace-nowrap ${
-              isCurrent('/admin/questions')
-                ? 'bg-coffee-900 text-white shadow-warm-sm'
-                : 'bg-white text-coffee-700 hover:bg-cream-100 border border-coffee-200'
-            }`}
-          >
-            <HelpCircle className="w-4 h-4" />
-            Soru Havuzu
-          </Link>
+          {isPlatformAdmin && (
+            <Link
+              to="/admin/questions"
+              className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-colors whitespace-nowrap ${
+                isCurrent('/admin/questions')
+                  ? 'bg-coffee-900 text-white shadow-warm-sm'
+                  : 'bg-white text-coffee-700 hover:bg-cream-100 border border-coffee-200'
+              }`}
+            >
+              <HelpCircle className="w-4 h-4" />
+              Soru Havuzu
+            </Link>
+          )}
         </div>
 
         {/* Page Title & Subtitle */}

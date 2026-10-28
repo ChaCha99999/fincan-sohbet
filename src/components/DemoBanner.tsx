@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, Info } from 'lucide-react';
-import { isSupabaseConfigured } from '../lib/supabase';
+import { isDemoMode } from '../lib/supabase';
 
 export const DemoBanner: React.FC = () => {
-  if (isSupabaseConfigured) {
+  if (!isDemoMode) {
     return null;
   }
 
